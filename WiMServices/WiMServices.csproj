@@ -55,9 +55,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\WiMCheckOuts\STN\packages\openrasta-hosting-aspnet.2.5.22\lib\net40\OpenRasta.Hosting.AspNet.dll</HintPath>
     </Reference>
-    <Reference Include="RestSharp, Version=105.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\RestSharp.105.0.1\lib\net4\RestSharp.dll</HintPath>
+    <Reference Include="RestSharp">
+      <HintPath>..\..\..\WiMCheckOuts\StreamStatsServices\packages\RestSharp.105.0.1\lib\net4\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Text">
       <HintPath>..\..\..\WiMCheckOuts\STN\packages\ServiceStack.Text.4.0.36\lib\net40\ServiceStack.Text.dll</HintPath>
@@ -86,7 +85,9 @@
     <Compile Include="Codecs\xml\UTF8XmlSerializerCodec.cs" />
     <Compile Include="Handlers\HandlerBase.cs" />
     <Compile Include="Resources\Hypermedia\Hypermedia.cs" />
+    <Compile Include="Resources\IMessage.cs" />
     <Compile Include="Resources\Parameter.cs" />
+    <Compile Include="Utilities\ServiceAgent\XMLAgentBase.cs" />
     <Compile Include="Utilities\Storage\S3Bucket.cs" />
     <Compile Include="Web\MemoryFile.cs" />
     <Compile Include="PipeLineContributors\CrossDomainPipelineContributor.cs" />
