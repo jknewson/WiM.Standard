@@ -32,6 +32,12 @@ using Newtonsoft.Json.Linq;
 
 namespace WiM.Resources.Spatial
 {
+    public class FeatureWrapper
+    {
+        public string name { get; set; }
+        public FeatureCollectionBase feature { get; set; }
+    }
+
     #region Base classes
 
     public abstract class ExtentBase
@@ -52,6 +58,7 @@ namespace WiM.Resources.Spatial
 
     [XmlInclude(typeof(EsriPolygon))]
     [XmlInclude(typeof(EsriPoint))]
+    [XmlInclude(typeof(EsriPolyline))]
     public abstract class GeometryBase
     {
         #region Base Properties
@@ -241,7 +248,7 @@ namespace WiM.Resources.Spatial
                         //SSdelineationResult["results"].Where(f=>isFeature(f, out feature)).Select(f => feature).ToList<IFeature>();
                         case "esriGeometryPolygon":
                             var ring = item.SelectToken("geometry.rings");
-                            List<List<List<double>>> rings = item.SelectToken("geometry.rings").Select(p => getRing(p)).ToList();
+                            List<List<List<double>>> rings = item.SelectToken("geometry.rings").Select(p => getpolyline(p)).ToList();
                             geometry = new EsriPolygon(rings);
                             attributes = JsonConvert.DeserializeObject<Attributes>(item.SelectToken("attributes").ToString());
                             break;
@@ -250,6 +257,12 @@ namespace WiM.Resources.Spatial
                             attributes = JsonConvert.DeserializeObject<Attributes>(item.SelectToken("attributes").ToString());
                             break;
 
+                        case "esriGeometryPolyline":
+                            var path = item.SelectToken("geometry.paths");
+                            List<List<List<double>>> paths = item.SelectToken("geometry.paths").Select(p => getpolyline(p)).ToList();
+                            geometry = new EsriPolyline(paths);
+                            attributes = JsonConvert.DeserializeObject<Attributes>(item.SelectToken("attributes").ToString());
+                            break;
                         default:
                             break;
                     }
@@ -262,9 +275,9 @@ namespace WiM.Resources.Spatial
                 return false;
             }
         }//end FromJson
-        public List<List<double>> getRing(JToken ring)
+        public List<List<double>> getpolyline(JToken polyline)
         {
-            var x = ring.Select(p=> new []{(Double)p[0], (Double)p[1]}.ToList<double>()).ToList();
+            var x = polyline.Select(p=> new []{(Double)p[0], (Double)p[1]}.ToList<double>()).ToList();
 
             return x;
         }
@@ -329,6 +342,30 @@ namespace WiM.Resources.Spatial
         public EsriPolygon(List<List<List<double>>> rings)
         {
             this.rings = rings;
+        }
+        #endregion
+        #region Methods
+        public override List<double> getBoundingBox()
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+    }//end EsriPolygon
+
+    public class EsriPolyline : GeometryBase
+    {
+        #region Properties
+
+        [XmlArrayItem("path")]
+        public List<List<List<double>>> paths { get; set; }
+        #endregion
+        #region Constructor
+        public EsriPolyline()
+            : base()
+        { }
+        public EsriPolyline(List<List<List<double>>> paths)
+        {
+            this.paths = paths;
         }
         #endregion
         #region Methods
