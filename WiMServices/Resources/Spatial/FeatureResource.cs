@@ -19,6 +19,7 @@
 //     
 
 #region Comments
+// 06.18.15 - jkn - added polyline/multiLineString features
 // 02.08.13 - jkn - Created
 #endregion
 using System;
@@ -143,6 +144,13 @@ namespace WiM.Resources.Spatial
         [XmlElement("hucid")]
         [JsonProperty("hucid")]
         public string HUCID { get; set; }
+        [XmlElement("name")]
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [XmlElement("elev")]
+        [JsonProperty("elev")]
+        public string Elev { get; set; }
+
 
     }
     #endregion
@@ -155,6 +163,8 @@ namespace WiM.Resources.Spatial
     {
         #region Fields & Properties
         public string geometryType { get; set; }
+        public dynamic fields { get; set; }
+
         [XmlElement(ElementName = "spatialReference")]
         [JsonProperty(PropertyName="spatialReference")]
         public override CoordianteReferenceSystemBase crs { get; set; }  
@@ -173,9 +183,10 @@ namespace WiM.Resources.Spatial
         {
             features.Add(feature);
         }
-        public EsriFeatureRecordSet(List<FeatureBase> features, Int32 wkid, string geomType)
+        public EsriFeatureRecordSet(List<FeatureBase> features, Int32 wkid, string geomType, dynamic fields)
             : this(wkid, geomType)
         {
+            this.fields = fields;
             features.ForEach(f=>addFeature(f));
         }
         #endregion
@@ -226,7 +237,7 @@ namespace WiM.Resources.Spatial
             this.attributes = attr;
             this.geometry = new EsriPolygon(rings);
         }
-        public EsriFeature(JArray jobj, string geometryType)
+        public EsriFeature(JToken jobj, string geometryType)
         {
             type = geometryType;
             FromJson(jobj);
@@ -237,36 +248,33 @@ namespace WiM.Resources.Spatial
         {
             throw new NotImplementedException();
         }
-        public Boolean FromJson(JArray jobj)
+        public Boolean FromJson(JToken jobj)
         {
             try
             {
-                foreach (JToken item in jobj)
+                switch (type)
                 {
-                    switch (type)
-                    {
-                        //SSdelineationResult["results"].Where(f=>isFeature(f, out feature)).Select(f => feature).ToList<IFeature>();
-                        case "esriGeometryPolygon":
-                            var ring = item.SelectToken("geometry.rings");
-                            List<List<List<double>>> rings = item.SelectToken("geometry.rings").Select(p => getpolyline(p)).ToList();
-                            geometry = new EsriPolygon(rings);
-                            attributes = JsonConvert.DeserializeObject<Attributes>(item.SelectToken("attributes").ToString());
-                            break;
-                        case "esriGeometryPoint":
-                            geometry = new EsriPoint((double)item.SelectToken("geometry.x"),(double)item.SelectToken("geometry.y"));
-                            attributes = JsonConvert.DeserializeObject<Attributes>(item.SelectToken("attributes").ToString());
-                            break;
+                    //SSdelineationResult["results"].Where(f=>isFeature(f, out feature)).Select(f => feature).ToList<IFeature>();
+                    case "esriGeometryPolygon":
+                        var ring = jobj.SelectToken("geometry.rings");
+                        List<List<List<double>>> rings = jobj.SelectToken("geometry.rings").Select(p => getpolyline(p)).ToList();
+                        geometry = new EsriPolygon(rings);
+                        attributes = JsonConvert.DeserializeObject<Attributes>(jobj.SelectToken("attributes").ToString());
+                        break;
+                    case "esriGeometryPoint":
+                        geometry = new EsriPoint((double)jobj.SelectToken("geometry.x"), (double)jobj.SelectToken("geometry.y"));
+                        attributes = JsonConvert.DeserializeObject<Attributes>(jobj.SelectToken("attributes").ToString());
+                        break;
 
-                        case "esriGeometryPolyline":
-                            var path = item.SelectToken("geometry.paths");
-                            List<List<List<double>>> paths = item.SelectToken("geometry.paths").Select(p => getpolyline(p)).ToList();
-                            geometry = new EsriPolyline(paths);
-                            attributes = JsonConvert.DeserializeObject<Attributes>(item.SelectToken("attributes").ToString());
-                            break;
-                        default:
-                            break;
-                    }
-                }//next item
+                    case "esriGeometryPolyline":
+                        var path = jobj.SelectToken("geometry.paths");
+                        List<List<List<double>>> paths = jobj.SelectToken("geometry.paths").Select(p => getpolyline(p)).ToList();
+                        geometry = new EsriPolyline(paths);
+                        attributes = JsonConvert.DeserializeObject<Attributes>(jobj.SelectToken("attributes").ToString());
+                        break;
+                    default:
+                        break;
+                }
                 return true;
             }
             catch (Exception)
@@ -468,6 +476,13 @@ namespace WiM.Resources.Spatial
             this.geometry = new Polygon(rings);
             bbox = this.geometry.getBoundingBox();
         }
+        public Feature(Object attr, List<List<List<double>>> paths, string polylinePlaceholder)
+        {
+            type = "Feature";
+            this._attributes = attr;
+            this.geometry = new LineString(paths);
+            bbox = this.geometry.getBoundingBox();
+        }
         public Feature(JArray jobj, string geometryType)
         {
             type = geometryType;
@@ -487,6 +502,10 @@ namespace WiM.Resources.Spatial
                 case "esriGeometryPolygon":
                     EsriPolygon poly = feature.geometry as EsriPolygon;
                     return new Feature(feature.attributes, poly.rings);
+
+                case "esriGeometryPolyline":
+                    EsriPolyline polyline = feature.geometry as EsriPolyline;
+                    return new Feature (feature.attributes, polyline.paths, "polyline");
                     
                 default:
                     return new Feature();
@@ -632,6 +651,42 @@ namespace WiM.Resources.Spatial
                     yMin = (from c in polyrings select c[1]).Min()
 
                 }).ToList();
+
+
+            return new List<double> { bbx.Max(x => x.xMax), bbx.Max(y => y.yMax), bbx.Min(x => x.xMin), bbx.Min(y => y.yMin) };
+        }
+        #endregion
+    }//end EsriPolygon
+
+    public class LineString : GeometryBase
+    {
+        #region Properties
+        public string type { get; set; }
+        public List<List<List<double>>> coordinates { get; set; }
+        #endregion
+        #region Constructor
+        public LineString()
+            : base()
+        { type = "MultiLineString"; }
+        public LineString(List<List<List<double>>> path)
+            : this()
+        {
+            this.coordinates = path;
+        }
+        #endregion
+        #region Methods
+        public override List<double> getBoundingBox()
+        {
+
+            var bbx = coordinates.Select(paths => new
+            {
+
+                xMax = (from c in paths select c[0]).Max(),
+                xMin = (from c in paths select c[0]).Min(),
+                yMax = (from c in paths select c[1]).Max(),
+                yMin = (from c in paths select c[1]).Min()
+
+            }).ToList();
 
 
             return new List<double> { bbx.Max(x => x.xMax), bbx.Max(y => y.yMax), bbx.Min(x => x.xMin), bbx.Min(y => y.yMin) };
