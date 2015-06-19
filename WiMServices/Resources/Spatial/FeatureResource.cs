@@ -103,6 +103,7 @@ namespace WiM.Resources.Spatial
             get { return _features; } 
         }
         public abstract Boolean addFeature(FeatureBase feature);
+        
         #endregion
         #region Base Constructors
         public FeatureCollectionBase()
@@ -153,6 +154,18 @@ namespace WiM.Resources.Spatial
 
 
     }
+    public class Field
+    {
+        [XmlElement("alias")]
+        [JsonProperty("alias")]
+        public string Alias { get; set; }
+        [XmlElement("type")]
+        [JsonProperty("type")]
+        public string Type { get; set; }
+        [XmlElement("name")]
+        [JsonProperty("name")]
+        public string Name { get; set; }
+    }
     #endregion
 
     #region Esri-based RecordSet
@@ -163,11 +176,14 @@ namespace WiM.Resources.Spatial
     {
         #region Fields & Properties
         public string geometryType { get; set; }
-        public dynamic fields { get; set; }
 
         [XmlElement(ElementName = "spatialReference")]
         [JsonProperty(PropertyName="spatialReference")]
-        public override CoordianteReferenceSystemBase crs { get; set; }  
+        public override CoordianteReferenceSystemBase crs { get; set; }
+
+        [XmlArrayItem("field")]
+        public List<Field> fields { get; set; }
+
         #endregion
         #region Constructors
         public EsriFeatureRecordSet()
@@ -183,7 +199,7 @@ namespace WiM.Resources.Spatial
         {
             features.Add(feature);
         }
-        public EsriFeatureRecordSet(List<FeatureBase> features, Int32 wkid, string geomType, dynamic fields)
+        public EsriFeatureRecordSet(List<FeatureBase> features, Int32 wkid, string geomType, List<Field> fields)
             : this(wkid, geomType)
         {
             this.fields = fields;
