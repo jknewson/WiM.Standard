@@ -109,6 +109,18 @@ namespace WiM.Resources.Spatial
         public FeatureCollectionBase()
         { }
         #endregion
+
+        public static explicit operator FeatureCollectionBase(string feature)
+        {
+            var x = true;
+            if (x)
+                return new EsriFeatureRecordSet();
+            else
+                return new FeatureCollection();
+            //return new FeatureCollection(feature);
+
+        }//end FeatureCollection
+
         #region Base Methods
         #endregion
        
@@ -135,13 +147,13 @@ namespace WiM.Resources.Spatial
     {
         [XmlElement("objectid")]
         [JsonProperty("objectid")]
-        public int OBJECTID { get; set; }
+        public int? OBJECTID { get; set; }
         [XmlElement("hydroid")]
         [JsonProperty("hydroid")]
-        public int HydroID { get; set; }
+        public int? HydroID { get; set; }
         [XmlElement("drainid")]
         [JsonProperty("drainid")]
-        public int DrainID { get; set; }
+        public int? DrainID { get; set; }
         [XmlElement("hucid")]
         [JsonProperty("hucid")]
         public string HUCID { get; set; }
@@ -151,6 +163,16 @@ namespace WiM.Resources.Spatial
         [XmlElement("elev")]
         [JsonProperty("elev")]
         public string Elev { get; set; }
+
+        [XmlElement("oid")]
+        [JsonProperty("oid")]
+        public int? OID { get; set; }
+
+        [XmlElement("srctype")]
+        [JsonProperty("srctype")]
+        public int? SrcType { get; set; }
+        
+  
 
 
     }
@@ -212,6 +234,42 @@ namespace WiM.Resources.Spatial
         {
             throw new NotImplementedException();
         }//end FeatureCollection
+        public static explicit operator EsriFeatureRecordSet(string feature)
+        {
+            JObject fobj = null;
+            EsriFeatureRecordSet rSet = null;
+            Int32 wKid = -1;
+            string geomType = string.Empty;
+            try
+            {
+                fobj = JsonConvert.DeserializeObject(feature) as JObject;
+                if ((fobj["type"] != null && String.Equals((string)fobj["type"], "FeatureCollection")) || 
+                    (fobj["geometryType"] != null && ((string)fobj["geometryType"]).Contains("esriGeometry"))) throw new Exception("input not valid");
+
+                
+                if (!String.Equals((string)fobj["type"], "FeatureCollection"))
+                {
+                    //geojson
+                    wKid = (Int32)fobj.SelectToken("crs.properties.code");
+                    geomType = (string)fobj.SelectToken("features[0].geometry.type");
+
+                    rSet = new EsriFeatureRecordSet(wKid,geomType);
+                    
+
+                }
+                else { 
+                
+                
+                }
+                return rSet;
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+
+        }//end FeatureCollection
         #endregion
         #region Methods
         public override Boolean addFeature(FeatureBase feature)
@@ -266,27 +324,25 @@ namespace WiM.Resources.Spatial
         }
         public Boolean FromJson(JToken jobj)
         {
+            JToken geom = null;
             try
             {
+                geom = (jobj.SelectToken("geometry") != null) ? jobj.SelectToken("geometry"): jobj;
+                attributes = (jobj.SelectToken("attributes") != null) ? JsonConvert.DeserializeObject<Attributes>(jobj.SelectToken("attributes").ToString()) : new Attributes() { Name="empty" };
                 switch (type)
                 {
                     //SSdelineationResult["results"].Where(f=>isFeature(f, out feature)).Select(f => feature).ToList<IFeature>();
                     case "esriGeometryPolygon":
-                        var ring = jobj.SelectToken("geometry.rings");
-                        List<List<List<double>>> rings = jobj.SelectToken("geometry.rings").Select(p => getpolyline(p)).ToList();
+                        List<List<List<double>>> rings = geom.SelectToken("rings").Select(p => getpolyline(p)).ToList();
                         geometry = new EsriPolygon(rings);
-                        attributes = JsonConvert.DeserializeObject<Attributes>(jobj.SelectToken("attributes").ToString());
                         break;
                     case "esriGeometryPoint":
-                        geometry = new EsriPoint((double)jobj.SelectToken("geometry.x"), (double)jobj.SelectToken("geometry.y"));
-                        attributes = JsonConvert.DeserializeObject<Attributes>(jobj.SelectToken("attributes").ToString());
+                        geometry = new EsriPoint((double)geom.SelectToken("x"), (double)geom.SelectToken("y"));
                         break;
 
                     case "esriGeometryPolyline":
-                        var path = jobj.SelectToken("geometry.paths");
-                        List<List<List<double>>> paths = jobj.SelectToken("geometry.paths").Select(p => getpolyline(p)).ToList();
+                        List<List<List<double>>> paths = geom.SelectToken("paths").Select(p => getpolyline(p)).ToList();
                         geometry = new EsriPolyline(paths);
-                        attributes = JsonConvert.DeserializeObject<Attributes>(jobj.SelectToken("attributes").ToString());
                         break;
                     default:
                         break;
@@ -443,6 +499,14 @@ namespace WiM.Resources.Spatial
             return new FeatureCollection(feature);
 
         }//end FeatureCollection
+
+        public static explicit operator FeatureCollection(string feature)
+        {
+
+            return new FeatureCollection();
+            //return new FeatureCollection(feature);
+
+        }//end FeatureCollection
         #endregion
         #region Methods
         public override Boolean addFeature(FeatureBase feature)
@@ -589,11 +653,8 @@ namespace WiM.Resources.Spatial
         { type = "ESPG"; }
         public CRS(Int32 espgCode)
         {
-            dynamic expObj = new System.Dynamic.ExpandoObject();
-            expObj.code = espgCode;
-
+            object expObj = new espg(){ code = espgCode};
             this.srObject = expObj;
-
         }
         #endregion
         #region Methods
@@ -607,7 +668,9 @@ namespace WiM.Resources.Spatial
         }//end FeatureCollection
         #endregion
     }//end SpatialReference
-
+    public class espg {
+        public Int32 code { get; set; }
+    }
     public class Point : GeometryBase
     {
         #region "Properties"

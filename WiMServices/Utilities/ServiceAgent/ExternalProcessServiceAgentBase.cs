@@ -95,7 +95,6 @@ namespace WiM.Utilities.ServiceAgent
             string results = null;
             try
             {
-                //http://localhost/streamStatsService/basincharacteristics?state=IA&workspaceID=IA20141112093901899000&includecharacteristics=DRNAREA;KSATSSUR;I24H10Y;CCM;TAU_ANN;STREAM_VAR;PRECIP;HYSEP;RSD
                 if (psi == null) throw new ArgumentNullException("processInfo");
                 task = new Process();
                 task = Process.Start(psi);
