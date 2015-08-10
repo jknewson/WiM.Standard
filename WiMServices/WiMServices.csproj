@@ -85,6 +85,7 @@
     <Compile Include="Codecs\xml\UTF8EntityXmlSerializerCodec.cs" />
     <Compile Include="Codecs\xml\UTF8XmlCodec.cs" />
     <Compile Include="Codecs\xml\UTF8XmlSerializerCodec.cs" />
+    <Compile Include="Exceptions\ServiceException.cs" />
     <Compile Include="Handlers\HandlerBase.cs" />
     <Compile Include="Resources\Hypermedia\Hypermedia.cs" />
     <Compile Include="Resources\IMessage.cs" />
