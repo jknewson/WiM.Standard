@@ -31,7 +31,7 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.Objects.DataClasses;
+using System.Data.Entity.Core.Objects.DataClasses;
 using System.Xml.Serialization;
 using OpenRasta.Codecs;
 using OpenRasta.TypeSystem;
@@ -42,7 +42,7 @@ using OpenRasta.Web;
 namespace WiM.Codecs.xml
 {
     [MediaType("application/xml;q=0.4", ".xml")]
-    public class SimpleUTF8XmlSerializerCodec : UTF8XmlCodec
+    public class UTF8EntityXmlSerializerCodec : UTF8XmlCodec
     {
         #region Methods
         public override object ReadFrom(IHttpEntity request, IType destinationType, string parameterName)
@@ -105,11 +105,10 @@ namespace WiM.Codecs.xml
                 entityType = entityType.GetGenericArguments()[0];
             }          
 
-            IEnumerable<string> properties =
-                entityType
-                    .GetProperties()
-                    .Where(e => e.Name.Contains("Reference"))
-                    .Select(e => e.Name);
+            List<string> properties =
+                entityType.GetProperties()
+                    .Where(e => e.Name.Contains("Reference") || (!e.PropertyType.IsPrimitive && !e.PropertyType.Equals(typeof(string))))
+                    .Select(e => e.Name).ToList();
             
                 // assign XmlAttribute to override those fields with XmlIgnoreAttribute    
             foreach (string propertyName in properties)
