@@ -74,7 +74,7 @@ namespace WiM.Codecs.json
                 serializer.NullValueHandling = NullValueHandling.Ignore;
                 serializer.TypeNameHandling = TypeNameHandling.None;
                 serializer.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
-                
+                                
                 serializer.Serialize(jsonTextWriter, entity);
                 jsonTextWriter.Flush();
             }

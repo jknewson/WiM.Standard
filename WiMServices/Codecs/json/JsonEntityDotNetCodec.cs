@@ -35,6 +35,7 @@ using OpenRasta.Codecs;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Newtonsoft;
 using System.Reflection;
 
 
@@ -63,6 +64,7 @@ namespace WiM.Codecs.json
                     serializer.MissingMemberHandling = MissingMemberHandling.Ignore;
                     serializer.NullValueHandling = NullValueHandling.Include;
                     serializer.TypeNameHandling = TypeNameHandling.None;
+                    serializer.PreserveReferencesHandling = PreserveReferencesHandling.None;
                     serializer.ContractResolver = new ContractResolver();
                     serializer.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
                    
@@ -95,8 +97,23 @@ namespace WiM.Codecs.json
         {
             var serializableMembers = base.GetSerializableMembers(objectType);
             serializableMembers.RemoveAll(memberInfo => (memberInfo.Name.Equals("EntityKey", StringComparison.OrdinalIgnoreCase)));
+
             return serializableMembers;
         }
+
+        protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
+        {
+            JsonProperty prop = base.CreateProperty(member, memberSerialization);
+           
+
+            if (!prop.PropertyType.IsPrimitive && !prop.PropertyType.Equals(typeof(string)))
+            {
+                prop.ShouldSerialize = obj => false;
+            }
+
+            return prop;
+        }
+
 
         private static bool IsMemberEntityWrapper(MemberInfo memberInfo)
         {
