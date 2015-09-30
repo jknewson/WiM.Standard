@@ -41,17 +41,24 @@ namespace WiM.Codecs.json
 
         public object ReadFrom(IHttpEntity request, IType destinationType, string paramName)
         {
-            if (destinationType.StaticType == null)
-                throw new InvalidOperationException();
-
-             // Create a serializer
-            JsonSerializer serializer = new JsonSerializer();
-            using (StreamReader streamReader = new StreamReader(request.Stream, new UTF8Encoding(false, true) ))
+            try
             {
-                using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
+                if (destinationType.StaticType == null)
+                    throw new InvalidOperationException();
+
+                 // Create a serializer
+                JsonSerializer serializer = new JsonSerializer();
+                using (StreamReader streamReader = new StreamReader(request.Stream, new UTF8Encoding(false, true) ))
                 {
-                    return serializer.Deserialize(jsonTextReader, destinationType.StaticType);
-                }
+                    using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
+                    {
+                        return serializer.Deserialize(jsonTextReader, destinationType.StaticType);
+                    }
+                }//end using
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
 
@@ -62,7 +69,6 @@ namespace WiM.Codecs.json
 
             using (JsonTextWriter jsonTextWriter = new JsonTextWriter(new StreamWriter(response.Stream, new UTF8Encoding(false, true))) { CloseOutput = false })
             {
-                jsonTextWriter.Formatting = Formatting.Indented;
                 //http://blog.greatrexpectations.com/2012/08/30/deserializing-interface-properties-using-json-net/
                 //https://www.google.com/search?q=jsonConverter&ie=utf-8&oe=utf-8&aq=t&rls=org.mozilla:en-US:official&client=firefox-a&channel=fflb#channel=fflb&q=json.net%20jsonconverter%20interface&rls=org.mozilla:en-US:official
 
@@ -74,6 +80,7 @@ namespace WiM.Codecs.json
                 serializer.NullValueHandling = NullValueHandling.Ignore;
                 serializer.TypeNameHandling = TypeNameHandling.None;
                 serializer.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
+                serializer.Formatting = Formatting.None;
                                 
                 serializer.Serialize(jsonTextWriter, entity);
                 jsonTextWriter.Flush();

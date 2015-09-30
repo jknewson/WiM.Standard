@@ -96,6 +96,8 @@
     <Compile Include="Handlers\HandlerBase.cs" />
     <Compile Include="Resources\IMessage.cs" />
     <Compile Include="Resources\Parameter.cs" />
+    <Compile Include="Utilities\ExpressionOps.cs" />
+    <Compile Include="Utilities\MathOps.cs" />
     <Compile Include="Utilities\ServiceAgent\DBServiceAgentBase.cs" />
     <Compile Include="Utilities\ServiceAgent\XMLAgentBase.cs" />
     <Compile Include="Utilities\Storage\S3Bucket.cs" />

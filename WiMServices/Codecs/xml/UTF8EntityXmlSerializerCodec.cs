@@ -47,10 +47,17 @@ namespace WiM.Codecs.xml
         #region Methods
         public override object ReadFrom(IHttpEntity request, IType destinationType, string parameterName)
         {
-            if (destinationType.StaticType == null)
-                throw new InvalidOperationException();
+            try
+            {
+                if (destinationType.StaticType == null)
+                    throw new InvalidOperationException();
 
-            return new XmlSerializer(destinationType.StaticType).Deserialize(request.Stream);
+                return new XmlSerializer(destinationType.StaticType).Deserialize(request.Stream);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         
