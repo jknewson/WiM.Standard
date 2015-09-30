@@ -62,9 +62,16 @@
   <ItemGroup>
     <Compile Include="EndpointTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="MathOpsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WiMServices\WiMServices.csproj">
+      <Project>{3cdb4ec5-0f03-4528-b644-f8bb922b4b9e}</Project>
+      <Name>WiMServices</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
