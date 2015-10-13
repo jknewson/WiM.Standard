@@ -63,7 +63,7 @@ namespace WiM.Authentication
 
         public override IEnumerable<IOperationInterceptor> GetInterceptors(IOperation operation)
         {
-            yield return DependencyManager.GetService<RequiresAuthenticationInterceptor>();
+            //yield return DependencyManager.GetService<RequiresAuthenticationInterceptor>();
             var roleInterceptor = DependencyManager.GetService<WiM.Authentication.RequiresRoleInterceptor>();
             roleInterceptor.Roles = _roleNames;
             yield return roleInterceptor;

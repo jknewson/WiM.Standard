@@ -4,6 +4,7 @@ using System.Text;
 using OpenRasta.Web;
 using WiM.Authentication;
 using WiM.Exceptions;
+using WiM;
 
 namespace WiM.Handlers
 {
@@ -15,7 +16,7 @@ namespace WiM.Handlers
 
        #region "Base Properties"
        // Automatically injected by DI in OpenRasta. Must be public!
-       public ICommunicationContext Context { get; set; }
+       protected ICommunicationContext Context { get; set; }
 
        public string username
        {

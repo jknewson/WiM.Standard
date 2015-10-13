@@ -94,6 +94,10 @@
     <Compile Include="Exceptions\ServiceException.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Handlers\HandlerBase.cs" />
+    <Compile Include="PipeLineContributors\HyperMediaPipelineContributor.cs" />
+    <Compile Include="PipeLineContributors\MessagePipelineContributor.cs" />
+    <Compile Include="Hypermedia\Link.cs" />
+    <Compile Include="Hypermedia\IHypermedia.cs" />
     <Compile Include="Resources\IMessage.cs" />
     <Compile Include="Resources\Parameter.cs" />
     <Compile Include="Utilities\ExpressionOps.cs" />
@@ -115,9 +119,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\Hypermedia\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

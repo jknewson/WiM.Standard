@@ -3,10 +3,13 @@ using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
 using WiM.Authentication;
+using WiM.Resources;
+
+using System.Collections.Generic;
 
 namespace WiM.Utilities.ServiceAgent
 {
-    public abstract class DBAgentBase:IDisposable
+    public abstract class DBAgentBase:IDisposable,IMessage
     {
         #region "Events"
         #endregion
@@ -17,6 +20,11 @@ namespace WiM.Utilities.ServiceAgent
         public DbContext context { get; protected set; }
         #endregion
         #region "Collections & Dictionaries"
+        private List<string> _message = new List<string>();
+        public List<string> Messages
+        {
+            get { return _message.Distinct().ToList(); }
+        }
         #endregion
         #region "Constructor and IDisposable Support"
         #region Constructors
@@ -87,8 +95,8 @@ namespace WiM.Utilities.ServiceAgent
         {
             DbSet<T> set = GetDBSet(typeof(T)).GetValue(context, null) as DbSet<T>;
             set.Add(item);
-            context.SaveChanges();          
-
+            context.SaveChanges(); 
+           
             return item;
         }
         public T Update<T>(T item) where T : class,new()
@@ -121,6 +129,14 @@ namespace WiM.Utilities.ServiceAgent
         {
             var properties = this.context.GetType().GetProperties().Where(item => item.PropertyType.Equals(typeof(DbSet<>).MakeGenericType(itemType)));
             return properties.First();
+        }
+        protected void sm(string msg)
+        {
+            this._message.Add(msg);
+        }
+        protected void sm(List<string> msg)
+        {
+            this._message.AddRange(msg);
         }
         #endregion
         #region "Structures"
