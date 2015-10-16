@@ -15,8 +15,10 @@
 //             expressions in infix notation.
 //          
 //discussion:  http://en.wikipedia.org/wiki/Shunting-yard_algorithm
-//             tokens pushed in outputstacks 
-//             operations pushed to tokenStack 
+//             numbers are added to outputQueue 
+//             operations and functions are pushed onto the tokenStack 
+//             function argument separator
+//                  Until token is at the top of the stacks left parenthesis, pop operators off the stack into output que
 //             Infix notation :         3 + 4 * AREA / ( 1 − 5 ) ^ 2 ^ 3
 //             Reverse Polish Notation: 3 4 AREA * 1 5 − 2 3 ^ ^ / +
 //
@@ -25,6 +27,7 @@
 
 #region "Comments"
 //08.12.2014 jkn - Created
+//10.15.2015 jkn - Added function support
 #endregion
 
 #region "Imports"
@@ -42,10 +45,9 @@ namespace WiM.Utilities
         #region "Fields"
 	    
         #endregion
-        #region "Properties"
-        
+        #region "Properties"        
         public string InfixExpression { get; private set; }
-        public String ReversePolishExpression { get; private set; }
+        public String PostFixExpression { get; private set; }
         public Double Value { get; private set; }
         public Boolean IsValid { get; private set; }
         
@@ -57,7 +59,6 @@ namespace WiM.Utilities
 
         #endregion
         #region Constructors
-
         public ExpressionOps(string expr)
         {
             InfixExpression = expr;
@@ -75,8 +76,7 @@ namespace WiM.Utilities
             if (IsValid) evaluate();         
         }
 
-        #endregion
-        
+        #endregion        
         #region "Methods"
         
         #endregion
@@ -96,6 +96,113 @@ namespace WiM.Utilities
             _operators.Add(OperationEnum.e_exponent, new OperatorStruc(3, AssociativityEnum.e_right));
 
         }
+        private void parseEquation()
+        {
+            Stack<String> tokenStack = new Stack<String>();
+            List<String> tokenList;
+            try
+            {
+                //Dijkstra's Shunting Yard Algorithm
+                Regex re = new Regex(@"([\,\+\-\*\(\)\^\/\ ])");
+                tokenList = re.Split(InfixExpression).Select(t => t.Trim()).Where(t => t != "").ToList();
+
+                adjustForUnary(ref tokenList);
+
+                for (int tokenNumber = 0; tokenNumber < tokenList.Count(); ++tokenNumber)
+                {
+                    String token = tokenList[tokenNumber];
+                    TokenClassEnum tokenClass = getTokenClass(token);
+
+                    switch (tokenClass)
+                    {
+                        case TokenClassEnum.e_variable:
+                        case TokenClassEnum.e_constant:
+                        case TokenClassEnum.e_value:
+                            outputQueue.Enqueue(token);
+                            break;
+
+                        case TokenClassEnum.e_function:
+                            tokenStack.Push(token);
+                            break;
+                        case TokenClassEnum.e_operator:
+                            if (token == "-" && (tokenStack.Count == 0 || tokenList[tokenNumber - 1] == "("))
+                            {
+                                tokenStack.Push(token);
+                                break;
+                            }//end if
+
+                            if (tokenStack.Count > 0)
+                            {
+                                String stackTopToken = tokenStack.Peek();
+                                if (getTokenClass(stackTopToken) == TokenClassEnum.e_operator)
+                                {
+                                    AssociativityEnum tokenAssociativity = getOperatorAssociativity(token);
+                                    int tokenPrecedence = getOperatorPrecedence(token);
+                                    int stackTopPrecedence = getOperatorPrecedence(stackTopToken);
+
+                                    if (tokenAssociativity == AssociativityEnum.e_left && tokenPrecedence <= stackTopPrecedence ||
+                                            tokenAssociativity == AssociativityEnum.e_right && tokenPrecedence < stackTopPrecedence)
+                                        outputQueue.Enqueue(tokenStack.Pop());
+                                }//end if
+                            }//end if
+                            tokenStack.Push(token);
+                            break;
+                        case TokenClassEnum.e_leftparenthesis:
+                            tokenStack.Push(token);
+                            break;
+                        case TokenClassEnum.e_functionArgSeparator:
+                            while (!(tokenStack.Peek().Equals("(")))
+                            {
+                                outputQueue.Enqueue(tokenStack.Pop());
+                            }//next
+
+                            break;
+                        case TokenClassEnum.e_rightparenthesis:
+                            while (!(tokenStack.Peek().Equals("(")))
+                            {
+                                outputQueue.Enqueue(tokenStack.Pop());
+                            }//next
+                            tokenStack.Pop();
+
+                            TokenClassEnum nextToken = this.getTokenClass(tokenStack.Peek());
+                            if (tokenStack.Count > 0 && nextToken == TokenClassEnum.e_function)
+                                outputQueue.Enqueue(tokenStack.Pop());
+
+                            break;
+                    }//end switch
+
+                    if (tokenClass == TokenClassEnum.e_value || tokenClass == TokenClassEnum.e_rightparenthesis ||
+                        tokenClass == TokenClassEnum.e_variable || tokenClass == TokenClassEnum.e_functionArgSeparator)
+                    {
+                        if (tokenNumber < tokenList.Count() - 1)
+                        {
+                            String nextToken = tokenList[tokenNumber + 1];
+                            TokenClassEnum nextTokenClass = getTokenClass(nextToken);
+
+                            //Note: checks if equation has implied multiplication AB = A*B, 
+                            //I had to remove it because it was causing issues with functions and function arg separators
+                            //if (nextTokenClass != TokenClassEnum.e_operator && nextTokenClass != TokenClassEnum.e_rightparenthesis
+                            //    && nextTokenClass != TokenClassEnum.e_functionArgSeparator)
+                            //    tokenList.Insert(tokenNumber + 1, "*");
+
+                        }//end if
+                    }//end if
+
+                }//next token
+
+                queOperationStack(tokenStack);
+
+                //---------------- set equation -----------------------
+                PostFixExpression = String.Join(",", outputQueue.Select(t => t).ToArray());
+
+                IsValid = true;
+            }
+            catch (Exception)
+            {
+
+                IsValid = false;
+            }
+        }
         private void evaluate()
         {
             Stack<String> expressionStack = new Stack<String>();
@@ -107,6 +214,12 @@ namespace WiM.Utilities
 
                     switch (this.getTokenClass(operand))
                     {
+                        case TokenClassEnum.e_variable:
+                            expressionStack.Push(Convert.ToString(_variables[operand].Value));
+                            break;
+                        case TokenClassEnum.e_constant:
+                            expressionStack.Push(Convert.ToString(getConstantValue(operand)));
+                            break;
                         case TokenClassEnum.e_value:
                             expressionStack.Push(operand);
                             break;
@@ -141,107 +254,8 @@ namespace WiM.Utilities
             {
                 throw new Exception(ex.Message);
             }
-        }
-
+        }       
         
-        private void parseEquation()
-        {
-            Stack<String> tokenStack = new Stack<String>();
-            try
-            {
-                //Dijkstra's Shunting Yard Algorithm
-                Regex re = new Regex(@"([\,\+\-\*\(\)\^\/\ ])");
-                List<String> tokenList = re.Split(InfixExpression).Select(t => t.Trim()).Where(t => t != "").ToList();
-            
-                adjustForNegative(ref tokenList);
-
-                for (int tokenNumber = 0; tokenNumber < tokenList.Count(); ++tokenNumber)
-                {
-                    String token = tokenList[tokenNumber];
-                    TokenClassEnum tokenClass = getTokenClass(token);
-
-                    switch (tokenClass)
-                    {
-                        case TokenClassEnum.e_variable:
-                            outputQueue.Enqueue(Convert.ToString(_variables[token].Value));
-                            break;
-                        case TokenClassEnum.e_value:                    
-                            outputQueue.Enqueue(token);
-                            break;
-                        case TokenClassEnum.e_function:
-                            tokenStack.Push(token);
-                            break;
-                        case TokenClassEnum.e_operator:
-                            if (token == "-" && (tokenStack.Count == 0 || tokenList[tokenNumber - 1] == "("))
-                            {
-                                tokenStack.Push(token);
-                                break;
-                            }//end if
-
-                            if (tokenStack.Count > 0)
-                            {
-                                String stackTopToken = tokenStack.Peek();
-                                if (getTokenClass(stackTopToken) == TokenClassEnum.e_operator)
-                                {
-                                    //TODO: utilize _operators list
-                                    AssociativityEnum tokenAssociativity = getOperatorAssociativity(token);
-                                    int tokenPrecedence = getOperatorPrecedence(token);
-                                    int stackTopPrecedence = getOperatorPrecedence(stackTopToken);
-
-                                    if (tokenAssociativity == AssociativityEnum.e_left && tokenPrecedence <= stackTopPrecedence ||
-                                            tokenAssociativity == AssociativityEnum.e_right && tokenPrecedence < stackTopPrecedence)
-                                        outputQueue.Enqueue(tokenStack.Pop());                                
-                                }//end if
-                            }//end if
-                            tokenStack.Push(token);
-                            break;
-                        case TokenClassEnum.e_leftparenthesis:
-                            tokenStack.Push(token);
-                            break;
-                        case TokenClassEnum.e_rightparenthesis:
-                            while (!(tokenStack.Peek().Equals("(")))
-                            {
-                                outputQueue.Enqueue(tokenStack.Pop());
-                            }//next
-
-                            tokenStack.Pop();
-
-                            if (tokenStack.Count > 0 && this.getTokenClass(tokenStack.Peek()) == TokenClassEnum.e_function)
-                                outputQueue.Enqueue(tokenStack.Pop()); 
-                       
-                            break;
-                    }//end switch
-
-                    if (tokenClass == TokenClassEnum.e_value || tokenClass == TokenClassEnum.e_rightparenthesis || 
-                        tokenClass == TokenClassEnum.e_variable)
-                    {
-                        if (tokenNumber < tokenList.Count() - 1)
-                        {
-                            String nextToken = tokenList[tokenNumber + 1];
-                            TokenClassEnum nextTokenClass = getTokenClass(nextToken);
-                        
-                            if (nextTokenClass != TokenClassEnum.e_operator && nextTokenClass != TokenClassEnum.e_rightparenthesis
-                                && nextTokenClass != TokenClassEnum.e_functionArgSeparator)
-                                tokenList.Insert(tokenNumber + 1, "*");
-                        
-                        }//end if
-                    }//end if
-
-                }//next token
-
-                queOperationStack(tokenStack);
-
-                //---------------- set equation -----------------------
-                ReversePolishExpression = String.Join(",", outputQueue.Select(t => t).ToArray());
-
-                IsValid = true;
-            }
-            catch (Exception)
-            {
-
-                IsValid = false;
-            }
-        }
         private void queOperationStack(Stack<string> stack)
         {
 
@@ -257,16 +271,18 @@ namespace WiM.Utilities
                 outputQueue.Enqueue(operand);
             }
         }
-        private void adjustForNegative(ref List<string> tokenList)
+        private void adjustForUnary(ref List<string> tokenList)
         {
 
             for (int tokenNumber = 0; tokenNumber < tokenList.Count(); ++tokenNumber)
             {
                 String token = tokenList[tokenNumber];
-                if ((getOperationEnum(token) == OperationEnum.e_minus || getOperationEnum(token) == OperationEnum.e_plus) && 
-                                                                        tokenNumber > 1 && (getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_operator || 
-                                                                                            getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_rightparenthesis || 
-                                                                                            getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_leftparenthesis))
+                if ((getOperationEnum(token) == OperationEnum.e_minus || getOperationEnum(token) == OperationEnum.e_plus) &&
+                                                                        tokenNumber > 1 && (getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_operator ||
+                                                                                            getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_rightparenthesis ||
+                                                                                            getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_leftparenthesis ||
+                                                                                            getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_function ||
+                                                                                            getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_functionArgSeparator))                                                                                                                 
                 {
                     //remove neg from the list, and add it to the begin of next var
                     tokenList[tokenNumber + 1] = tokenList[tokenNumber] + tokenList[tokenNumber + 1];
@@ -275,61 +291,7 @@ namespace WiM.Utilities
                 }//end if
 
             }//next
-        }
-        private AssociativityEnum getOperatorAssociativity(String token)
-        {
-            return _operators[getOperationEnum(token)].Associativity;
-        }
-        private int getOperatorPrecedence(String token)
-        {
-            return _operators[getOperationEnum(token)].Precedence;
-        }
-        private Double doOperation(Double val1, Double val2, OperationEnum operation)
-        {
-            switch (operation)
-            {
-                case OperationEnum.e_multiply:
-                    return val1 * val2;
-                case OperationEnum.e_divide:
-                    return val1 / val2;
-                case OperationEnum.e_percent:
-                    return (int)val1 % (int)val2;
-                case OperationEnum.e_plus:
-                    return val1 + val2;
-                case OperationEnum.e_minus:
-                    return val1 - val2;
-                case OperationEnum.e_exponent:
-                    return (float)System.Math.Pow(val1, val2);
-                default:
-                    IsValid = false;
-                    return 0;
-            }
-        }
-        
-        private bool isHigherPrecedence(string a, string b)
-        {
-            OperationEnum f = getOperationEnum(a);
-            OperationEnum s = getOperationEnum(b);
-
-            if (f >= s)
-                return false;
-            else
-                return true;
-        }
-        private bool isOperator(string token)
-        {
-            OperationEnum oper = getOperationEnum(token);
-            if (oper == OperationEnum.e_undefined)
-                return false;
-            return true;
-        }
-        private bool isFunction(string token)
-        {
-            FunctionEnum oper = getFunctionEnum(token);
-            if (oper == FunctionEnum.e_undefined)
-                return false;
-            return true;
-        }
+        }   
         private TokenClassEnum getTokenClass(string token)
         {
             double tempValue;
@@ -359,6 +321,10 @@ namespace WiM.Utilities
             {
                 return TokenClassEnum.e_operator;
             }
+            else if (isConstant(token))
+            {
+                return TokenClassEnum.e_constant;
+            }
             else
             {
                 //lookup variable name
@@ -366,6 +332,7 @@ namespace WiM.Utilities
                 {
                     if (_variables[token].HasValue)
                         tempValue = Convert.ToDouble(_variables[token].Value);
+
                     return TokenClassEnum.e_variable;
                 }
                 catch (Exception)
@@ -374,7 +341,85 @@ namespace WiM.Utilities
                     throw new Exception("token class unidentified");
                 }
             }
+        }
+        
+        #region ConstantHelpers
+        private bool isConstant(string token)
+        {
+            ConstantEnum oper = getConstantEnum(token);
+            if (oper == ConstantEnum.e_undefined)
+                return false;
+            return true;
+        }
+        private double getConstantValue(String token)
+        {
+            switch (getConstantEnum(token))
+            {
+                case ConstantEnum.e_eulernumber:
+                    return Math.E;
+                case ConstantEnum.e_goldenratio:
+                    return 1.61803398874989;
+                case ConstantEnum.e_pi:
+                    return Math.PI;
 
+                default:
+                    IsValid = false;
+                    return 0;
+            }//end switch
+        }
+        private ConstantEnum getConstantEnum(String a)
+        {
+            switch (a.ToLower())
+            {
+                case "e":
+                case "e#":
+                    return ConstantEnum.e_eulernumber;
+                case "pi":
+                    return ConstantEnum.e_pi;
+                case "phi":
+                    return ConstantEnum.e_goldenratio;
+
+                default:
+                    return ConstantEnum.e_undefined;
+            }//end switch
+        }
+        #endregion
+        #region OperatorHelpers
+        private bool isOperator(string token)
+        {
+            OperationEnum oper = getOperationEnum(token);
+            if (oper == OperationEnum.e_undefined)
+                return false;
+            return true;
+        }
+        private int getOperatorPrecedence(String token)
+        {
+            return _operators[getOperationEnum(token)].Precedence;
+        }
+        private AssociativityEnum getOperatorAssociativity(String token)
+        {
+            return _operators[getOperationEnum(token)].Associativity;
+        }
+        private Double doOperation(Double val1, Double val2, OperationEnum operation)
+        {
+            switch (operation)
+            {
+                case OperationEnum.e_multiply:
+                    return val1 * val2;
+                case OperationEnum.e_divide:
+                    return val1 / val2;
+                case OperationEnum.e_percent:
+                    return (int)val1 % (int)val2;
+                case OperationEnum.e_plus:
+                    return val1 + val2;
+                case OperationEnum.e_minus:
+                    return val1 - val2;
+                case OperationEnum.e_exponent:
+                    return (float)System.Math.Pow(val1, val2);
+                default:
+                    IsValid = false;
+                    return 0;
+            }
         }
         private OperationEnum getOperationEnum(String a)
         {
@@ -390,27 +435,20 @@ namespace WiM.Utilities
                     return OperationEnum.e_divide;
                 case "^":
                     return OperationEnum.e_exponent;
-                case"%":
+                case "%":
                     return OperationEnum.e_percent;
                 default:
                     return OperationEnum.e_undefined;
             }//end switch
-
         }
-
-        private FunctionEnum getFunctionEnum(String f)
+        #endregion
+        #region FunctionHelpers
+        private bool isFunction(string token)
         {
-            switch (f.ToLower())
-            {
-                case "sqrt":
-                    return FunctionEnum.e_sqrt;
-                case "logn":
-                    return FunctionEnum.e_logn;
-               
-                default:
-                    return FunctionEnum.e_undefined;
-            }//end switch
-
+            FunctionEnum oper = getFunctionEnum(token);
+            if (oper == FunctionEnum.e_undefined)
+                return false;
+            return true;
         }
         private Int32 getFunctionArgNumber(FunctionEnum operand)
         {
@@ -419,10 +457,15 @@ namespace WiM.Utilities
                 case FunctionEnum.e_sqrt:
                     return 1;
                 case FunctionEnum.e_logn:
+                case FunctionEnum.e_max:
+                case FunctionEnum.e_min:
+                case FunctionEnum.e_round:
                     return 2;
+
                 default:
                     IsValid = false;
-                    return 0;            }
+                    return 0;
+            }
         }
         private Double doFunction(FunctionEnum function, List<double> funcArgs)
         {
@@ -432,14 +475,40 @@ namespace WiM.Utilities
                 case FunctionEnum.e_sqrt:
                     return System.Math.Sqrt(funcArgs[0]);
                 case FunctionEnum.e_logn:
-                    var x = System.Math.Log10(funcArgs[1]);
-                    var y = System.Math.Log(funcArgs[1], funcArgs[0]);
                     return System.Math.Log(funcArgs[1], funcArgs[0]);
+                case FunctionEnum.e_max:
+                    return System.Math.Max(funcArgs[1], funcArgs[0]);
+                case FunctionEnum.e_min:
+                    return System.Math.Min(funcArgs[1], funcArgs[0]);
+                case FunctionEnum.e_round:
+                    return System.Math.Round(funcArgs[1], Convert.ToInt32(funcArgs[0]));
+
                 default:
                     IsValid = false;
                     return -9999;
             }
         }
+        private FunctionEnum getFunctionEnum(String f)
+        {
+            switch (f.ToLower())
+            {
+                case "sqrt":
+                    return FunctionEnum.e_sqrt;
+                case "logn":
+                    return FunctionEnum.e_logn;
+                case "max":
+                    return FunctionEnum.e_max;
+                case "min":
+                    return FunctionEnum.e_min;
+                case "round":
+                    return FunctionEnum.e_round;
+
+                default:
+                    return FunctionEnum.e_undefined;
+            }//end switch
+
+        }        
+        #endregion
         #endregion
         #region Structures
         private struct OperatorStruc
@@ -463,7 +532,8 @@ namespace WiM.Utilities
             e_leftparenthesis,
             e_operator,
             e_variable,
-            e_functionArgSeparator
+            e_functionArgSeparator,
+            e_constant
         }
         public enum OperationEnum 
         { 
@@ -475,6 +545,13 @@ namespace WiM.Utilities
             e_exponent = 5, 
             e_percent = 8
         };
+        public enum ConstantEnum
+        {
+            e_undefined = -1,
+            e_eulernumber = 1,
+            e_pi = 2,
+            e_goldenratio =3
+        };
         public enum AssociativityEnum
         {
             e_right,
@@ -484,7 +561,11 @@ namespace WiM.Utilities
         {
             e_undefined = -1,
             e_sqrt = 1,
-            e_logn = 2
+            e_logn = 2,
+            e_max =3,
+            e_min =4,
+            e_round =5
+
         };
         #endregion
         

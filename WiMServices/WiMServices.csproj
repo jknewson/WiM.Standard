@@ -94,6 +94,7 @@
     <Compile Include="Exceptions\ServiceException.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Handlers\HandlerBase.cs" />
+    <Compile Include="PipeLineContributors\VersionPipelineContributor.cs" />
     <Compile Include="PipeLineContributors\HyperMediaPipelineContributor.cs" />
     <Compile Include="PipeLineContributors\MessagePipelineContributor.cs" />
     <Compile Include="Hypermedia\Link.cs" />

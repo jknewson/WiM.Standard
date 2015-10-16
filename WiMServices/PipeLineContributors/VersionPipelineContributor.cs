@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-//----- MessagePipeLineContributors ---------------------------------------------------
+//----- PipeLineContributors ---------------------------------------------------
 //------------------------------------------------------------------------------
 
 //-------1---------2---------3---------4---------5---------6---------7---------8
@@ -10,7 +10,7 @@
 
 //    authors:  Jeremy Newson          
 //  
-//   purpose:   Add Message headers
+//   purpose:   Message headers and properties are treated as HTTP headers
 //
 //discussion:   
 //
@@ -27,26 +27,14 @@ using System.Web;
 using OpenRasta.Pipeline;
 using OpenRasta.Web;
 
-using WiM.Resources;
-
 namespace WiM.PipeLineContributors
 {
-    public class MessagePipelineContributor:IPipelineContributor
+    public abstract class VersionPipelineContributor:IPipelineContributor
     {
         public void Initialize(IPipeline pipelineRunner)
         {
-            pipelineRunner.Notify(processOptions).After<KnownStages.IOperationExecution>();
+            pipelineRunner.Notify(processOptions).Before<KnownStages.IUriMatching>();
         }
-        private PipelineContinuation processOptions(ICommunicationContext context)
-        {
-            try
-            {
-                context.Response.Headers.Add("X-USGSWiM-Messages", context.OperationResult.Description);
-            }
-            catch (Exception e)
-            { }
-            return PipelineContinuation.Continue;
-        }
-
+        protected abstract PipelineContinuation processOptions(ICommunicationContext context);
     }//end class
 }//end namespace
