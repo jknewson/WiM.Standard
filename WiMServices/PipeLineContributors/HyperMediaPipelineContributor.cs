@@ -12,7 +12,11 @@
 //  
 //   purpose:   Add hypermedia links to the resources if available
 //
-//discussion:   
+//discussion:   Hypermedia is an important aspect of REST. It allows you to build services 
+//              that decouple client and server to a large extent and allow them to evolve 
+//              independently. The representations returned for REST resources contain not 
+//              only data, but links to related resources. Thus the design of the representations 
+//              is crucial to the design of the overall service. 
 //
 //     
 #region Comments
