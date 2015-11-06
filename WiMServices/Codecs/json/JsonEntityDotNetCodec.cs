@@ -35,6 +35,7 @@ using OpenRasta.Codecs;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Newtonsoft;
 using System.Reflection;
 
 
@@ -52,7 +53,7 @@ namespace WiM.Codecs.json
 
                 using (JsonTextWriter jsonTextWriter = new JsonTextWriter(new StreamWriter(response.Stream, new UTF8Encoding(false, true))) { CloseOutput = false })
                 {
-                    jsonTextWriter.Formatting = Formatting.Indented;
+                   
                     //http://blog.greatrexpectations.com/2012/08/30/deserializing-interface-properties-using-json-net/
                     //https://www.google.com/search?q=jsonConverter&ie=utf-8&oe=utf-8&aq=t&rls=org.mozilla:en-US:official&client=firefox-a&channel=fflb#channel=fflb&q=json.net%20jsonconverter%20interface&rls=org.mozilla:en-US:official
 
@@ -61,10 +62,12 @@ namespace WiM.Codecs.json
                  
                     serializer.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                     serializer.MissingMemberHandling = MissingMemberHandling.Ignore;
-                    serializer.NullValueHandling = NullValueHandling.Include;
+                    serializer.NullValueHandling = NullValueHandling.Ignore;
                     serializer.TypeNameHandling = TypeNameHandling.None;
+                    serializer.PreserveReferencesHandling = PreserveReferencesHandling.None;
                     serializer.ContractResolver = new ContractResolver();
                     serializer.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
+                    serializer.Formatting = Formatting.None;
                    
 
                     serializer.Serialize(jsonTextWriter, entity);
@@ -95,8 +98,23 @@ namespace WiM.Codecs.json
         {
             var serializableMembers = base.GetSerializableMembers(objectType);
             serializableMembers.RemoveAll(memberInfo => (memberInfo.Name.Equals("EntityKey", StringComparison.OrdinalIgnoreCase)));
+
             return serializableMembers;
         }
+
+        protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
+        {
+            JsonProperty prop = base.CreateProperty(member, memberSerialization);
+
+
+            if (!prop.PropertyType.IsPrimitive && !prop.PropertyType.Equals(typeof(string)) && !String.Equals(prop.PropertyName, "Results") && !prop.PropertyName.Contains("Links"))
+            {
+                prop.ShouldSerialize = obj => false;
+            }
+
+            return prop;
+        }
+
 
         private static bool IsMemberEntityWrapper(MemberInfo memberInfo)
         {

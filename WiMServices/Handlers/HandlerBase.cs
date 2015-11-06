@@ -3,6 +3,8 @@ using System.Text;
 
 using OpenRasta.Web;
 using WiM.Authentication;
+using WiM.Exceptions;
+using WiM;
 
 namespace WiM.Handlers
 {
@@ -14,7 +16,7 @@ namespace WiM.Handlers
 
        #region "Base Properties"
        // Automatically injected by DI in OpenRasta. Must be public!
-       public ICommunicationContext Context { get; set; }
+       protected ICommunicationContext Context { get; set; }
 
        public string username
        {
@@ -27,10 +29,6 @@ namespace WiM.Handlers
        public virtual bool IsAuthorized(string role)
        {
            return Context.User.IsInRole(role);
-       }
-       protected virtual EasySecureString GetSecuredPassword()
-       {
-           throw new NotImplementedException();
        }
      
        protected DateTime? ValidDate(string date)
@@ -57,6 +55,16 @@ namespace WiM.Handlers
            }
 
        }//end ValidDate
+
+       protected OperationResult HandleException(Exception ex)
+       {
+           if (ex is BadRequestException)
+               return new OperationResult.NotFound { ResponseResource = ex.Message.ToString() };
+           if (ex is NotFoundRequestException)
+               return new OperationResult.NotFound { ResponseResource = ex.Message.ToString() };
+           else
+               return new OperationResult.InternalServerError { ResponseResource = ex.Message.ToString() };
+       }
 
        public string GetState(State state)
        {

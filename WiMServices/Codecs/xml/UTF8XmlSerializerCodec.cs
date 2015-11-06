@@ -40,10 +40,19 @@ namespace WiM.Codecs.xml
     {
         public override object ReadFrom(IHttpEntity request, IType destinationType, string parameterName)
         {
-            if (destinationType.StaticType == null)
-                throw new InvalidOperationException();
-                        
-            return new XmlSerializer(destinationType.StaticType).Deserialize(request.Stream);            
+            try
+            {
+                if (destinationType.StaticType == null)
+                    throw new InvalidOperationException();
+
+                return new XmlSerializer(destinationType.StaticType).Deserialize(request.Stream);  
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+                     
         }
 
         public override void WriteToCore(object obj, IHttpEntity response)
