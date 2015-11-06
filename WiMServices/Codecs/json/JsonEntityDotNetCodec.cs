@@ -62,7 +62,7 @@ namespace WiM.Codecs.json
                  
                     serializer.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                     serializer.MissingMemberHandling = MissingMemberHandling.Ignore;
-                    serializer.NullValueHandling = NullValueHandling.Include;
+                    serializer.NullValueHandling = NullValueHandling.Ignore;
                     serializer.TypeNameHandling = TypeNameHandling.None;
                     serializer.PreserveReferencesHandling = PreserveReferencesHandling.None;
                     serializer.ContractResolver = new ContractResolver();
@@ -105,9 +105,9 @@ namespace WiM.Codecs.json
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
             JsonProperty prop = base.CreateProperty(member, memberSerialization);
-           
 
-            if (!prop.PropertyType.IsPrimitive && !prop.PropertyType.Equals(typeof(string)))
+
+            if (!prop.PropertyType.IsPrimitive && !prop.PropertyType.Equals(typeof(string)) && !String.Equals(prop.PropertyName, "Results") && !prop.PropertyName.Contains("Links"))
             {
                 prop.ShouldSerialize = obj => false;
             }

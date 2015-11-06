@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-//----- PipeLineContributors ---------------------------------------------------
+//----- MessagePipeLineContributors ---------------------------------------------------
 //------------------------------------------------------------------------------
 
 //-------1---------2---------3---------4---------5---------6---------7---------8
@@ -10,7 +10,7 @@
 
 //    authors:  Jeremy Newson          
 //  
-//   purpose:   Message headers and properties are treated as HTTP headers
+//   purpose:   Add Message headers
 //
 //discussion:   
 //
@@ -27,30 +27,26 @@ using System.Web;
 using OpenRasta.Pipeline;
 using OpenRasta.Web;
 
+using WiM.Resources;
+
 namespace WiM.PipeLineContributors
 {
-    public class CrossDomainPipelineContributor:IPipelineContributor
+    public class MessagePipelineContributor:IPipelineContributor
     {
         public void Initialize(IPipeline pipelineRunner)
         {
-            pipelineRunner.Notify(processOptions).Before<KnownStages.IUriMatching>();
+            pipelineRunner.Notify(processOptions).After<KnownStages.IOperationExecution>();
         }
         private PipelineContinuation processOptions(ICommunicationContext context)
         {
-            addHeaders(context);
-            if (context.Request.HttpMethod == "OPTIONS")
+            try
             {
-                context.Response.StatusCode = 200;
-                context.OperationResult = new OperationResult.NoContent();
-                return PipelineContinuation.RenderNow;
+                context.Response.Headers.Add("X-USGSWiM-Messages", context.OperationResult.Description);
             }
+            catch (Exception e)
+            { }
             return PipelineContinuation.Continue;
         }
-        private void addHeaders(ICommunicationContext context)
-        {
-            context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
-            context.Response.Headers.Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
-            context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type");
-        }
+
     }//end class
 }//end namespace
