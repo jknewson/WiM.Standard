@@ -64,7 +64,7 @@ namespace WiM.Resources.Spatial
     public abstract class GeometryBase
     {
         #region Base Properties
-        
+        //public string type { get; set; }
         #endregion
         
         #region Base Constructors
@@ -347,6 +347,9 @@ namespace WiM.Resources.Spatial
             FromJson(jobj);
         }
         #endregion
+        #region Explicit operator
+        //used for casting
+        #endregion
         #region Methods
         protected override bool FromJson(JObject jobj)
         {
@@ -362,7 +365,9 @@ namespace WiM.Resources.Spatial
                 attributes = loadAttributes(jobj);
                 switch (type)
                 {
+                    case "Polygon":
                     case "esriGeometryPolygon":
+                        this.type = "esriGeometryPolygon";
                         if(geom.SelectToken("rings") != null)
                             rings = geom.SelectToken("rings").Select(p => getpolyline(p)).ToList();
                         else if(geom.SelectToken("coordinates") != null)
@@ -371,12 +376,16 @@ namespace WiM.Resources.Spatial
                         if (rings == null) throw new Exception("esriGeometry requires features");
                         geometry = new EsriPolygon(rings);
                         break;
-                    
+
+                    case "Point":
                     case "esriGeometryPoint":
+                        this.type = "esriGeometryPoint";
                         geometry = new EsriPoint((double)geom.SelectToken("x"), (double)geom.SelectToken("y"));
                         break;
 
+                    case "Polyline":
                     case "esriGeometryPolyline":
+                        this.type = "esriGeometryPolyline";
                         List<List<List<double>>> paths = geom.SelectToken("paths").Select(p => getpolyline(p)).ToList();
                         geometry = new EsriPolyline(paths);
                         break;
@@ -465,7 +474,6 @@ namespace WiM.Resources.Spatial
     public class EsriPolygon : GeometryBase
     {
         #region Properties
-
         [XmlArrayItem("ring")]
         public List<List<List<double>>> rings { get; set; }
         #endregion
@@ -579,7 +587,7 @@ namespace WiM.Resources.Spatial
         }//end addFeature
         #endregion
         
-    }//end  EsriFeatureCollection
+    }//end  FeatureCollection
 
     public class Feature : FeatureBase
     {
@@ -717,7 +725,7 @@ namespace WiM.Resources.Spatial
 
         }//end FeatureCollection
         #endregion
-    }//end SpatialReference
+    }//end CRS
     public class espg {
         public Int32 code { get; set; }
     }
@@ -749,7 +757,7 @@ namespace WiM.Resources.Spatial
         #endregion
 
        
-    }//end EsriPoint
+    }//end \Point
 
     public class Polygon : GeometryBase
     {
@@ -785,7 +793,7 @@ namespace WiM.Resources.Spatial
             return new List<double> { bbx.Max(x => x.xMax), bbx.Max(y => y.yMax), bbx.Min(x => x.xMin), bbx.Min(y => y.yMin) };
         }
         #endregion
-    }//end EsriPolygon
+    }//end Polygon
 
     public class LineString : GeometryBase
     {
@@ -821,7 +829,7 @@ namespace WiM.Resources.Spatial
             return new List<double> { bbx.Max(x => x.xMax), bbx.Max(y => y.yMax), bbx.Min(x => x.xMin), bbx.Min(y => y.yMin) };
         }
         #endregion
-    }//end EsriPolygon
+    }//end LineString
 
     #endregion
 
