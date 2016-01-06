@@ -41,7 +41,8 @@ namespace WiM.PipeLineContributors
         {
             try
             {
-                context.Response.Headers.Add("X-USGSWiM-Messages", context.OperationResult.Description);
+                context.Response.Headers.Add("USGSWiM-HostName", Environment.MachineName);
+                context.Response.Headers.Add("USGSWiM-Messages", context.OperationResult.Description);
             }
             catch (Exception e)
             { }

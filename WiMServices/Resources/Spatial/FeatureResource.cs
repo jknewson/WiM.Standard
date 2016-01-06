@@ -64,7 +64,7 @@ namespace WiM.Resources.Spatial
     public abstract class GeometryBase
     {
         #region Base Properties
-        
+        //public string type { get; set; }
         #endregion
         
         #region Base Constructors
@@ -79,7 +79,7 @@ namespace WiM.Resources.Spatial
         #region Base Properties
         public abstract string type { get; set; }
         public GeometryBase geometry { get; set; }
-        public Attributes attributes { get; set; }
+        public Object attributes { get; set; }
         #endregion
         #region Base Constructors
         public FeatureBase()
@@ -136,39 +136,36 @@ namespace WiM.Resources.Spatial
   
     }//end CoordinateReferenceSystemBase
 
-    public class Attributes
-    {
-        [XmlElement("objectid")]
-        [JsonProperty("objectid")]
-        public int? OBJECTID { get; set; }
-        [XmlElement("hydroid")]
-        [JsonProperty("hydroid")]
-        public int? HydroID { get; set; }
-        [XmlElement("drainid")]
-        [JsonProperty("drainid")]
-        public int? DrainID { get; set; }
-        [XmlElement("hucid")]
-        [JsonProperty("hucid")]
-        public string HUCID { get; set; }
-        [XmlElement("name")]
-        [JsonProperty("name")]
-        public string Name { get; set; }
-        [XmlElement("elev")]
-        [JsonProperty("elev")]
-        public string Elev { get; set; }
+    //public class Attributes
+    //{
+    //    [XmlElement("objectid")]
+    //    [JsonProperty("objectid")]
+    //    public int? OBJECTID { get; set; }
+    //    [XmlElement("hydroid")]
+    //    [JsonProperty("hydroid")]
+    //    public int? HydroID { get; set; }
+    //    [XmlElement("drainid")]
+    //    [JsonProperty("drainid")]
+    //    public int? DrainID { get; set; }
+    //    [XmlElement("hucid")]
+    //    [JsonProperty("hucid")]
+    //    public string HUCID { get; set; }
+    //    [XmlElement("name")]
+    //    [JsonProperty("name")]
+    //    public string Name { get; set; }
+    //    [XmlElement("elev")]
+    //    [JsonProperty("elev")]
+    //    public string Elev { get; set; }
 
-        [XmlElement("oid")]
-        [JsonProperty("oid")]
-        public int? OID { get; set; }
+    //    [XmlElement("oid")]
+    //    [JsonProperty("oid")]
+    //    public int? OID { get; set; }
 
-        [XmlElement("srctype")]
-        [JsonProperty("srctype")]
-        public int? SrcType { get; set; }
-        
+    //    [XmlElement("srctype")]
+    //    [JsonProperty("srctype")]
+    //    public int? SrcType { get; set; }    
   
-
-
-    }
+    //}
     public class Field
     {
         [XmlElement("alias")]
@@ -236,7 +233,7 @@ namespace WiM.Resources.Spatial
             this.fields = new List<Field>() { new Field() { Name = "EmptyplaceHolder", Type = "esriFieldTypeString" } };
             foreach (var f in feature.features)
             {
-                f.attributes = new Attributes() { Name = "empty" };
+                f.attributes =  new { Name = "empty" };
                 this.addFeature(f);
             }
         }
@@ -332,13 +329,13 @@ namespace WiM.Resources.Spatial
         #region "Constructor"
         public EsriFeature()
         { }
-        public EsriFeature(Attributes attr,double x, double y)
+        public EsriFeature(Object attr,double x, double y)
         {
             type = "esriGeometryPoint";
             this._attributes = attr;
             this.geometry = new EsriPoint(x,y);
         }
-        public EsriFeature(Attributes attr, List<List<List<double>>> rings)
+        public EsriFeature(Object attr, List<List<List<double>>> rings)
         {
             type = "esriGeometryPolygon";
             this.attributes = attr;
@@ -349,6 +346,9 @@ namespace WiM.Resources.Spatial
             type = geometryType;
             FromJson(jobj);
         }
+        #endregion
+        #region Explicit operator
+        //used for casting
         #endregion
         #region Methods
         protected override bool FromJson(JObject jobj)
@@ -362,10 +362,12 @@ namespace WiM.Resources.Spatial
             try
             {
                 geom = (jobj.SelectToken("geometry") != null) ? jobj.SelectToken("geometry"): jobj;
-                attributes = (jobj.SelectToken("attributes") != null) ? JsonConvert.DeserializeObject<Attributes>(jobj.SelectToken("attributes").ToString()) : new Attributes() { Name="empty" };
+                attributes = loadAttributes(jobj);
                 switch (type)
                 {
+                    case "Polygon":
                     case "esriGeometryPolygon":
+                        this.type = "esriGeometryPolygon";
                         if(geom.SelectToken("rings") != null)
                             rings = geom.SelectToken("rings").Select(p => getpolyline(p)).ToList();
                         else if(geom.SelectToken("coordinates") != null)
@@ -374,12 +376,16 @@ namespace WiM.Resources.Spatial
                         if (rings == null) throw new Exception("esriGeometry requires features");
                         geometry = new EsriPolygon(rings);
                         break;
-                    
+
+                    case "Point":
                     case "esriGeometryPoint":
+                        this.type = "esriGeometryPoint";
                         geometry = new EsriPoint((double)geom.SelectToken("x"), (double)geom.SelectToken("y"));
                         break;
 
+                    case "Polyline":
                     case "esriGeometryPolyline":
+                        this.type = "esriGeometryPolyline";
                         List<List<List<double>>> paths = geom.SelectToken("paths").Select(p => getpolyline(p)).ToList();
                         geometry = new EsriPolyline(paths);
                         break;
@@ -399,7 +405,25 @@ namespace WiM.Resources.Spatial
             var x = polyline.Select(p=> new []{(Double)p[0], (Double)p[1]}.ToList<double>()).ToList();
             return x;
         }
-        #endregion        
+        #endregion   
+        #region HelperMethods
+        private object loadAttributes(JToken jobj)
+        {
+            try
+            {
+                if(jobj.SelectToken("attributes") != null)
+                    return JsonConvert.DeserializeObject<dynamic>(jobj.SelectToken("attributes").ToString());
+                else if (jobj.SelectToken("properties") != null)
+                    return JsonConvert.DeserializeObject<dynamic>(jobj.SelectToken("properties").ToString()); 
+                else 
+                    return new { Name = "empty" };
+            }
+            catch (Exception)
+            {
+                return new { Name = "empty" };
+            }
+        }
+        #endregion
     }//end Features
     
     public class SpatialReference:CoordianteReferenceSystemBase
@@ -450,7 +474,6 @@ namespace WiM.Resources.Spatial
     public class EsriPolygon : GeometryBase
     {
         #region Properties
-
         [XmlArrayItem("ring")]
         public List<List<List<double>>> rings { get; set; }
         #endregion
@@ -564,7 +587,7 @@ namespace WiM.Resources.Spatial
         }//end addFeature
         #endregion
         
-    }//end  EsriFeatureCollection
+    }//end  FeatureCollection
 
     public class Feature : FeatureBase
     {
@@ -579,7 +602,7 @@ namespace WiM.Resources.Spatial
         #region "Constructor"
         public Feature()
         { }
-        public Feature(Attributes attr, double x, double y)
+        public Feature(Object attr, double x, double y)
         {
             type = "Feature";
             this._attributes = attr;
@@ -702,7 +725,7 @@ namespace WiM.Resources.Spatial
 
         }//end FeatureCollection
         #endregion
-    }//end SpatialReference
+    }//end CRS
     public class espg {
         public Int32 code { get; set; }
     }
@@ -734,7 +757,7 @@ namespace WiM.Resources.Spatial
         #endregion
 
        
-    }//end EsriPoint
+    }//end \Point
 
     public class Polygon : GeometryBase
     {
@@ -770,7 +793,7 @@ namespace WiM.Resources.Spatial
             return new List<double> { bbx.Max(x => x.xMax), bbx.Max(y => y.yMax), bbx.Min(x => x.xMin), bbx.Min(y => y.yMin) };
         }
         #endregion
-    }//end EsriPolygon
+    }//end Polygon
 
     public class LineString : GeometryBase
     {
@@ -806,7 +829,7 @@ namespace WiM.Resources.Spatial
             return new List<double> { bbx.Max(x => x.xMax), bbx.Max(y => y.yMax), bbx.Min(x => x.xMin), bbx.Min(y => y.yMin) };
         }
         #endregion
-    }//end EsriPolygon
+    }//end LineString
 
     #endregion
 

@@ -52,7 +52,7 @@ namespace WiM.Utilities.Storage
             try
             {
                 FileLocation = Path.Combine(ParentDirectory, ObjectName);
-                if (!isDirectory(FileLocation)) throw new Exception("Does not exist");
+                if (!isDirectory(FileLocation)) throw new Exception("Does not exist; Directory:" + ParentDirectory + "object: "+ObjectName);
                 using (ZipFile zip = new ZipFile())
                 {
                     //Note: if empty folder exists, folder will not be included.

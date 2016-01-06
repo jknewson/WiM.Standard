@@ -125,10 +125,12 @@ namespace WiM.Utilities.ServiceAgent
                 if (task != null) { task.Close(); task.Dispose(); task = null; }
             }
         }//endExecute
-
+       
+        #endregion
+        #region Helper Methods
         protected ProcessStartInfo getProcessRequest(string filename, string args)
         {
-                        
+
             ProcessStartInfo psi = new ProcessStartInfo();
             psi.FileName = this.BaseEXE;
             psi.Arguments = string.Format("{0} {1}", filename, args);
@@ -141,7 +143,6 @@ namespace WiM.Utilities.ServiceAgent
 
             return psi;
         }//end BuildRestRequest
-
         #endregion
 
     }
