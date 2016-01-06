@@ -50,7 +50,8 @@ namespace WiM.PipeLineContributors
         {
             context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
             context.Response.Headers.Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
-            context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type");
+            context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, X-Requested-With, Origin, Accept, Authorization");
+            context.Response.Headers.Add("Access-Control-Expose-Headers", "X-USGSWiM-Messages");
         }
     }//end class
 }//end namespace
