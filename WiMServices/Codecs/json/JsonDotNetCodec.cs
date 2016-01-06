@@ -39,7 +39,7 @@ namespace WiM.Codecs.json
     {
         public object Configuration { get; set; }
 
-        public object ReadFrom(IHttpEntity request, IType destinationType, string paramName)
+        public virtual object ReadFrom(IHttpEntity request, IType destinationType, string paramName)
         {
             try
             {

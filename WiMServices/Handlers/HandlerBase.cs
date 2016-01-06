@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Text;
+using System.Collections.Generic;
 
 using OpenRasta.Web;
 using WiM.Authentication;
 using WiM.Exceptions;
 using WiM;
+using WiM.Resources;
 
 namespace WiM.Handlers
 {
@@ -18,6 +20,13 @@ namespace WiM.Handlers
        // Automatically injected by DI in OpenRasta. Must be public!
        protected ICommunicationContext Context { get; set; }
 
+       private List<Message> _messages = new List<Message>();
+       public List<Message> Messages
+       {
+           get { return _messages; }
+       }
+       
+
        public string username
        {
            get { return Context.User.Identity.Name; }
@@ -26,6 +35,14 @@ namespace WiM.Handlers
        #endregion
 
        #region "Base Methods"
+       public void sm(MessageType t, string msg)
+       {
+           this._messages.Add(new Message() { type = t, msg = msg });
+       }
+       public void sm(List<Message> msg)
+       {
+           this._messages.AddRange(msg);
+       }
        public virtual bool IsAuthorized(string role)
        {
            return Context.User.IsInRole(role);

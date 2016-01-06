@@ -125,9 +125,7 @@ namespace WiM.Utilities.ServiceAgent
                 if (task != null) { task.Close(); task.Dispose(); task = null; }
             }
         }//endExecute
-
-        
-
+       
         #endregion
         #region Helper Methods
         protected ProcessStartInfo getProcessRequest(string filename, string args)

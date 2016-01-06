@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace WiM.Utilities.ServiceAgent
 {
-    public abstract class DBAgentBase:IDisposable,IMessage
+    public abstract class DBAgentBase:IDisposable
     {
         #region "Events"
         #endregion
@@ -20,8 +20,8 @@ namespace WiM.Utilities.ServiceAgent
         public DbContext context { get; protected set; }
         #endregion
         #region "Collections & Dictionaries"
-        private List<string> _message = new List<string>();
-        public List<string> Messages
+        private List<Message> _message = new List<Message>();
+        public List<Message> Messages
         {
             get { return _message.Distinct().ToList(); }
         }
@@ -130,11 +130,11 @@ namespace WiM.Utilities.ServiceAgent
             var properties = this.context.GetType().GetProperties().Where(item => item.PropertyType.Equals(typeof(DbSet<>).MakeGenericType(itemType)));
             return properties.First();
         }
-        protected void sm(string msg)
+        protected void sm(MessageType t,string msg)
         {
-            this._message.Add(msg);
+            this._message.Add(new Message(){ type = t, msg=msg });
         }
-        protected void sm(List<string> msg)
+        protected void sm(List<Message> msg)
         {
             this._message.AddRange(msg);
         }
