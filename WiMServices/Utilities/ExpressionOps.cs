@@ -103,7 +103,8 @@ namespace WiM.Utilities
             try
             {
                 //Dijkstra's Shunting Yard Algorithm
-                Regex re = new Regex(@"(\d+(,\d+)*(?:.\d+)?(?:[eE][-+]?[0-9]+)?|[-^+/()]|\w+)");
+                Regex re = new Regex(@"((?<!\d[eE])[+-]|[\,\*\(\)\^\/\ ])");
+                
                 tokenList = re.Split(InfixExpression).Select(t => t.Trim()).Where(t => t != "").ToList();
 
                 adjustForUnary(ref tokenList);

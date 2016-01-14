@@ -17,6 +17,12 @@ namespace WiMServices.Test
             ExpressionOps eOps = new ExpressionOps(expression, variables);
             Assert.IsTrue(eOps.IsValid && eOps.Value == 77.5484110086447);
 
+            //RO PeakFlow
+            expression = "10^2.124*DRNAREA^0.870*STRDEN^0.770*STORNHD^(-0.856)";
+            variables = new Dictionary<string, double?>() { { "DRNAREA", 0.38 }, { "STRDEN", 2.21 }, { "STORNHD", 7.38 } };
+            eOps = new ExpressionOps(expression, variables);
+            Assert.IsTrue(eOps.IsValid && eOps.Value == 19.0782065546947);
+
             //CO lowFlow
             expression = "2.75423E-19* (DRNAREA)^(1.17)* (PRECIP)^(1.86)* (ELEV)^(3.56)";
             variables = new Dictionary<string, double?>() { { "DRNAREA", 2.9 }, { "PRECIP", 15.03 }, { "ELEV", 9450 } };
