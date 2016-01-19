@@ -103,7 +103,7 @@ namespace WiM.Utilities
             try
             {
                 //Dijkstra's Shunting Yard Algorithm
-                Regex re = new Regex(@"((?<!\d[eE])[+-]|[\,\*\(\)\^\/\ ])");
+                Regex re = new Regex(@"((?<!\d[eE])[+-]|[\=\,\*\(\)\^\/\ ])");
                 
                 tokenList = re.Split(InfixExpression).Select(t => t.Trim()).Where(t => t != "").ToList();
 
@@ -123,6 +123,9 @@ namespace WiM.Utilities
                             break;
 
                         case TokenClassEnum.e_function:
+                            tokenStack.Push(token);
+                            break;
+                        case TokenClassEnum.e_relational:
                             tokenStack.Push(token);
                             break;
                         case TokenClassEnum.e_operator:
@@ -165,10 +168,9 @@ namespace WiM.Utilities
                             }//next
                             tokenStack.Pop();
 
-                            TokenClassEnum nextToken = this.getTokenClass(tokenStack.Peek());
-                            if (tokenStack.Count > 0 && nextToken == TokenClassEnum.e_function)
+                            if (tokenStack.Count > 0 && getTokenClass(tokenStack.Peek()) == TokenClassEnum.e_function)
                                 outputQueue.Enqueue(tokenStack.Pop());
-
+                           
                             break;
                     }//end switch
 
@@ -241,6 +243,19 @@ namespace WiM.Utilities
                             var result = doOperation(Convert.ToDouble(leftOperand), Convert.ToDouble(rightOperand), getOperationEnum(operand));
 
                             expressionStack.Push(result.ToString());
+                            break;
+                        case TokenClassEnum.e_relational:
+
+                            String rightRelation = expressionStack.Pop();
+                            String leftRelation = expressionStack.Pop();
+
+                            var isRelated = doRelation(Convert.ToDouble(leftRelation), Convert.ToDouble(rightRelation), getRelationalEnum(operand));
+                            if (!isRelated){
+                                expressionStack.Clear();
+                                outputQueue.Clear();
+                                expressionStack.Push("0");
+                            };
+                            expressionStack.Push("1");
                             break;
                         default:
                             throw new Exception(operand + " found in calculate");
@@ -321,6 +336,10 @@ namespace WiM.Utilities
             else if (isOperator(token))
             {
                 return TokenClassEnum.e_operator;
+            }
+            else if (isRelational(token))
+            {
+                return TokenClassEnum.e_relational;
             }
             else if (isConstant(token))
             {
@@ -443,6 +462,36 @@ namespace WiM.Utilities
             }//end switch
         }
         #endregion
+        #region RelationalHelpers
+        private bool isRelational(string token)
+        {
+            RelationalEnum oper = getRelationalEnum(token);
+            if (oper == RelationalEnum.e_undefined)
+                return false;
+            return true;
+        }
+        private Boolean doRelation(Double val1, Double val2, RelationalEnum operation)
+        {
+            switch (operation)
+            {
+                case RelationalEnum.e_equal:
+                    return val1 == val2;
+                default:
+                    IsValid = false;
+                    return false;
+            }
+        }
+        private RelationalEnum getRelationalEnum(String a)
+        {
+            switch (a)
+            {
+                case "=":
+                    return RelationalEnum.e_equal;
+                default:
+                    return RelationalEnum.e_undefined;
+            }//end switch
+        }
+        #endregion
         #region FunctionHelpers
         private bool isFunction(string token)
         {
@@ -534,7 +583,8 @@ namespace WiM.Utilities
             e_operator,
             e_variable,
             e_functionArgSeparator,
-            e_constant
+            e_constant,
+            e_relational
         }
         public enum OperationEnum 
         { 
@@ -545,6 +595,11 @@ namespace WiM.Utilities
             e_divide = 4, 
             e_exponent = 5, 
             e_percent = 8
+        };
+        public enum RelationalEnum
+        {
+            e_undefined = -1,
+            e_equal = 1
         };
         public enum ConstantEnum
         {

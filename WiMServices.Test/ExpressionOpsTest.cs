@@ -11,10 +11,20 @@ namespace WiMServices.Test
         [TestMethod]
         public void MultipleFunctionTests()
         {
+            string expression = "";
+            Dictionary<string, double?> variables = null;
+            ExpressionOps eOps = null;
+           
+            //GA
+            expression = "(round(PCTREG1+PCTREG2+PCTREG3+PCTREG4+PCTREG5,0)=100)*10^(0.0220*PCTREG1+0.0204*PCTREG2+0.0141*PCTREG3+0.0178*PCTREG4+0.0196*PCTREG5)*DRNAREA^(0.649+0.00130*PCTREG2+0.00109*PCTREG3)";
+            variables = new Dictionary<string, double?>() { { "DRNAREA", 6.69 }, { "PCTREG1", 100 }, { "PCTREG2", 0 }, { "PCTREG3", 0 }, { "PCTREG4", 0 }, { "PCTREG5", 0 } };
+            eOps = new ExpressionOps(expression, variables);
+            Assert.IsTrue(eOps.IsValid && eOps.Value == 544.128609363891);
+
             //NY
-            string expression = "0.037* (DRNAREA)^(1.029)* (SLOPERATIO)^(0.317)* (STORAGE+0.5)^(-0.104)* (MAR)^(2.308)";
-            Dictionary<string, double?> variables = new Dictionary<string, double?>() { { "DRNAREA", 3.55 }, { "SLOPERATIO", 0.21 }, { "STORAGE", 0.55 }, { "MAR", 19.4 } };
-            ExpressionOps eOps = new ExpressionOps(expression, variables);
+            expression = "0.037* (DRNAREA)^(1.029)* (SLOPERATIO)^(0.317)* (STORAGE+0.5)^(-0.104)* (MAR)^(2.308)";
+            variables = new Dictionary<string, double?>() { { "DRNAREA", 3.55 }, { "SLOPERATIO", 0.21 }, { "STORAGE", 0.55 }, { "MAR", 19.4 } };
+            eOps = new ExpressionOps(expression, variables);
             Assert.IsTrue(eOps.IsValid && eOps.Value == 77.5484110086447);
 
             //RO PeakFlow
