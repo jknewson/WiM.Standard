@@ -62,7 +62,7 @@ namespace WiM.Codecs.json
             }
         }
 
-        public virtual void WriteTo(object entity, IHttpEntity response, string[] paramneters)
+        public virtual void WriteTo(object entity, IHttpEntity response, string[] parameters)
         {
             if (entity == null)
                 return;

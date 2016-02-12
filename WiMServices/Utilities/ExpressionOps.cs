@@ -135,20 +135,31 @@ namespace WiM.Utilities
                                 break;
                             }//end if
 
-                            if (tokenStack.Count > 0)
-                            {
-                                String stackTopToken = tokenStack.Peek();
-                                if (getTokenClass(stackTopToken) == TokenClassEnum.e_operator)
-                                {
-                                    AssociativityEnum tokenAssociativity = getOperatorAssociativity(token);
-                                    int tokenPrecedence = getOperatorPrecedence(token);
-                                    int stackTopPrecedence = getOperatorPrecedence(stackTopToken);
 
-                                    if (tokenAssociativity == AssociativityEnum.e_left && tokenPrecedence <= stackTopPrecedence ||
-                                            tokenAssociativity == AssociativityEnum.e_right && tokenPrecedence < stackTopPrecedence)
-                                        outputQueue.Enqueue(tokenStack.Pop());
+                            //remove any operators already on the tokenstack that have higher or equal precedence and append them to the output list.
+                            var stackHigherOrEquivalentPrecedence = false;
+                            do
+                            {
+                                stackHigherOrEquivalentPrecedence = false;
+                                if (tokenStack.Count > 0)
+                                {                                        
+                                    String stackTopToken = tokenStack.Peek();
+                                    if (getTokenClass(stackTopToken) == TokenClassEnum.e_operator)
+                                    {
+                                        AssociativityEnum tokenAssociativity = getOperatorAssociativity(token);
+                                        int tokenPrecedence = getOperatorPrecedence(token);
+                                        int stackTopPrecedence = getOperatorPrecedence(stackTopToken);
+
+                                        if (tokenAssociativity == AssociativityEnum.e_left && tokenPrecedence <= stackTopPrecedence ||
+                                                tokenAssociativity == AssociativityEnum.e_right && tokenPrecedence < stackTopPrecedence)
+                                        {
+                                            stackHigherOrEquivalentPrecedence = true;
+                                            outputQueue.Enqueue(tokenStack.Pop());                                            
+                                        }//end if
+                                    }//end if
                                 }//end if
-                            }//end if
+                            } while (stackHigherOrEquivalentPrecedence);
+                            
                             tokenStack.Push(token);
                             break;
                         case TokenClassEnum.e_leftparenthesis:
@@ -505,7 +516,9 @@ namespace WiM.Utilities
             switch (operand)
             {
                 case FunctionEnum.e_sqrt:
+                case FunctionEnum.e_exponential:
                     return 1;
+
                 case FunctionEnum.e_logn:
                 case FunctionEnum.e_max:
                 case FunctionEnum.e_min:
@@ -524,6 +537,9 @@ namespace WiM.Utilities
             {
                 case FunctionEnum.e_sqrt:
                     return System.Math.Sqrt(funcArgs[0]);
+                case FunctionEnum.e_exponential:
+                    return System.Math.Exp(funcArgs[0]);
+
                 case FunctionEnum.e_logn:
                     return System.Math.Log(funcArgs[1], funcArgs[0]);
                 case FunctionEnum.e_max:
@@ -532,6 +548,7 @@ namespace WiM.Utilities
                     return System.Math.Min(funcArgs[1], funcArgs[0]);
                 case FunctionEnum.e_round:
                     return System.Math.Round(funcArgs[1], Convert.ToInt32(funcArgs[0]));
+                
 
                 default:
                     IsValid = false;
@@ -552,6 +569,8 @@ namespace WiM.Utilities
                     return FunctionEnum.e_min;
                 case "round":
                     return FunctionEnum.e_round;
+                case "exp":
+                    return FunctionEnum.e_exponential;
 
                 default:
                     return FunctionEnum.e_undefined;
@@ -620,7 +639,8 @@ namespace WiM.Utilities
             e_logn = 2,
             e_max =3,
             e_min =4,
-            e_round =5
+            e_round =5,
+            e_exponential=6
 
         };
         #endregion
