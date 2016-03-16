@@ -52,7 +52,6 @@ namespace WiM.PipeLineContributors
             context.Response.Headers.Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
             context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, X-Requested-With, Origin, Accept, Authorization");
             context.Response.Headers.Add("Access-Control-Expose-Headers", "USGSWiM-Messages, USGSWiM-HostName");
-            context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Accept, Origin, X-Requested-With");
         }
     }//end class
 }//end namespace
