@@ -192,13 +192,6 @@ namespace WiM.Utilities
                         {
                             String nextToken = tokenList[tokenNumber + 1];
                             TokenClassEnum nextTokenClass = getTokenClass(nextToken);
-
-                            //Note: checks if equation has implied multiplication AB = A*B, 
-                            //I had to remove it because it was causing issues with functions and function arg separators
-                            //if (nextTokenClass != TokenClassEnum.e_operator && nextTokenClass != TokenClassEnum.e_rightparenthesis
-                            //    && nextTokenClass != TokenClassEnum.e_functionArgSeparator)
-                            //    tokenList.Insert(tokenNumber + 1, "*");
-
                         }//end if
                     }//end if
 
@@ -306,7 +299,7 @@ namespace WiM.Utilities
                 String token = tokenList[tokenNumber];
                 if ((getOperationEnum(token) == OperationEnum.e_minus || getOperationEnum(token) == OperationEnum.e_plus) &&
                                                                         tokenNumber > 1 && (getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_operator ||
-                                                                                            getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_rightparenthesis ||
+                                                                                            //getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_rightparenthesis ||
                                                                                             getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_leftparenthesis ||
                                                                                             getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_function ||
                                                                                             getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_functionArgSeparator))                                                                                                                 

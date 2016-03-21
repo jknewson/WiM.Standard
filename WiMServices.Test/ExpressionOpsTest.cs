@@ -16,6 +16,12 @@ namespace WiMServices.Test
             ExpressionOps eOps = null;
            
             //IA (5564)
+            expression = "1-(exp(-3.99+1.73*logN(DRNAREA,10)+8.21*BFI)/(1+exp(-3.99+1.73*logN(DRNAREA,10)+8.21*BFI)))";
+            variables = new Dictionary<string, double?>() { { "DRNAREA", 891 }, { "BFI", 0.532 } };
+            eOps = new ExpressionOps(expression, variables);
+            Assert.IsTrue(eOps.IsValid && eOps.Value == 0.00414785102067905);
+
+
             expression = "1-(exp(-32.7+23.7*DRNAREA^0.05+8.61*BFI)/(1+exp(-32.7+23.7*DRNAREA^0.05+8.61*BFI)))";
             variables = new Dictionary<string, double?>() { { "DRNAREA", 0.85 }, { "BFI", 0.531059 } };
             eOps = new ExpressionOps(expression, variables);
