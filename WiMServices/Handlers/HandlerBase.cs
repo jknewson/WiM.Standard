@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
+using System.Linq;
 
 using OpenRasta.Web;
 using WiM.Authentication;
@@ -25,7 +26,11 @@ namespace WiM.Handlers
        {
            get { return _messages; }
        }
-       
+
+       public String MessageString
+       {
+           get { return String.Join(";", Messages.GroupBy(g => g.type).Select(gr => gr.Key.ToString() + ": " + string.Join(",", gr.Select(c => c.msg))).ToList()); }
+       }
 
        public string username
        {

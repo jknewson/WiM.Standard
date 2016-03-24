@@ -94,26 +94,30 @@ namespace WiM.Utilities.ServiceAgent
         public T Add<T>(T item) where T : class,new()
         {
             DbSet<T> set = GetDBSet(typeof(T)).GetValue(context, null) as DbSet<T>;
+            if (set.Contains(item)) {
+                sm(MessageType.warning, "Item already exists");
+                return item;
+            }
             set.Add(item);
-            context.SaveChanges(); 
-           
+            context.SaveChanges();            
             return item;
         }
         public T Update<T>(T item) where T : class,new()
         {
             DbSet<T> set = GetDBSet(typeof(T)).GetValue(context, null) as DbSet<T>;
-            set.Attach(item);
-
+            
+            set.Attach(item);            
             //set state to modified to force the update.
             context.Entry(item).State = EntityState.Modified;
 
             context.SaveChanges();
-
+            sm(MessageType.info, "Item found and updated."); 
             return item;
         }
         public void Delete<T>(T item) where T : class,new()
         {
             DbSet<T> set = GetDBSet(typeof(T)).GetValue(context, null) as DbSet<T>;
+
             var entry = context.Entry(item);
             if (entry != null)
             {
@@ -130,6 +134,7 @@ namespace WiM.Utilities.ServiceAgent
             var properties = this.context.GetType().GetProperties().Where(item => item.PropertyType.Equals(typeof(DbSet<>).MakeGenericType(itemType)));
             return properties.First();
         }
+    
         protected void sm(MessageType t,string msg)
         {
             this._message.Add(new Message(){ type = t, msg=msg });

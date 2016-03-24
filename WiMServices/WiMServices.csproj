@@ -95,8 +95,6 @@
     <Compile Include="PipeLineContributors\VersionPipelineContributor.cs" />
     <Compile Include="PipeLineContributors\HyperMediaPipelineContributor.cs" />
     <Compile Include="PipeLineContributors\MessagePipelineContributor.cs" />
-    <Compile Include="Hypermedia\Link.cs" />
-    <Compile Include="Hypermedia\IHypermedia.cs" />
     <Compile Include="Resources\Message.cs" />
     <Compile Include="Resources\Parameter.cs" />
     <Compile Include="Utilities\ExpressionOps.cs" />
@@ -118,6 +116,13 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WiMHypermedia\WiMHypermedia.csproj">
+      <Project>{e597a484-e4ad-489a-b669-0e77d67dc523}</Project>
+      <Name>WiMHypermedia</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -126,6 +131,10 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
