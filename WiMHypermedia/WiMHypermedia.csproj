@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E597A484-E4AD-489A-B669-0E77D67DC523}</ProjectGuid>
+    <ProjectGuid>{FBBF2BCC-4A97-4882-AA5B-152103D409C0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WiMHypermedia</RootNamespace>

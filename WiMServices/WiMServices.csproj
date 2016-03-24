@@ -118,11 +118,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WiMHypermedia\WiMHypermedia.csproj">
-      <Project>{e597a484-e4ad-489a-b669-0e77d67dc523}</Project>
+      <Project>{fbbf2bcc-4a97-4882-aa5b-152103d409c0}</Project>
       <Name>WiMHypermedia</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

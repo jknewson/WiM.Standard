@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{1995D7
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WiMServices.Test", "WiMServices.Test\WiMServices.Test.csproj", "{E69759AC-2EC8-4666-86CF-1F71E302C036}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WiMHypermedia", "WiMHypermedia\WiMHypermedia.csproj", "{E597A484-E4AD-489A-B669-0E77D67DC523}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WiMHypermedia", "WiMHypermedia\WiMHypermedia.csproj", "{FBBF2BCC-4A97-4882-AA5B-152103D409C0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,10 +30,10 @@ Global
 		{E69759AC-2EC8-4666-86CF-1F71E302C036}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E69759AC-2EC8-4666-86CF-1F71E302C036}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E69759AC-2EC8-4666-86CF-1F71E302C036}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E597A484-E4AD-489A-B669-0E77D67DC523}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E597A484-E4AD-489A-B669-0E77D67DC523}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E597A484-E4AD-489A-B669-0E77D67DC523}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E597A484-E4AD-489A-B669-0E77D67DC523}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBBF2BCC-4A97-4882-AA5B-152103D409C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBBF2BCC-4A97-4882-AA5B-152103D409C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBBF2BCC-4A97-4882-AA5B-152103D409C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBBF2BCC-4A97-4882-AA5B-152103D409C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
