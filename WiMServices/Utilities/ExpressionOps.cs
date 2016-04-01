@@ -510,6 +510,7 @@ namespace WiM.Utilities
             {
                 case FunctionEnum.e_sqrt:
                 case FunctionEnum.e_exponential:
+                case FunctionEnum.e_naturallog:
                     return 1;
 
                 case FunctionEnum.e_logn:
@@ -532,7 +533,8 @@ namespace WiM.Utilities
                     return System.Math.Sqrt(funcArgs[0]);
                 case FunctionEnum.e_exponential:
                     return System.Math.Exp(funcArgs[0]);
-
+                case FunctionEnum.e_naturallog:
+                    return System.Math.Log(funcArgs[0]);
                 case FunctionEnum.e_logn:
                     return System.Math.Log(funcArgs[1], funcArgs[0]);
                 case FunctionEnum.e_max:
@@ -556,6 +558,8 @@ namespace WiM.Utilities
                     return FunctionEnum.e_sqrt;
                 case "logn":
                     return FunctionEnum.e_logn;
+                case "ln":
+                    return FunctionEnum.e_naturallog;
                 case "max":
                     return FunctionEnum.e_max;
                 case "min":
@@ -633,7 +637,8 @@ namespace WiM.Utilities
             e_max =3,
             e_min =4,
             e_round =5,
-            e_exponential=6
+            e_exponential=6,
+            e_naturallog =7
 
         };
         #endregion

@@ -19,7 +19,7 @@ namespace WiM.Handlers
 
        #region "Base Properties"
        // Automatically injected by DI in OpenRasta. Must be public!
-       protected ICommunicationContext Context { get; set; }
+       public ICommunicationContext Context { get; set; }
 
        private List<Message> _messages = new List<Message>();
        public List<Message> Messages

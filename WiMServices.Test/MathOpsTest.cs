@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WiM.Utilities;
 using System.Linq;
 
-namespace WiMServices.Test
+namespace WiM.Test
 {
     [TestClass]
     public class MathOpsTest

@@ -12,7 +12,7 @@ using OpenRasta.Configuration;
 
 //https://www.danielirvine.com/blog/2011/06/08/testing-restful-services-with-openrasta/
 
-namespace WiMServices.Test
+namespace WiM.Test
 {
     public abstract class EndpointTestBase
     {
@@ -25,7 +25,7 @@ namespace WiMServices.Test
             this.ConfigSource = config;
         }
         #endregion  
-        protected T GETRequest<T>(string url)
+        protected T GETRequest<T>(string url, string authenticationHeader = "")
         {
             using (InMemoryHost host = new InMemoryHost(ConfigSource))
             {
@@ -37,6 +37,7 @@ namespace WiMServices.Test
                 // set up your code formats
                 request.Entity.ContentType = MediaType.Json;
                 request.Entity.Headers["Accept"] = "application/json";
+                if (!string.IsNullOrEmpty(authenticationHeader)) request.Entity.Headers["Authorization"] = authenticationHeader;
 
                 // send the request and save the resulting response
                 var response = host.ProcessRequest(request);
@@ -61,7 +62,7 @@ namespace WiMServices.Test
             }//end using  
             return default(T);
         }
-        protected T POSTRequest<T>(string url, T content)
+        protected T POSTRequest<T>(string url, T content,string authenticationHeader = "")
         {
             using (InMemoryHost host = new InMemoryHost(ConfigSource))
             {
@@ -73,11 +74,24 @@ namespace WiMServices.Test
                 // set up your code formats
                 request.Entity.ContentType = MediaType.Json;
                 request.Entity.Headers["Accept"] = "application/json";
+                if (!string.IsNullOrEmpty(authenticationHeader)) request.Entity.Headers["Authorization"] = authenticationHeader;
 
-                //JsonSerializer serializer1 = new JsonSerializer(typeof(T));
-                //serializer1.Serialize(request.Entity.Stream, content);
-                //request.Entity.Stream.Seek(0, SeekOrigin.Begin);
-                //request.Entity.ContentLength = Request.Entity.Stream.Length;
+                using (JsonTextWriter jsonTextWriter = new JsonTextWriter(new StreamWriter(request.Entity.Stream, new UTF8Encoding(false, true))) { CloseOutput = false }) {
+                    JsonSerializer serializer = new JsonSerializer();
+                    //serializer.PreserveReferencesHandling = PreserveReferencesHandling.None;
+                    //serializer.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                    //serializer.MissingMemberHandling = MissingMemberHandling.Ignore;
+                    serializer.NullValueHandling = NullValueHandling.Ignore;
+                    serializer.TypeNameHandling = TypeNameHandling.None;
+                    serializer.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
+                    serializer.Formatting = Formatting.None;
+
+                    serializer.Serialize(jsonTextWriter, content);
+                    jsonTextWriter.Flush();
+                    request.Entity.ContentLength = request.Entity.Stream.Length;
+                    //rewinding the stream.
+                    request.Entity.Stream.Seek(0, SeekOrigin.Begin);
+                }//end using
 
                 // send the request and save the resulting response
                 var response = host.ProcessRequest(request);
