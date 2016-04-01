@@ -94,9 +94,9 @@ namespace WiM.Utilities.ServiceAgent
         public T Add<T>(T item) where T : class,new()
         {
             DbSet<T> set = GetDBSet(typeof(T)).GetValue(context, null) as DbSet<T>;
-            if (set.AsEnumerable().Contains(item)) {
+            if (set.AsEnumerable().Contains(item)) {                
                 sm(MessageType.warning, "Item already exists");
-                return item;
+                return set.AsEnumerable<T>().FirstOrDefault(i => item.Equals(i));
             }
             set.Add(item);
             context.SaveChanges();            
