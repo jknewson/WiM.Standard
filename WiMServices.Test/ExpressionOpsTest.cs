@@ -14,6 +14,12 @@ namespace WiM.Test
             string expression = "";
             Dictionary<string, double?> variables = null;
             ExpressionOps eOps = null;
+            //OH (5517)
+            expression = "DRNAREA*(STREAM_VARG<=0.80)*(0.795 -3.740*STREAM_VARG +6.633*STREAM_VARG^2 -5.234*STREAM_VARG^3 +1.543*STREAM_VARG^4)";
+            variables = new Dictionary<string, double?>() { { "DRNAREA", 0.73 }, { "STREAM_VARG", 0.61 } };
+            eOps = new ExpressionOps(expression, variables);
+            Assert.IsTrue(eOps.IsValid && eOps.Value == 0.00537430177781314);
+
            // MA (3412)
             expression = "e#^(2.8084+ (0.9884*(ln(DRNAREA)))+ (0.0111*(PCTSNDGRV))+ (-0.0233*(FOREST))+ (0.75*(MAREGION)))/(1+e#^(2.8084+ (0.9884*(ln(DRNAREA)))+ (0.0111*(PCTSNDGRV))+ (-0.0233*(FOREST))+ (0.75*(MAREGION))))";
             variables = new Dictionary<string, double?>() { { "DRNAREA", 4.4 }, { "PCTSNDGRV", 30.43 }, { "FOREST", 59.98 }, { "MAREGION", 1 } };
