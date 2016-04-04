@@ -173,8 +173,9 @@ namespace WiM.Test
             }//end using  
             return default(T);
         }
-        protected T DELETERequest<T>(string url, string authenticationHeader = "")
+        protected Boolean DELETERequest<T>(string url, string authenticationHeader = "")
         {
+            int statusCode = -999;
             using (InMemoryHost host = new InMemoryHost(ConfigSource))
             {
                 var request = new InMemoryRequest()
@@ -189,26 +190,12 @@ namespace WiM.Test
 
                 // send the request and save the resulting response
                 var response = host.ProcessRequest(request);
-                int statusCode = response.StatusCode;
+                statusCode = response.StatusCode;
 
                 // deserialize the content from the response
 
-                if (response.Entity.ContentLength > 0)
-                {
-                    // you must rewind the stream
-                    response.Entity.Stream.Seek(0, SeekOrigin.Begin);
-
-                    JsonSerializer serializer = new JsonSerializer();
-                    using (StreamReader streamReader = new StreamReader(response.Entity.Stream, new UTF8Encoding(false, true)))
-                    {
-                        using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
-                        {
-                            return serializer.Deserialize<T>(jsonTextReader);
-                        }//end using
-                    }//end using
-                }//end if
             }//end using  
-            return default(T);
+            return statusCode == 200;
         }
 
     }//end class
