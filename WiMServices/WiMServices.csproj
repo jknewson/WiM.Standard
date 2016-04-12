@@ -82,6 +82,7 @@
     <Compile Include="Authentication\EasySecureString.cs" />
     <Compile Include="Authentication\RequiresRoleAttribute.cs" />
     <Compile Include="Authentication\RequiresRoleInterceptor.cs" />
+    <Compile Include="Authentication\Security.cs" />
     <Compile Include="Codecs\csv\CsvDotNetCodec.cs" />
     <Compile Include="Codecs\json\JsonDotNetCodec.cs" />
     <Compile Include="Codecs\json\JsonEntityDotNetCodec.cs" />
