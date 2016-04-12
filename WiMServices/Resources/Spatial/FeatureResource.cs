@@ -79,6 +79,7 @@ namespace WiM.Resources.Spatial
         #region Base Properties
         public abstract string type { get; set; }
         public GeometryBase geometry { get; set; }
+        [XmlIgnore]
         public Object attributes { get; set; }
         #endregion
         #region Base Constructors

@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WiM.Utilities;
 using System.Linq;
 using System.Collections.Generic;
-namespace WiMServices.Test    
+namespace WiM.Test    
 {
     [TestClass]
     public class ExpressionOpsTest
@@ -14,8 +14,25 @@ namespace WiMServices.Test
             string expression = "";
             Dictionary<string, double?> variables = null;
             ExpressionOps eOps = null;
-           
+            //OH (5517)
+            expression = "DRNAREA*(STREAM_VARG<=0.80)*(0.795 -3.740*STREAM_VARG +6.633*STREAM_VARG^2 -5.234*STREAM_VARG^3 +1.543*STREAM_VARG^4)";
+            variables = new Dictionary<string, double?>() { { "DRNAREA", 0.73 }, { "STREAM_VARG", 0.61 } };
+            eOps = new ExpressionOps(expression, variables);
+            Assert.IsTrue(eOps.IsValid && eOps.Value == 0.00537430177781314);
+
+           // MA (3412)
+            expression = "e#^(2.8084+ (0.9884*(ln(DRNAREA)))+ (0.0111*(PCTSNDGRV))+ (-0.0233*(FOREST))+ (0.75*(MAREGION)))/(1+e#^(2.8084+ (0.9884*(ln(DRNAREA)))+ (0.0111*(PCTSNDGRV))+ (-0.0233*(FOREST))+ (0.75*(MAREGION))))";
+            variables = new Dictionary<string, double?>() { { "DRNAREA", 4.4 }, { "PCTSNDGRV", 30.43 }, { "FOREST", 59.98 }, { "MAREGION", 1 } };
+            eOps = new ExpressionOps(expression, variables);
+            Assert.IsTrue(eOps.IsValid && eOps.Value == 0.981349522920335);
+            
             //IA (5564)
+            expression = "1-(exp(-3.99+1.73*logN(DRNAREA,10)+8.21*BFI)/(1+exp(-3.99+1.73*logN(DRNAREA,10)+8.21*BFI)))";
+            variables = new Dictionary<string, double?>() { { "DRNAREA", 891 }, { "BFI", 0.532 } };
+            eOps = new ExpressionOps(expression, variables);
+            Assert.IsTrue(eOps.IsValid && eOps.Value == 0.00414785102067905);
+
+
             expression = "1-(exp(-32.7+23.7*DRNAREA^0.05+8.61*BFI)/(1+exp(-32.7+23.7*DRNAREA^0.05+8.61*BFI)))";
             variables = new Dictionary<string, double?>() { { "DRNAREA", 0.85 }, { "BFI", 0.531059 } };
             eOps = new ExpressionOps(expression, variables);

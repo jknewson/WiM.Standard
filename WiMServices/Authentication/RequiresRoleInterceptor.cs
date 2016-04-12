@@ -55,6 +55,13 @@ namespace WiM.Authentication
         public override bool BeforeExecute(IOperation operation)
         {
             Boolean isAuthorized = false;
+            if (_context.User == null || _context.User.Identity == null || !_context.User.Identity.IsAuthenticated) 
+            {
+                DenyAuthorization(_context);
+                return false;
+            }
+
+
             foreach (string role in Roles)
             {
                 //one role is all that is needed
@@ -67,9 +74,15 @@ namespace WiM.Authentication
             }//next
 
            
-            if (!isAuthorized)  _context.OperationResult = new OperationResult.Unauthorized();
+            if (!isAuthorized)
+                DenyAuthorization(_context);
+
             
             return isAuthorized;
+        }
+        protected virtual void DenyAuthorization(ICommunicationContext context)
+        {
+            _context.OperationResult = new OperationResult.Unauthorized();
         }
 
         #endregion

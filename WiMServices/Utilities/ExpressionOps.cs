@@ -24,6 +24,8 @@
 //
 //             Queue - A FIFO (first in, first out) list where you push records on top and pop them off the bottom
 //             Stack - A LIFO (last in, first out) list where you push/pop records on top of each other.
+//
+//             Regex: http://rick.measham.id.au/paste/explain.pl
 
 #region "Comments"
 //08.12.2014 jkn - Created
@@ -85,16 +87,7 @@ namespace WiM.Utilities
         private void init()
         {
             this.IsValid = false;
-
-            _operators = new Dictionary<OperationEnum, OperatorStruc>();
-            
-            _operators.Add(OperationEnum.e_plus, new OperatorStruc( 1, AssociativityEnum.e_left));
-            _operators.Add(OperationEnum.e_minus, new OperatorStruc(1, AssociativityEnum.e_left));
-            _operators.Add(OperationEnum.e_multiply, new OperatorStruc(2, AssociativityEnum.e_left));
-            _operators.Add(OperationEnum.e_divide, new OperatorStruc(2, AssociativityEnum.e_left));
-            _operators.Add(OperationEnum.e_percent, new OperatorStruc(2, AssociativityEnum.e_left));
-            _operators.Add(OperationEnum.e_exponent, new OperatorStruc(3, AssociativityEnum.e_right));
-
+            initOperators();
         }
         private void parseEquation()
         {
@@ -103,7 +96,7 @@ namespace WiM.Utilities
             try
             {
                 //Dijkstra's Shunting Yard Algorithm
-                Regex re = new Regex(@"((?<!\d[eE])[+-]|[\=\,\*\(\)\^\/\ ])");
+                Regex re = new Regex(@"((?<!\d[eE])[+-]|(?:>=|<=|=|<|>)|[,\*\(\)\^\/\ ])");
                 
                 tokenList = re.Split(InfixExpression).Select(t => t.Trim()).Where(t => t != "").ToList();
 
@@ -192,13 +185,6 @@ namespace WiM.Utilities
                         {
                             String nextToken = tokenList[tokenNumber + 1];
                             TokenClassEnum nextTokenClass = getTokenClass(nextToken);
-
-                            //Note: checks if equation has implied multiplication AB = A*B, 
-                            //I had to remove it because it was causing issues with functions and function arg separators
-                            //if (nextTokenClass != TokenClassEnum.e_operator && nextTokenClass != TokenClassEnum.e_rightparenthesis
-                            //    && nextTokenClass != TokenClassEnum.e_functionArgSeparator)
-                            //    tokenList.Insert(tokenNumber + 1, "*");
-
                         }//end if
                     }//end if
 
@@ -306,7 +292,7 @@ namespace WiM.Utilities
                 String token = tokenList[tokenNumber];
                 if ((getOperationEnum(token) == OperationEnum.e_minus || getOperationEnum(token) == OperationEnum.e_plus) &&
                                                                         tokenNumber > 1 && (getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_operator ||
-                                                                                            getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_rightparenthesis ||
+                                                                                            //getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_rightparenthesis ||
                                                                                             getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_leftparenthesis ||
                                                                                             getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_function ||
                                                                                             getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_functionArgSeparator))                                                                                                                 
@@ -416,6 +402,16 @@ namespace WiM.Utilities
         }
         #endregion
         #region OperatorHelpers
+        private void initOperators() {
+            _operators = new Dictionary<OperationEnum, OperatorStruc>();
+
+            _operators.Add(OperationEnum.e_plus, new OperatorStruc(1, AssociativityEnum.e_left));
+            _operators.Add(OperationEnum.e_minus, new OperatorStruc(1, AssociativityEnum.e_left));
+            _operators.Add(OperationEnum.e_multiply, new OperatorStruc(2, AssociativityEnum.e_left));
+            _operators.Add(OperationEnum.e_divide, new OperatorStruc(2, AssociativityEnum.e_left));
+            _operators.Add(OperationEnum.e_percent, new OperatorStruc(2, AssociativityEnum.e_left));
+            _operators.Add(OperationEnum.e_exponent, new OperatorStruc(3, AssociativityEnum.e_right));
+        }
         private bool isOperator(string token)
         {
             OperationEnum oper = getOperationEnum(token);
@@ -487,6 +483,15 @@ namespace WiM.Utilities
             {
                 case RelationalEnum.e_equal:
                     return val1 == val2;
+                case RelationalEnum.e_greaterthan:
+                    return val1 > val2;
+                case RelationalEnum.e_greaterthanorequal:
+                    return val1 >= val2;
+                case RelationalEnum.e_lessthanorequal:
+                    return val1 <= val2;
+                case RelationalEnum.e_lessthan:
+                    return val1 < val2;
+                
                 default:
                     IsValid = false;
                     return false;
@@ -498,6 +503,14 @@ namespace WiM.Utilities
             {
                 case "=":
                     return RelationalEnum.e_equal;
+                case "<=":
+                    return RelationalEnum.e_lessthanorequal;
+                case ">=":
+                    return RelationalEnum.e_greaterthanorequal;
+                case "<":
+                    return RelationalEnum.e_lessthan;
+                case ">":
+                    return RelationalEnum.e_greaterthan;
                 default:
                     return RelationalEnum.e_undefined;
             }//end switch
@@ -517,6 +530,7 @@ namespace WiM.Utilities
             {
                 case FunctionEnum.e_sqrt:
                 case FunctionEnum.e_exponential:
+                case FunctionEnum.e_naturallog:
                     return 1;
 
                 case FunctionEnum.e_logn:
@@ -539,7 +553,8 @@ namespace WiM.Utilities
                     return System.Math.Sqrt(funcArgs[0]);
                 case FunctionEnum.e_exponential:
                     return System.Math.Exp(funcArgs[0]);
-
+                case FunctionEnum.e_naturallog:
+                    return System.Math.Log(funcArgs[0]);
                 case FunctionEnum.e_logn:
                     return System.Math.Log(funcArgs[1], funcArgs[0]);
                 case FunctionEnum.e_max:
@@ -563,6 +578,8 @@ namespace WiM.Utilities
                     return FunctionEnum.e_sqrt;
                 case "logn":
                     return FunctionEnum.e_logn;
+                case "ln":
+                    return FunctionEnum.e_naturallog;
                 case "max":
                     return FunctionEnum.e_max;
                 case "min":
@@ -618,7 +635,11 @@ namespace WiM.Utilities
         public enum RelationalEnum
         {
             e_undefined = -1,
-            e_equal = 1
+            e_equal = 1,
+            e_greaterthanorequal =2,
+            e_lessthanorequal = 3,
+            e_greaterthan = 4,
+            e_lessthan = 5
         };
         public enum ConstantEnum
         {
@@ -640,7 +661,8 @@ namespace WiM.Utilities
             e_max =3,
             e_min =4,
             e_round =5,
-            e_exponential=6
+            e_exponential=6,
+            e_naturallog =7
 
         };
         #endregion

@@ -74,9 +74,9 @@ namespace WiM.Codecs.json
 
                 // Create a serializer
                 JsonSerializer serializer = new JsonSerializer();
-                //serializer.PreserveReferencesHandling = PreserveReferencesHandling.None;
-                //serializer.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                //serializer.MissingMemberHandling = MissingMemberHandling.Ignore;
+                serializer.PreserveReferencesHandling = PreserveReferencesHandling.None;
+                serializer.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                serializer.MissingMemberHandling = MissingMemberHandling.Ignore;
                 serializer.NullValueHandling = NullValueHandling.Ignore;
                 serializer.TypeNameHandling = TypeNameHandling.None;
                 serializer.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
