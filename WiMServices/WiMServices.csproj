@@ -79,10 +79,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Authentication\EasySecureString.cs" />
-    <Compile Include="Authentication\RequiresRoleAttribute.cs" />
-    <Compile Include="Authentication\RequiresRoleInterceptor.cs" />
-    <Compile Include="Authentication\Security.cs" />
+    <Compile Include="Security\EasySecureString.cs" />
+    <Compile Include="Security\RequiresRoleAttribute.cs" />
+    <Compile Include="Security\RequiresRoleInterceptor.cs" />
+    <Compile Include="Security\Cryptography.cs" />
     <Compile Include="Codecs\csv\CsvDotNetCodec.cs" />
     <Compile Include="Codecs\json\JsonDotNetCodec.cs" />
     <Compile Include="Codecs\json\JsonEntityDotNetCodec.cs" />
@@ -97,6 +97,7 @@
     <Compile Include="PipeLineContributors\MessagePipelineContributor.cs" />
     <Compile Include="Resources\Message.cs" />
     <Compile Include="Resources\Parameter.cs" />
+    <Compile Include="Security\WiMCredentials.cs" />
     <Compile Include="Utilities\ExpressionOps.cs" />
     <Compile Include="Utilities\MathOps.cs" />
     <Compile Include="Utilities\ServiceAgent\DBServiceAgentBase.cs" />

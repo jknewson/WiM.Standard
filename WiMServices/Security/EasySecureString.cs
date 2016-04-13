@@ -13,7 +13,7 @@ using System;
 using System.Security;
 using System.Runtime.InteropServices;
 
-namespace WiM.Authentication
+namespace WiM.Security
 {
     public class EasySecureString : IDisposable
     {

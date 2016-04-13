@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using OpenRasta.Web;
-using WiM.Authentication;
+using WiM.Security;
 using WiM.Exceptions;
 using WiM;
 using WiM.Resources;
