@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using WiM.Authentication;
+using WiM.Security;
 
 namespace WiMServices.Test
 {
@@ -11,13 +11,13 @@ namespace WiMServices.Test
         public void PasswordHashTest()
         {
             string password = "Dog1";
-            string salt = Security.CreateSalt();
+            string salt = Cryptography.CreateSalt();
             Assert.IsNotNull(salt);
 
-            string hashstring = Security.GenerateSHA256Hash(password, salt);
+            string hashstring = Cryptography.GenerateSHA256Hash(password, salt);
             Assert.IsNotNull(hashstring);
 
-            Boolean verified = Security.VerifyPassword(password, salt,hashstring);
+            Boolean verified = Cryptography.VerifyPassword(password, salt, hashstring);
             Assert.IsTrue(verified);
         }
     }

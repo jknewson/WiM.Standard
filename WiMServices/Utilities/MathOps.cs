@@ -16,7 +16,7 @@ namespace WiM.Utilities
             catch (Exception e)
             {
                 
-                throw new Exception("Cannot interpolate");
+                throw new Exception("Cannot interpolate",e);
             }
             
         }

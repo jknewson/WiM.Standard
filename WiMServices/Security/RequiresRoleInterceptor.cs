@@ -29,7 +29,7 @@ using OpenRasta.OperationModel.Interceptors;
 using OpenRasta.Web;
 
 
-namespace WiM.Authentication
+namespace WiM.Security
 {
     public class RequiresRoleInterceptor  : OperationInterceptor
     {

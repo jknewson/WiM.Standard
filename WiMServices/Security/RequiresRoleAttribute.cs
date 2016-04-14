@@ -29,7 +29,7 @@ using OpenRasta.OperationModel;
 using OpenRasta.OperationModel.Interceptors;
 using OpenRasta.Security;
 
-namespace WiM.Authentication
+namespace WiM.Security
 {
     public class RequiresRoleAttribute : OpenRasta.OperationModel.Interceptors.InterceptorProviderAttribute
     {
@@ -64,7 +64,7 @@ namespace WiM.Authentication
         public override IEnumerable<IOperationInterceptor> GetInterceptors(IOperation operation)
         {
             //yield return DependencyManager.GetService<RequiresAuthenticationInterceptor>();
-            var roleInterceptor = DependencyManager.GetService<WiM.Authentication.RequiresRoleInterceptor>();
+            var roleInterceptor = DependencyManager.GetService<RequiresRoleInterceptor>();
             roleInterceptor.Roles = _roleNames;
             yield return roleInterceptor;
         }

@@ -14,7 +14,7 @@
 //   purpose:   generate salted Hash password 
 //
 //discussion:   
-//  https://crackstation.net/hashing-security.htm#aspsourcecode
+//  http://www.codeproject.com/Articles/704865/Salted-Password-Hashing-Doing-it-Right
 //     
 
 #region Comments
@@ -28,9 +28,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
 
-namespace WiM.Authentication
+namespace WiM.Security
 {
-    public class Security
+    public static class Cryptography
     {
         #region Constants
         public const int SALT_BYTES = 24;
@@ -57,13 +57,13 @@ namespace WiM.Authentication
                 throw new Exception("Invalid argument given to random number generator", ex);
             }
         }
-        public static string GenerateSHA256Hash(string input, string salt)
+        public static string GenerateSHA256Hash(string password, string salt)
         {
             byte[] bytes;
             byte[] hash;
             try
             {
-                bytes = Encoding.UTF8.GetBytes(input + salt);
+                bytes = Encoding.UTF8.GetBytes(password + salt);
                 using (SHA256Managed sha256hashstring = new SHA256Managed()) { 
                     hash = sha256hashstring.ComputeHash(bytes);                
                 }//end using;                
