@@ -63,23 +63,6 @@ namespace WiM.Codecs.xml
         
         public override void WriteToCore(object obj, IHttpEntity response)
         {
-            //XmlAttributeOverrides Overrider = null;
-            //Type type = obj.GetType();
-
-            //// Check for ListTypes
-            //if (type.IsGenericType && type.GetGenericTypeDefinition()
-            //        == typeof(List<>))
-            //{
-            //    type = type.GetGenericArguments()[0];
-            //}
-                        
-            //Overrider = OverrideReferenceAttributes(type);
-           
-            ////ignore toplevel superfluous EntityKey objects
-            //Overrider.Add(typeof(EntityObject), "EntityKey", new XmlAttributes { XmlIgnore = true });
-
-            //addMediaReferences(obj);
-
             // create the overrider serialzier    
             XmlSerializer serializer = new XmlSerializer(obj.GetType(),  
                                                         this.OverrideReferenceAttributes( obj.GetType()));
@@ -114,7 +97,8 @@ namespace WiM.Codecs.xml
 
             List<string> properties =
                 entityType.GetProperties()
-                    .Where(e => e.Name.Contains("Reference") || (!e.PropertyType.IsPrimitive && !e.PropertyType.Equals(typeof(string))) && !e.Name.Contains("Links"))
+                    .Where(e => e.Name.Contains("Reference") ||
+                        (!e.PropertyType.IsPrimitive && !e.PropertyType.Equals(typeof(string))) && !e.Name.Contains("Links") && !String.Equals(e.PropertyType.Name, "Nullable`1"))
                     .Select(e => e.Name).ToList();
             
                 // assign XmlAttribute to override those fields with XmlIgnoreAttribute    
