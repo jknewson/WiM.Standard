@@ -5,6 +5,8 @@ using System.Reflection;
 using WiM.Security;
 using WiM.Resources;
 
+using System.Data.Entity.Infrastructure;
+
 using System.Collections.Generic;
 
 namespace WiM.Utilities.ServiceAgent
@@ -96,15 +98,16 @@ namespace WiM.Utilities.ServiceAgent
             DbSet<T> set = GetDBSet(typeof(T)).GetValue(context, null) as DbSet<T>;
             if (set.AsEnumerable().Contains(item)) {                
                 sm(MessageType.warning, "Item already exists");
-                return set.AsEnumerable<T>().FirstOrDefault(i => item.Equals(i));
+                return set.AsEnumerable<T>().FirstOrDefault(i => i.Equals(item));
             }
             set.Add(item);
             context.SaveChanges();            
             return item;
         }
-        public T Update<T>(T item) where T : class,new()
+        public T Update<T>(Int32 pkId, T item) where T : class,new()
         {
             DbSet<T> set = GetDBSet(typeof(T)).GetValue(context, null) as DbSet<T>;
+            if (!setPKfield<T>(item, pkId)) return null;
             
             set.Attach(item);            
             //set state to modified to force the update.
@@ -112,6 +115,17 @@ namespace WiM.Utilities.ServiceAgent
 
             context.SaveChanges();
             sm(MessageType.info, "Item found and updated."); 
+            return item;
+        }
+        public T Update<T>(T item) where T : class,new()
+        {
+            DbSet<T> set = GetDBSet(typeof(T)).GetValue(context, null) as DbSet<T>;
+            set.Attach(item);
+            //set state to modified to force the update.
+            context.Entry(item).State = EntityState.Modified;
+
+            context.SaveChanges();
+            sm(MessageType.info, "Item found and updated.");
             return item;
         }
         public void Delete<T>(T item) where T : class,new()
@@ -134,7 +148,26 @@ namespace WiM.Utilities.ServiceAgent
             var properties = this.context.GetType().GetProperties().Where(item => item.PropertyType.Equals(typeof(DbSet<>).MakeGenericType(itemType)));
             return properties.First();
         }
-    
+        private bool setPKfield<T>(T obj, object value) where T : class,new()
+        {
+            try
+            {
+                System.Data.Entity.Core.Objects.ObjectContext objectContext = ((IObjectContextAdapter)context).ObjectContext;
+                System.Data.Entity.Core.Objects.ObjectSet<T> set = objectContext.CreateObjectSet<T>();
+                string property = set.EntitySet.ElementType.KeyMembers.FirstOrDefault().Name;
+
+                var prop = obj.GetType().GetProperty(property, BindingFlags.Public | BindingFlags.Instance);
+                if (prop != null && prop.CanWrite && prop.GetValue(obj) != value)
+                    prop.SetValue(obj, value, null);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                sm(MessageType.error, "Failed to set pk.");
+                return false;
+            }
+        }
         protected void sm(MessageType t,string msg)
         {
             this._message.Add(new Message(){ type = t, msg=msg });
