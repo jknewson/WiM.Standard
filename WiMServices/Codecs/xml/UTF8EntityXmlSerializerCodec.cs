@@ -98,7 +98,7 @@ namespace WiM.Codecs.xml
             List<string> properties =
                 entityType.GetProperties()
                     .Where(e => e.Name.Contains("Reference") ||
-                        (!e.PropertyType.IsPrimitive && !e.PropertyType.Equals(typeof(string))) && !e.Name.Contains("Links") && !String.Equals(e.PropertyType.Name, "Nullable`1"))
+                        (!e.PropertyType.IsPrimitive && !e.PropertyType.Equals(typeof(string)) && !e.PropertyType.Equals(typeof(DateTime))) && !e.Name.Contains("Links") && !String.Equals(e.PropertyType.Name, "Nullable`1"))
                     .Select(e => e.Name).ToList();
             
                 // assign XmlAttribute to override those fields with XmlIgnoreAttribute    
