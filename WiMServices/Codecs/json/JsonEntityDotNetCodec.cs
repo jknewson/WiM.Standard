@@ -107,8 +107,8 @@ namespace WiM.Codecs.json
             JsonProperty prop = base.CreateProperty(member, memberSerialization);
 
 
-            if (!prop.PropertyType.IsPrimitive && !String.Equals(prop.PropertyType.Name, "Nullable`1") && 
-                !prop.PropertyType.Equals(typeof(string)) && !String.Equals(prop.PropertyName, "Results") && 
+            if (!prop.PropertyType.IsPrimitive && !String.Equals(prop.PropertyType.Name, "Nullable`1") &&
+                !prop.PropertyType.Equals(typeof(string)) && !prop.PropertyType.Equals(typeof(DateTime)) && !String.Equals(prop.PropertyName, "Results") && 
                 !prop.PropertyName.Contains("Links"))
             {
                 prop.ShouldSerialize = obj => false;
