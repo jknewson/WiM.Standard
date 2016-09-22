@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace WiM.Utilities.ServiceAgent
 {
-    public abstract class DBAgentBase:IDisposable
+    public abstract class DBAgentBase:IDisposable,IMessage
     {
         #region "Events"
         #endregion
