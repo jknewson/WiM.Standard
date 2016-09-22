@@ -116,7 +116,7 @@ namespace WiM.Test
         }
 
 
-        private void serialize(ref InMemoryRequest request, object content ) {
+        protected virtual void serialize(ref InMemoryRequest request, object content ) {
             using (JsonTextWriter jsonTextWriter = new JsonTextWriter(new StreamWriter(request.Entity.Stream, new UTF8Encoding(false, true))) { CloseOutput = false })
             {
                 JsonSerializer serializer = new JsonSerializer();
@@ -137,7 +137,8 @@ namespace WiM.Test
         
         
         }
-        private T deserialize<T>(IResponse response) {
+        protected virtual T deserialize<T>(IResponse response)
+        {
             if (response.Entity.ContentLength > 0)
             {
                 // you must rewind the stream, as OpenRasta
