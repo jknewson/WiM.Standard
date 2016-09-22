@@ -125,7 +125,17 @@ namespace WiM.Utilities.ServiceAgent
             response = client.Execute(request) as IRestResponse;
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                return JsonConvert.DeserializeObject(response.Content);
+                switch (response.ContentType)
+                {
+                    case "text/html":
+                        throw new Exception(response.Content);
+
+                    case "text/plain":
+                    case "text/plain; charset=UTF-8":
+                        return response.Content;
+                    default:
+                        return JsonConvert.DeserializeObject(response.Content);
+                }
             }//else
             else
             {

@@ -130,8 +130,8 @@ namespace WiM.Utilities.ServiceAgent
         }
         public void Delete<T>(T item) where T : class,new()
         {
-            DbSet<T> set = GetDBSet(typeof(T)).GetValue(context, null) as DbSet<T>;
-
+            //DbSet<T> set = GetDBSet(typeof(T)).GetValue(context, null) as DbSet<T>;
+            //set.Remove(item);
             var entry = context.Entry(item);
             if (entry != null)
             {
