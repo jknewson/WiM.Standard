@@ -251,7 +251,9 @@ namespace WiM.Utilities
                                 expressionStack.Clear();
                                 outputQueue.Clear();
                                 expressionStack.Push("0");
+                                break;
                             };
+
                             expressionStack.Push("1");
                             break;
                         default:
