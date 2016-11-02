@@ -8,7 +8,7 @@
 
 // copyright:   2012 WiM - USGS
 
-//    authors:  Jon Baier USGS Wisconsin Internet Mapping
+//    authors:  Jon Baier USGS Web Informatics and Mapping
 //  
 //   purpose:   Created a JSON Codec that works with EF. JsonDataContractCodec 
 //              does not work because IsReference is set

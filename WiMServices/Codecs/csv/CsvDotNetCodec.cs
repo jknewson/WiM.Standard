@@ -8,7 +8,7 @@
 
 // copyright:   2015 WiM - USGS
 
-//    authors:  Jeremy Newson USGS Wisconsin Internet Mapping
+//    authors:  Jeremy Newson USGS Web Informatics and Mapping
 //  
 //   purpose:   Serialize incomming entity as a csv stream 
 //              
