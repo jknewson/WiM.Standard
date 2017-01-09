@@ -8,8 +8,8 @@
 
 // copyright:   2012 WiM - USGS
 
-//    authors:  Jon Baier USGS Wisconsin Internet Mapping
-//              Jeremy K. Newson USGS Wisconsin Internet Mapping
+//    authors:  Jon Baier USGS Web Informatics and Mapping
+//              Jeremy K. Newson USGS Web Informatics and Mapping
 //              
 //  
 //   purpose:   Handles File upload methods to AWS S3 bucket.

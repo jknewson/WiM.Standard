@@ -8,7 +8,7 @@
 
 // copyright:   2012 WiM - USGS
 
-//    authors:  Jon Baier USGS Wisconsin Internet Mapping
+//    authors:  Jon Baier USGS Web Informatics and Mapping
 //              
 //  
 //   purpose:   Create in place of OpenRasta's XmlCodec which does not properly handle the BOM in UTF8 encoding.
