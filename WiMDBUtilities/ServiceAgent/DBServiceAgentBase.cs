@@ -2,7 +2,6 @@
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
-using WiM.Security;
 using WiM.Resources;
 
 using System.Data.Entity.Infrastructure;

@@ -8,7 +8,7 @@
 
 // copyright:   2012 WiM - USGS
 
-//    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
+//    authors:  Jeremy K. Newson USGS Web Informatics and Mapping
 //              
 //  
 //   purpose:   Sets role attribute to be used by roleInterceptor  

@@ -8,7 +8,7 @@
 
 // copyright:   2014 WiM - USGS
 
-//    authors:  Jeremy K. Newson USGS Wisconsin Internet Mapping
+//    authors:  Jeremy K. Newson USGS Web Informatics and Mapping
 //             
 // 
 //   purpose:  parsing and calculating algorithm based on Shunting-yard's algorithm that parses mathematical 

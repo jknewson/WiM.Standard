@@ -8,7 +8,7 @@
 
 // copyright:   2012 WiM - USGS
 
-//    authors:  Jeremy Newson USGS Wisconsin Internet Mapping
+//    authors:  Jeremy Newson USGS Web Informatics and Mapping
 //              
 //  
 //   purpose:   Create in place of OpenRasta's XmlSerializerCodec which does not 
