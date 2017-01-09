@@ -247,14 +247,7 @@ namespace WiM.Utilities
                             String leftRelation = expressionStack.Pop();
 
                             var isRelated = doRelation(Convert.ToDouble(leftRelation), Convert.ToDouble(rightRelation), getRelationalEnum(operand));
-                            if (!isRelated){
-                                expressionStack.Clear();
-                                outputQueue.Clear();
-                                expressionStack.Push("0");
-                                break;
-                            };
-
-                            expressionStack.Push("1");
+                            expressionStack.Push(Convert.ToInt32(isRelated).ToString());
                             break;
                         default:
                             throw new Exception(operand + " found in calculate");
@@ -354,7 +347,7 @@ namespace WiM.Utilities
 
                     return TokenClassEnum.e_variable;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     IsValid = false;
                     throw new Exception("token class unidentified");
@@ -493,7 +486,11 @@ namespace WiM.Utilities
                     return val1 <= val2;
                 case RelationalEnum.e_lessthan:
                     return val1 < val2;
-                
+                case RelationalEnum.e_and:
+                    return Convert.ToBoolean(val1) && Convert.ToBoolean(val2);
+                case RelationalEnum.e_or:
+                    return Convert.ToBoolean(val1) || Convert.ToBoolean(val2);
+
                 default:
                     IsValid = false;
                     return false;
@@ -501,7 +498,7 @@ namespace WiM.Utilities
         }
         private RelationalEnum getRelationalEnum(String a)
         {
-            switch (a)
+            switch (a.ToUpper())
             {
                 case "=":
                     return RelationalEnum.e_equal;
@@ -513,6 +510,10 @@ namespace WiM.Utilities
                     return RelationalEnum.e_lessthan;
                 case ">":
                     return RelationalEnum.e_greaterthan;
+                case "AND":
+                    return RelationalEnum.e_and;
+                case "OR":
+                    return RelationalEnum.e_or;
                 default:
                     return RelationalEnum.e_undefined;
             }//end switch
@@ -641,7 +642,9 @@ namespace WiM.Utilities
             e_greaterthanorequal =2,
             e_lessthanorequal = 3,
             e_greaterthan = 4,
-            e_lessthan = 5
+            e_lessthan = 5,
+            e_and,
+            e_or
         };
         public enum ConstantEnum
         {
