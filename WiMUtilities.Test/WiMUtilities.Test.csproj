@@ -55,7 +55,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Utilities\WiMUtilities.csproj">
+    <ProjectReference Include="..\WiMUtilities\WiMUtilities.csproj">
       <Project>{8fd46bb2-1a02-4019-85cd-3c448cc9f0a3}</Project>
       <Name>WiMUtilities</Name>
     </ProjectReference>
