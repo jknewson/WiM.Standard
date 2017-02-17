@@ -285,12 +285,14 @@ namespace WiM.Utilities
             for (int tokenNumber = 0; tokenNumber < tokenList.Count(); ++tokenNumber)
             {
                 String token = tokenList[tokenNumber];
-                if ((getOperationEnum(token) == OperationEnum.e_minus || getOperationEnum(token) == OperationEnum.e_plus) &&
-                                                                        tokenNumber > 1 && (getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_operator ||
-                                                                                            //getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_rightparenthesis ||
-                                                                                            getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_leftparenthesis ||
-                                                                                            getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_function ||
-                                                                                            getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_functionArgSeparator))                                                                                                                 
+                if ((getOperationEnum(token) == OperationEnum.e_minus || 
+                    getOperationEnum(token) == OperationEnum.e_plus) &&
+                            (tokenNumber == 0 ||
+                            (tokenNumber > 1 && (getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_operator ||
+                                                //getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_rightparenthesis ||
+                                                getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_leftparenthesis ||
+                                                getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_function ||
+                                                getTokenClass(tokenList[tokenNumber - 1]) == TokenClassEnum.e_functionArgSeparator))))                                                                                                                 
                 {
                     //remove neg from the list, and add it to the begin of next var
                     tokenList[tokenNumber + 1] = tokenList[tokenNumber] + tokenList[tokenNumber + 1];

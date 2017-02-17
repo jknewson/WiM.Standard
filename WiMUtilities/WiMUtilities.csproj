@@ -7,8 +7,8 @@
     <ProjectGuid>{8FD46BB2-1A02-4019-85CD-3C448CC9F0A3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Utilities</RootNamespace>
-    <AssemblyName>Utilities</AssemblyName>
+    <RootNamespace>WiMUtilities</RootNamespace>
+    <AssemblyName>WiMUtilities</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
