@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+    <AssemblyName>WiM.Utilities</AssemblyName>
+    <RootNamespace>WiM.Utilities</RootNamespace>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>jknewson</Authors>
+    <Company>Web Informatics and Mapping</Company>
+    <Description>random utility operations</Description>
+    <Version>1.0.2</Version>
+  </PropertyGroup>
+
+</Project>

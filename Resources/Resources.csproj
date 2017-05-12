@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+    <AssemblyName>WiM.Resources</AssemblyName>
+    <RootNamespace>WiM.Resources</RootNamespace>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>jknewson</Authors>
+    <Company>Web Informatics and Mapping</Company>
+    <Description>Resource objects</Description>
+    <Version>1.0.2</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Spatial\FeatureResource.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Spatial\" />
+  </ItemGroup>
+
+</Project>
