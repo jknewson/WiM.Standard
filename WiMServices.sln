@@ -16,7 +16,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WiMServices.Test", "WiMServ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WiMHypermedia", "WiMHypermedia\WiMHypermedia.csproj", "{FBBF2BCC-4A97-4882-AA5B-152103D409C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WiMTimeSeries", "TimeSeries\WiMTimeSeries.csproj", "{9BCE0767-ECB2-412F-9BF6-FA6281B47D80}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WiMTimeSeries", "WiMTimeSeries\WiMTimeSeries.csproj", "{9BCE0767-ECB2-412F-9BF6-FA6281B47D80}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WiMUtilities.Test", "WiMUtilities.Test\WiMUtilities.Test.csproj", "{F6DE6F99-D250-43B7-8986-D80BF6A3BE10}"
 EndProject
