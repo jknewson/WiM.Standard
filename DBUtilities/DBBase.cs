@@ -6,17 +6,13 @@ using System.Linq;
 using System.Reflection;
 using WiM.Resources;
 
-
 namespace WiM.Utilities
 {
     public abstract class DBAgentBase : IDisposable, IMessage
     {
-        #region "Events"
-        #endregion
-        #region Fields
-        #endregion
+
         #region "Properties"
-        public DbContext context { get; private set; }
+        protected DbContext context { get; private set; }
         #endregion
         #region "Collections & Dictionaries"
         private List<Message> _message = new List<Message>();
@@ -83,17 +79,22 @@ namespace WiM.Utilities
         #endregion
         #endregion
         #region "Methods"
-        public IQueryable<T> Select<T>() where T : class, new()
+        protected IQueryable<T> Select<T>() where T : class, new()
         {
             DbSet<T> set = GetDBSet<T>();
             return set;
         }
-        public T Find<T>(Int32 pk) where T : class, new()
+        protected IQueryable<T> FromSQL<T>(string sql, object[] parameters) where T : class, new()
+        {
+            DbSet<T> set = GetDBSet<T>();
+            return set.FromSql(sql,parameters);
+        }
+        protected T Find<T>(Int32 pk) where T : class, new()
         {
             DbSet<T> set = GetDBSet<T>();
             return set.Find(pk);
         }
-        public T Add<T>(T item) where T : class, new()
+        protected T Add<T>(T item) where T : class, new()
         {
             DbSet<T> set = GetDBSet<T>();
             if (set.AsEnumerable().Contains(item))
@@ -105,7 +106,7 @@ namespace WiM.Utilities
             context.SaveChanges();
             return item;
         }
-        public T Update<T>(Int32 pkId, T item) where T : class, new()
+        protected T Update<T>(Int32 pkId, T item) where T : class, new()
         {
             DbSet<T> set = GetDBSet<T>();
             if (!setPKfield<T>(item, pkId)) return null;
@@ -118,7 +119,7 @@ namespace WiM.Utilities
             sm(MessageType.info, "Item found and updated.");
             return this.Find<T>(pkId);
         }
-        public void Delete<T>(T item) where T : class, new()
+        protected void Delete<T>(T item) where T : class, new()
         {
             //DbSet<T> set = GetDBSet(typeof(T)).GetValue(context, null) as DbSet<T>;
             //set.Remove(item);
@@ -164,21 +165,6 @@ namespace WiM.Utilities
         {
             this._message.AddRange(msg);
         }
-        #endregion
-        #region "Structures"
-        //A structure is a value type. When a structure is created, the variable to which the struct is assigned holds
-        //the struct's actual data. When the struct is assigned to a new variable, it is copied. The new variable and
-        //the original variable therefore contain two separate copies of the same data. Changes made to one copy do not
-        //affect the other copy.
-
-        //In general, classes are used to model more complex behavior, or data that is intended to be modified after a
-        //class object is created. Structs are best suited for small data structures that contain primarily data that is
-        //not intended to be modified after the struct is created.
-        #endregion
-        #region "Asynchronous Methods"
-
-        #endregion
-        #region "Enumerated Constants"
         #endregion
     }//end class
 }//end namespace
