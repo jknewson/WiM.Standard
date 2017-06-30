@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Reflection;
 using WiM.Resources;
+using System.Threading.Tasks;
 
 namespace WiM.Utilities
 {
@@ -84,17 +85,17 @@ namespace WiM.Utilities
             DbSet<T> set = GetDBSet<T>();
             return set;
         }
-        protected IQueryable<T> FromSQL<T>(string sql, object[] parameters) where T : class, new()
+        protected IQueryable<T> FromSQL<T>(string sql) where T : class, new()
         {
             DbSet<T> set = GetDBSet<T>();
-            return set.FromSql(sql,parameters);
+            return set.FromSql(sql);
         }
-        protected T Find<T>(Int32 pk) where T : class, new()
+        protected async Task<T> Find<T>(Int32 pk) where T : class, new()
         {
             DbSet<T> set = GetDBSet<T>();
-            return set.Find(pk);
+            return await set.FindAsync(pk);
         }
-        protected T Add<T>(T item) where T : class, new()
+        protected async Task<T> Add<T>(T item) where T : class, new()
         {
             DbSet<T> set = GetDBSet<T>();
             if (set.AsEnumerable().Contains(item))
@@ -102,11 +103,26 @@ namespace WiM.Utilities
                 sm(MessageType.warning, "Item already exists");
                 return set.AsEnumerable<T>().FirstOrDefault(i => i.Equals(item));
             }
-            set.Add(item);
-            context.SaveChanges();
+            await set.AddAsync(item);
+            await context.SaveChangesAsync();
             return item;
         }
-        protected T Update<T>(Int32 pkId, T item) where T : class, new()
+        protected async Task<IEnumerable<T>> Add<T>(List<T> items) where T : class, new()
+        {
+            DbSet<T> set = GetDBSet<T>();
+            set.AsEnumerable();
+            //create list of items that don't exist in db already
+            List<T> DontAlreadyExist = items.Except(set.AsEnumerable()).ToList();
+
+            if (DontAlreadyExist.Count > 0) {
+                sm(MessageType.info, "added " +DontAlreadyExist.Count +" items.");
+                await set.AddRangeAsync(DontAlreadyExist);
+                await context.SaveChangesAsync();
+            }//end if
+            
+            return Select<T>();
+        }
+        protected async Task<T> Update<T>(Int32 pkId, T item) where T : class, new()
         {
             DbSet<T> set = GetDBSet<T>();
             if (!setPKfield<T>(item, pkId)) return null;
@@ -115,11 +131,11 @@ namespace WiM.Utilities
             //set state to modified to force the update.
             context.Entry(item).State = EntityState.Modified;
 
-            context.SaveChanges();
+            await context.SaveChangesAsync();
             sm(MessageType.info, "Item found and updated.");
-            return this.Find<T>(pkId);
+            return await this.Find<T>(pkId);
         }
-        protected void Delete<T>(T item) where T : class, new()
+        protected async Task Delete<T>(T item) where T : class, new()
         {
             //DbSet<T> set = GetDBSet(typeof(T)).GetValue(context, null) as DbSet<T>;
             //set.Remove(item);
@@ -128,8 +144,9 @@ namespace WiM.Utilities
             {
                 //set state to modified to force the update.
                 context.Entry(item).State = EntityState.Deleted;
-                context.SaveChanges();
-            }//end if
+                await context.SaveChangesAsync();
+                sm(MessageType.info, "Item Deleted.");
+            }//end if           
 
         }
         #endregion
