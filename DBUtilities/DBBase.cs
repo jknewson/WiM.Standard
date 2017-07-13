@@ -120,7 +120,7 @@ namespace WiM.Utilities
                 await context.SaveChangesAsync();
             }//end if
             
-            return Select<T>();
+            return Select<T>().Where(i=>items.Contains(i));
         }
         protected async Task<T> Update<T>(Int32 pkId, T item) where T : class, new()
         {
