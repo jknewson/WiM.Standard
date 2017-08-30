@@ -20,46 +20,25 @@
 //          
 //              https://andrewlock.net/introduction-to-authentication-with-asp-net-core/
 
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Options;
 using System;
+using Microsoft.AspNetCore.Authentication;
 
 namespace WiM.Security.Authentication.Basic
 {
     public static class BasicAppBuilderExtensions
     {
-        /// <summary>
-        /// Adds the <see cref="BasicAuthenticationMiddleware"/> middleware to the specified <see cref="IApplicationBuilder"/>
-        /// </summary>
-        /// <param name="app">The <see cref="IApplicationBuilder"/> to add the middleware to.</param>
-        /// <returns>A reference to this instance after the operation has completed.</returns>
-        public static IApplicationBuilder UseBasicAuthentication(this IApplicationBuilder app)
-        {
-            if (app == null)
-            {
-                throw new ArgumentNullException(nameof(app));
-            }
+        public static AuthenticationBuilder AddBasicAuthentication(this AuthenticationBuilder builder)
+            => builder.AddBasicAuthentication(BasicDefaults.AuthenticationScheme,"", _ => { });
 
-            return app.UseMiddleware<BasicAuthenticationMiddleware>();
-        }
-        /// <summary>
-        /// Adds the <see cref="BasicAuthenticationMiddleware"/> middleware to the specified <see cref="IApplicationBuilder"/>.
-        /// </summary>
-        /// <param name="app">The <see cref="IApplicationBuilder"/> to add the middleware to.</param>
-        /// <param name="options">A <see cref="BasicAuthenticationOptions"/> that specifies options for the middleware.</param>
-        /// <returns>A reference to this instance after the operation has completed.</returns>
-        public static IApplicationBuilder UseBasicAuthentication(this IApplicationBuilder app, BasicAuthenticationOptions options)
-        {
-            if (app == null)
-            {
-                throw new ArgumentNullException(nameof(app));
-            }
-            if (options == null)
-            {
-                throw new ArgumentNullException(nameof(options));
-            }
+        public static AuthenticationBuilder AddBasicAuthentication(this AuthenticationBuilder builder, Action<BasicOptions> configureOptions)
+             => builder.AddBasicAuthentication(BasicDefaults.AuthenticationScheme,"", configureOptions);
 
-            return app.UseMiddleware<BasicAuthenticationMiddleware>(Options.Create(options));
+        public static AuthenticationBuilder AddBasicAuthentication(this AuthenticationBuilder builder, string authenticationScheme, Action<BasicOptions> configureOptions)
+            => builder.AddBasicAuthentication(authenticationScheme, displayName: null, configureOptions: configureOptions);
+
+        public static AuthenticationBuilder AddBasicAuthentication(this AuthenticationBuilder builder, string authenticationScheme, string displayName, Action<BasicOptions> configureOptions)
+        {
+            return builder.AddScheme<BasicOptions, BasicAuthenticationHandler>(authenticationScheme, displayName, configureOptions);
         }
     }
 }//end namespace

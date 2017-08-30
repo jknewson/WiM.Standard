@@ -20,28 +20,18 @@
 //          
 //              https://andrewlock.net/introduction-to-authentication-with-asp-net-core/
 
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Options;
 
 namespace WiM.Security.Authentication.Basic
 {
-    public class BasicAuthenticationOptions : AuthenticationOptions, IOptions<BasicAuthenticationOptions>
+    public class BasicOptions : AuthenticationSchemeOptions
     {
-        public BasicAuthenticationOptions() {
-            AuthenticationScheme = "Basic";
-            AutomaticAuthenticate = true;
-        }
         /// <summary>
-        /// IOptionsImplementation
+        /// Gets or sets the challenge to put in the "Authenticate" header.
         /// </summary>
-        BasicAuthenticationOptions IOptions<BasicAuthenticationOptions>.Value
-        {
-            get
-            {
-                return this;
-            }
-        }
-
+        public string AuthenticationScheme { get; set; } = BasicDefaults.AuthenticationScheme;
 
     }
 }

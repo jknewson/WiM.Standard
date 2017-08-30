@@ -13,7 +13,7 @@
 //  
 //   purpose:   Handle Basic Authentication. !important, Should be used with HTTPS
 //
-//discussion:   Authentication is the process of determining who you are, while Authorisation 
+//discussion:   Authentication is the process of determining who you are, while Authorization 
 //              evolves around what you are allowed to do, i.e. permissions. Obviously before 
 //              you can determine what a user is allowed to do, you need to know who they are, 
 //              so when authorisation is required, you must also first authenticate the user in some way.  
@@ -26,17 +26,25 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using System.Text.Encodings.Web;
 
 
 //where all the authentication work is actually done
 namespace WiM.Security.Authentication.Basic
 {
-    internal class BasicAuthenticationHandler : AuthenticationHandler<BasicAuthenticationOptions>
+    public class BasicAuthenticationHandler : AuthenticationHandler<BasicOptions>
     {
         private IBasicUserAgent _agent;
-        public BasicAuthenticationHandler(IBasicUserAgent agent) {
+
+        public BasicAuthenticationHandler(IOptionsMonitor<BasicOptions> options, ILoggerFactory logger, 
+                                            UrlEncoder encoder, ISystemClock clock, IBasicUserAgent agent) 
+            : base(options, logger, encoder, clock)
+        {
             this._agent = agent;
         }
+
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             try
@@ -44,11 +52,11 @@ namespace WiM.Security.Authentication.Basic
                 string authorization = Request.Headers["Authorization"];
                 if (string.IsNullOrEmpty(authorization))
                 {
-                    return AuthenticateResult.Skip();
+                    return AuthenticateResult.Fail("Authorization failed");
                 }
                 if (!authorization.StartsWith("Basic ", StringComparison.OrdinalIgnoreCase))
                 {
-                    AuthenticateResult.Skip();
+                    AuthenticateResult.Fail("Authorization failed");
                 }
 
                 var encodedUsernamePassword = authorization.Substring("Basic ".Length).Trim();
@@ -62,7 +70,7 @@ namespace WiM.Security.Authentication.Basic
                 var userprincipal = getUserPrincipal(username, password);
 
                 if (userprincipal == null)
-                    return AuthenticateResult.Skip();
+                    return AuthenticateResult.Fail("Authorization failed");
 
                 return AuthenticateResult.Success(new AuthenticationTicket(userprincipal, null, Options.AuthenticationScheme));
             }
