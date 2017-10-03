@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Text;
 using System.IO;
+using System.Collections.Generic;
 
 namespace WiM.Utilities.ServiceAgent
 {
@@ -134,8 +135,10 @@ namespace WiM.Utilities.ServiceAgent
                     break;
                 case contentType.XML: 
                     break;
-            }
-            
+                case contentType.FORMURL:
+                    this.Content = new FormUrlEncodedContent((IEnumerable<KeyValuePair<string, string>>)data);
+                    break;
+            }            
         }
         private string GetMediaType(contentType type) {
             switch (type)
@@ -144,8 +147,9 @@ namespace WiM.Utilities.ServiceAgent
                     return "application/json";
                 case contentType.XML:
                     return "application/xml";
+                case contentType.FORMURL:
+                    return "application/x-www-form-urlencoded";
             }
-
             return "application/json";
         }
     }
@@ -159,6 +163,7 @@ namespace WiM.Utilities.ServiceAgent
     public enum contentType
     {
         JSON,
-        XML
+        XML,
+        FORMURL
     }
 }
