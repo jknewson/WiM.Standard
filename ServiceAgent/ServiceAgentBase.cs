@@ -25,6 +25,8 @@ using Newtonsoft.Json;
 using System.Text;
 using System.IO;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
+
 
 namespace WiM.Utilities.ServiceAgent
 {
@@ -47,31 +49,17 @@ namespace WiM.Utilities.ServiceAgent
         #endregion
 
         #region Methods
-        public async Task<T> ExecuteAsync<T>(RequestInfo request) where T : new()
+        protected async Task<T> ExecuteAsync<T>(RequestInfo request) where T : new()
+        {
+            return await this.ExecuteAsync<T>(request.RequestURI, request.Content, request.Method);
+        }//end ExecuteAsync<T>
+        protected async Task<T> ExecuteAsync<T>(string uri, HttpContent data, methodType mtd = methodType.e_GET)
         {
             try
             {
-                HttpResponseMessage response=null;
+                HttpResponseMessage response = null;
                 T result = default(T);
-                switch (request.Method)
-                {
-                    case methodType.e_GET:
-                        response = await client.GetAsync(request.RequestURI);
-                        break;
-                    case methodType.e_POST:
-                        response = await client.PostAsync(request.RequestURI, request.Content);
-                        break;
-                    case methodType.e_PUT:
-                        response = await client.PutAsync(request.RequestURI, request.Content);
-                        break;
-                    case methodType.e_DELETE:
-                        response = await client.DeleteAsync(request.RequestURI);
-                        break;
-                }//end switch
-
-                if (response == null) throw new Exception("http request invalid");
-                //throws an exception if not 200
-                response.EnsureSuccessStatusCode();
+                response = await this.ExecuteAsync(uri, data, mtd);
 
                 var stream = await response.Content.ReadAsStreamAsync();
                 if (stream != null)
@@ -83,11 +71,48 @@ namespace WiM.Utilities.ServiceAgent
             {
                 throw;
             }
+        }
 
+        protected void ExecuteAsync(RequestInfo request)
+        {
+            this.ExecuteAsync(request.RequestURI, request.Content, request.Method);
         }//end ExecuteAsync<T>
+
+        protected async Task<HttpResponseMessage> ExecuteAsync(string uri, HttpContent data, methodType mtd = methodType.e_GET)
+        {
+            try
+            {
+                HttpResponseMessage response = null;
+                switch (mtd)
+                {
+                    case methodType.e_GET:
+                        response = await client.GetAsync(uri);
+                        break;
+                    case methodType.e_POST:
+                        response = await client.PostAsync(uri, data);
+                        break;
+                    case methodType.e_PUT:
+                        response = await client.PutAsync(uri, data);
+                        break;
+                    case methodType.e_DELETE:
+                        response = await client.DeleteAsync(uri);
+                        break;
+                }//end switch
+
+                if (response == null) throw new Exception("http request invalid");
+                //throws an exception if not 200
+                response.EnsureSuccessStatusCode();
+                return response;               
+            }
+            catch (HttpRequestException ex)
+            {
+                throw;
+            }
+        }
 
         #endregion
         #region Helper Methods
+
         protected T DeserializeStream<T>(Stream stream)
         {
             using (var sr = new StreamReader(stream))
@@ -120,11 +145,12 @@ namespace WiM.Utilities.ServiceAgent
         public string DataType { get; set; }
         public HttpContent Content { get; set; }
 
-        public RequestInfo(string uri, methodType mtd = methodType.e_GET) {
+        public RequestInfo(string uri, methodType mtd = methodType.e_GET)
+        {
             this.RequestURI = uri;
-            this.Method = mtd;            
+            this.Method = mtd;
         }
-        public RequestInfo(string uri, Object data,contentType type = contentType.JSON,  methodType mtd = methodType.e_GET)
+        public RequestInfo(string uri, Object data, contentType type = contentType.JSON, methodType mtd = methodType.e_GET)
         {
             this.RequestURI = uri;
             this.Method = mtd;
@@ -133,22 +159,18 @@ namespace WiM.Utilities.ServiceAgent
                 case contentType.JSON:
                     this.Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, GetMediaType(type));
                     break;
-                case contentType.XML: 
-                    break;
-                case contentType.FORMURL:
-                    this.Content = new FormUrlEncodedContent((IEnumerable<KeyValuePair<string, string>>)data);
-                    break;
-            }            
+                case contentType.XML:
+                    throw new NotImplementedException("XML not implemented");
+            }
         }
-        private string GetMediaType(contentType type) {
+        private string GetMediaType(contentType type)
+        {
             switch (type)
             {
                 case contentType.JSON:
                     return "application/json";
                 case contentType.XML:
                     return "application/xml";
-                case contentType.FORMURL:
-                    return "application/x-www-form-urlencoded";
             }
             return "application/json";
         }
@@ -163,7 +185,6 @@ namespace WiM.Utilities.ServiceAgent
     public enum contentType
     {
         JSON,
-        XML,
-        FORMURL
+        XML
     }
 }
