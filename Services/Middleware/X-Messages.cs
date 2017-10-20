@@ -24,7 +24,7 @@ namespace WiM.Services.Middleware
             //attach callback to last event that fires before headers are sent.
             httpContext.Response.OnStarting((state) =>
             {
-                if (httpContext.Response.StatusCode == (int)HttpStatusCode.OK)
+                try
                 {
                     httpContext.Response.Headers.Add("X-USGSWiM-HostName", Environment.MachineName);
                     //need to attach msg from log here 
@@ -34,6 +34,11 @@ namespace WiM.Services.Middleware
                         httpContext.Response.Headers.Add("X-USGSWiM-Messages", string.Join(";", msg));
                     }
                 }
+                catch (Exception ex)
+                {
+                    //do nothing
+                }
+
                 return Task.FromResult(0);
             }, null);
 
