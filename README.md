@@ -4,16 +4,13 @@
 
 WiM.Standard is a collection of custom reusable .NET Standard libraries and objects available on nuget for handling logging, requests, hypermedia and timeseries
 
-### Prerequisites
 ![dotnet Standard](netstandard.png)
 
-## Getting Started
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
 ### Installing
 
 comming soon -> push to nuget repo list
+
 [GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMAnalytics/):`Install-Package WIMAnalytics`
 [GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMDBUtilities/):`Install-Package WIMDBUtilities`
 [GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMExtensions/):`Install-Package WIMExtensions`
@@ -24,12 +21,6 @@ comming soon -> push to nuget repo list
 [GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMServices/):`Install-Package WIMServices`
 [GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMTimeSeriesResources/):`Install-Package WIMTimeSeriesResources`
 [GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMUtilities/):`Install-Package WIMUtilities`
-
-
-Open the solution file (.sln) using perfered IDE.
-
-
-## Building and testing
 
 
 ## Built With
