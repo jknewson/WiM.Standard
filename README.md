@@ -12,14 +12,23 @@ WiM.Standard is a collection of custom reusable .NET Standard libraries and obje
 comming soon -> push to nuget repo list
 
 [GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMAnalytics/):`Install-Package WIMAnalytics`
+
 [GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMDBUtilities/):`Install-Package WIMDBUtilities`
+
 [GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMExtensions/):`Install-Package WIMExtensions`
+
 [GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMHypermedia/):`Install-Package WIMHypermedia`
+
 [GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMResources/):`Install-Package WIMResources`
+
 [GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMSecurity/):`Install-Package WIMSecurity`
+
 [GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMServiceAgent/):`Install-Package WIMServiceAgent`
+
 [GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMServices/):`Install-Package WIMServices`
+
 [GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMTimeSeriesResources/):`Install-Package WIMTimeSeriesResources`
+
 [GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMUtilities/):`Install-Package WIMUtilities`
 
 
