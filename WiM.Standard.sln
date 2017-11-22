@@ -27,7 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Servic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceAgent", "ServiceAgent\ServiceAgent.csproj", "{83C80EFA-B14B-4422-AE0C-07DB291591F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analytics", "Analytics\Analytics.csproj", "{7B128B16-41B2-4BDF-8CB7-2AA786DB88EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analytics", "Analytics\Analytics.csproj", "{7B128B16-41B2-4BDF-8CB7-2AA786DB88EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spatial", "Spatial\Spatial.csproj", "{93F42940-B465-437C-886F-1374A65FA1CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +89,10 @@ Global
 		{7B128B16-41B2-4BDF-8CB7-2AA786DB88EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B128B16-41B2-4BDF-8CB7-2AA786DB88EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B128B16-41B2-4BDF-8CB7-2AA786DB88EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93F42940-B465-437C-886F-1374A65FA1CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93F42940-B465-437C-886F-1374A65FA1CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93F42940-B465-437C-886F-1374A65FA1CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93F42940-B465-437C-886F-1374A65FA1CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

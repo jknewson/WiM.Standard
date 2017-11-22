@@ -11,12 +11,4 @@
     <Version>1.1.0</Version>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Spatial\FeatureResource.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Spatial\" />
-  </ItemGroup>
-
 </Project>
