@@ -11,26 +11,27 @@ WiM.Standard is a collection of custom reusable .NET Standard libraries and obje
 
 comming soon -> push to nuget repo list
 
-[GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMAnalytics/):`Install-Package WIMAnalytics`
+[WIM.Analytics NuGet package](https://www.nuget.org/packages/WiM.Analytics/):`Install-Package WiM.Analytics`
 
-[GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMDBUtilities/):`Install-Package WIMDBUtilities`
+[WIM.DBUtilities NuGet package](https://www.nuget.org/packages/WiM.DBUtilities /):`Install-Package WiM.DBUtilities`
 
-[GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMExtensions/):`Install-Package WIMExtensions`
+[WIM.Extensions NuGet package](https://www.nuget.org/packages/WiM.Extensions/):`Install-Package WiM.Extensions`
 
-[GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMHypermedia/):`Install-Package WIMHypermedia`
+[WIM.Hypermedia NuGet package](https://www.nuget.org/packages/WiM.Hypermedia/):`Install-Package WiM.Hypermedia`
 
-[GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMResources/):`Install-Package WIMResources`
+[WIM.TimeSeries NuGet package](https://www.nuget.org/packages/WiM.Resource.TimeSeries/):`Install-Package WiM.Resource.TimeSeries`
 
-[GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMSecurity/):`Install-Package WIMSecurity`
+[WIM.Resources NuGet package](https://www.nuget.org/packages/WiM.Resources/):`Install-Package WiM.Resources`
 
-[GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMServiceAgent/):`Install-Package WIMServiceAgent`
+[WIM.Security NuGet package](https://www.nuget.org/packages/WiM.Security/):`Install-Package WiM.Security`
 
-[GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMServices/):`Install-Package WIMServices`
+[WIM.Services NuGet package](https://www.nuget.org/packages/WiM.Services/):`Install-Package WiM.Services`
 
-[GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMTimeSeriesResources/):`Install-Package WIMTimeSeriesResources`
+[WIM.Spatial NuGet package](https://www.nuget.org/packages/WiM.Spatial/):`Install-Package WiM.Spatial`
 
-[GeoJSON.Net NuGet package](https://www.nuget.org/packages/WIMUtilities/):`Install-Package WIMUtilities`
+[WIM.Utilities NuGet package](https://www.nuget.org/packages/WiM.Utilities/):`Install-Package WiM.Utilities`
 
+[WIM.ServiceAgent NuGet package](https://www.nuget.org/packages/WiM.Utilities.ServiceAgent/):`Install-Package WiM.Utilities.ServiceAgent`
 
 ## Built With
 
