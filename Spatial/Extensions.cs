@@ -4,10 +4,11 @@ using GeoJSON.Net.Geometry;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace WiM.Spatial
+namespace WiM.Extensions
 {
-    public static class Extensions
+    public static class SpatialExtensions
     {
+        //https://en.wikipedia.org/wiki/Point_in_polygon
         //Adapted from Turfjs https://github.com/Turfjs/turf-inside/blob/master/index.js#L65
         public static Boolean ContainsPoint(this MultiPolygon polygon, Point point)
         {
@@ -74,7 +75,7 @@ namespace WiM.Spatial
                 var intersect = ((yi > pt.Longitude) != (yj > pt.Longitude)) &&
                     (pt.Latitude < (xj - xi) * (pt.Longitude - yi) / (yj - yi) + xi);
                 if (intersect) isInside = !isInside;
-            }
+            }//next
             return isInside;
         }
 

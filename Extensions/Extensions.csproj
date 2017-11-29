@@ -5,10 +5,14 @@
     <AssemblyName>WiM.Extensions</AssemblyName>
     <RootNamespace>WiM.Extensions</RootNamespace>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Authors>jknewson</Authors>
+    <Authors>Jeremy Newson</Authors>
     <Company>Web Informatics and Mapping</Company>
-    <Description>Extension methods</Description>
+    <Description>Simple Enumerable and string Extension methods</Description>
     <Version>1.1.0</Version>
+    <Copyright>public domain</Copyright>
+    <RepositoryUrl>https://github.com/USGS-WiM/WiM.Standard</RepositoryUrl>
+    <PackageLicenseUrl>https://www2.usgs.gov/visual-id/credit_usgs.html#copyright</PackageLicenseUrl>
+    <PackageIconUrl>https://github.com/USGS-WiM/WiM.Standard/blob/staging/wimlogo.png</PackageIconUrl>
   </PropertyGroup>
 
 </Project>

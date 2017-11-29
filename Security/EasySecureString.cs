@@ -1,14 +1,23 @@
-﻿#region Comments
-//05.04.2017- JKN- Modified for cross platform. 
-//02.17.12 - JB - Created
-#endregion
-#region Copywright
-/* Authors:
- *      Jonathan Baier (jbaier@usgs.gov)
- *      Jeremy Newson (jknewson@usgs.gov)
- * Copyright:
- *      2017 USGS - WiM
- */
+﻿//------------------------------------------------------------------------------
+//----- EasySecureString -------------------------------------------------------
+//------------------------------------------------------------------------------
+
+//-------1---------2---------3---------4---------5---------6---------7---------8
+//       01234567890123456789012345678901234567890123456789012345678901234567890
+//-------+---------+---------+---------+---------+---------+---------+---------+
+
+// copyright:   2017 WIM - USGS
+
+//    authors:  Jeremy K. Newson USGS Web Informatics and Mapping
+//              
+//  
+//   purpose:   Secure string with disposable support
+//
+//discussion:
+//     
+
+#region Comments
+// 05.04.2017 - updated to .net standard
 #endregion
 
 using System;

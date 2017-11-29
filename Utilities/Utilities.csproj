@@ -5,10 +5,14 @@
     <AssemblyName>WiM.Utilities</AssemblyName>
     <RootNamespace>WiM.Utilities</RootNamespace>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Authors>jknewson</Authors>
+    <Authors>Jeremy Newson</Authors>
     <Company>Web Informatics and Mapping</Company>
     <Description>random utility operations</Description>
     <Version>1.1.0</Version>
+    <PackageLicenseUrl>https://www2.usgs.gov/visual-id/credit_usgs.html#copyright</PackageLicenseUrl>
+    <Copyright>public domain</Copyright>
+    <RepositoryUrl>https://github.com/USGS-WiM/WiM.Standard</RepositoryUrl>
+    <PackageIconUrl>https://github.com/USGS-WiM/WiM.Standard/blob/staging/wimlogo.png</PackageIconUrl>
   </PropertyGroup>
 
 </Project>

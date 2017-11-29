@@ -5,10 +5,14 @@
     <AssemblyName>WiM.Resources</AssemblyName>
     <RootNamespace>WiM.Resources</RootNamespace>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Authors>jknewson</Authors>
+    <Authors>Jeremy Newson</Authors>
     <Company>Web Informatics and Mapping</Company>
     <Description>Resource objects</Description>
     <Version>1.1.0</Version>
+    <RepositoryUrl>https://github.com/USGS-WiM/WiM.Standard</RepositoryUrl>
+    <Copyright>public domain</Copyright>
+    <PackageLicenseUrl>https://www2.usgs.gov/visual-id/credit_usgs.html#copyright</PackageLicenseUrl>
+    <PackageIconUrl>https://github.com/USGS-WiM/WiM.Standard/blob/staging/wimlogo.png</PackageIconUrl>
   </PropertyGroup>
 
 </Project>

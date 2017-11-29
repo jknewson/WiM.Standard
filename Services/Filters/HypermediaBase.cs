@@ -1,4 +1,27 @@
-﻿//https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/filters#action-filters
+﻿//------------------------------------------------------------------------------
+//----- HypermediaBase ---------------------------------------------------------
+//------------------------------------------------------------------------------
+
+//-------1---------2---------3---------4---------5---------6---------7---------8
+//       01234567890123456789012345678901234567890123456789012345678901234567890
+//-------+---------+---------+---------+---------+---------+---------+---------+
+
+// copyright:   2017 WIM - USGS
+
+//    authors:  Jeremy K. Newson USGS Web Informatics and Mapping
+//              
+//  
+//   purpose:    Pipline Filter for hypermedia insertion
+//
+//discussion:   
+// https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/filters#action-filters
+//     
+
+#region Comments
+// 11.01.2017 - jkn Created
+
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Text;

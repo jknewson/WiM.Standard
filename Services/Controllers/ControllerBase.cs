@@ -1,4 +1,28 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿//------------------------------------------------------------------------------
+//----- ControllerBase ---------------------------------------------------------
+//------------------------------------------------------------------------------
+
+//-------1---------2---------3---------4---------5---------6---------7---------8
+//       01234567890123456789012345678901234567890123456789012345678901234567890
+//-------+---------+---------+---------+---------+---------+---------+---------+
+
+// copyright:   2017 WIM - USGS
+
+//    authors:  Jeremy K. Newson USGS Web Informatics and Mapping
+//              
+//  
+//   purpose:   contains base methods for aspnetcore controllers
+//
+//discussion:   
+//  http://www.codeproject.com/Articles/704865/Salted-Password-Hashing-Doing-it-Right
+//     
+
+#region Comments
+// 05.04.2017 - updated to .net standard
+// 7.03.12 - jkn created
+
+#endregion
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;

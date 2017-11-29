@@ -1,4 +1,26 @@
-﻿using System;
+﻿//------------------------------------------------------------------------------
+//----- MathOps ----------------------------------------------------------------
+//------------------------------------------------------------------------------
+
+//-------1---------2---------3---------4---------5---------6---------7---------8
+//       01234567890123456789012345678901234567890123456789012345678901234567890
+//-------+---------+---------+---------+---------+---------+---------+---------+
+
+// copyright:   2017 WIM - USGS
+
+//    authors:  Jeremy K. Newson USGS Web Informatics and Mapping
+//             
+// 
+//   purpose:  various reusable math operations.
+//          
+//discussion:  
+
+#region "Comments"
+//08.12.2014 jkn - Created
+//10.15.2015 jkn - Added function support
+//05.05.2017 jkn - Ported over to netstandard library
+#endregion
+using System;
 
 namespace WiM.Utilities
 {
