@@ -14,6 +14,13 @@ namespace WiM.Test
             string expression = "";
             Dictionary<string, double?> variables = null;
             ExpressionOps eOps = null;
+
+            //CO LIMIT ()
+            expression = "1.94984E-51*(DRNAREA)^(0.89)*(ELEV)^(12.42)";
+            variables = new Dictionary<string, double?>() { { "DRNAREA", 22.7 },{"ELEV", 1459 } };
+            eOps = new ExpressionOps(expression, variables);
+            Assert.IsTrue(eOps.IsValid && eOps.Value == -4.246);
+
             //ME LIMIT ()
             expression = "-2.123*DRNAREA";
             variables = new Dictionary<string, double?>() { { "DRNAREA", 2 } };

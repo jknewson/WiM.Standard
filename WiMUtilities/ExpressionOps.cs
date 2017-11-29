@@ -439,7 +439,7 @@ namespace WiM.Utilities
                 case OperationEnum.e_minus:
                     return val1 - val2;
                 case OperationEnum.e_exponent:
-                    return (float)System.Math.Pow(val1, val2);
+                    return System.Math.Pow(val1, val2);
                 default:
                     IsValid = false;
                     return 0;
