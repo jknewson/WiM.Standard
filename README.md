@@ -9,7 +9,7 @@ WiM.Standard is a collection of custom reusable .NET Standard libraries and obje
 ### Installing
 [WIM.Analytics NuGet package](https://www.nuget.org/packages/WiM.Analytics/):`Install-Package WiM.Analytics`
 
-[WIM.DBUtilities NuGet package](https://www.nuget.org/packages/WiM.DBUtilities /):`Install-Package WiM.DBUtilities`
+[WIM.DBUtilities NuGet package](https://www.nuget.org/packages/WiM.DBUtilities/):`Install-Package WiM.DBUtilities`
 
 [WIM.Extensions NuGet package](https://www.nuget.org/packages/WiM.Extensions/):`Install-Package WiM.Extensions`
 
