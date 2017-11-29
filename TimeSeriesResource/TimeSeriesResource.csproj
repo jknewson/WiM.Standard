@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>WiM.Resource.TimeSeries</AssemblyName>
+    <RootNamespace>WiM.Resources.TimeSeries</RootNamespace>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>Jeremy Newson</Authors>
+    <Company>Web Informatics and Mapping</Company>
+    <Description>Timeseries resource objects</Description>
+    <Version>1.1.0</Version>
+    <RepositoryUrl>https://github.com/USGS-WiM/WiM.Standard</RepositoryUrl>
+    <PackageLicenseUrl>https://www2.usgs.gov/visual-id/credit_usgs.html#copyright</PackageLicenseUrl>
+    <Copyright>public domain</Copyright>
+    <PackageIconUrl>https://github.com/USGS-WiM/WiM.Standard/blob/staging/wimlogo.png</PackageIconUrl>
+  </PropertyGroup>
+
+</Project>
