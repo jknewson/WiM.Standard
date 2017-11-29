@@ -11,11 +11,11 @@
     <Company>USGS Web Informatics and Mapping</Company>
     <PackageLicenseUrl>https://www2.usgs.gov/visual-id/credit_usgs.html#copyright</PackageLicenseUrl>
     <Copyright>public domain</Copyright>
-    <PackageProjectUrl></PackageProjectUrl>
+    <PackageProjectUrl>https://wim.usgs.gov/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/USGS-WiM/WiM.Standard</RepositoryUrl>
 	<Description>provides basic services for integration with google analytics measurement protocal. See https://developers.google.com/analytics/devguides/collection/protocol/v1/reference for more information</Description>
 	<Version>1.1.0</Version>
-	<PackageIconUrl>https://github.com/USGS-WiM/WiM.Standard/blob/staging/wimlogo.png</PackageIconUrl>
+	<PackageIconUrl>https://wim.usgs.gov/visuals/branding/wimvector.png</PackageIconUrl>
     </PropertyGroup>
 
   <ItemGroup>
