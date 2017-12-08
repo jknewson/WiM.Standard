@@ -7,7 +7,7 @@ namespace WiM.Services.Resources
 {
     public class RESTResource
     {
-        public string Resource { get; set; }
+        public string Name { get; set; }
         public string Description { get; set; }
         public List<ResourceMethod> Methods { get; set; }
     }

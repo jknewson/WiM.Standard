@@ -44,7 +44,7 @@ namespace WiM.Services.Controllers
             var routes = _provider.ActionDescriptors.Items.Where(a => a.RouteValues["Action"] != "GetRoutes").GroupBy(s => ((ControllerActionDescriptor)s).ControllerName).Select(k => 
             new RESTResource()  
             {
-                Resource = k.Key,
+                Name = k.Key,
                 Description = getResourceDescription(k.Key),
                 Methods = k.GroupBy(m => getResourceMethod(m.RouteValues["Action"])).Select(x => new ResourceMethod()
                 {
