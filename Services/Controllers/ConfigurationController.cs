@@ -49,7 +49,7 @@ namespace WiM.Services.Controllers
                 Methods = k.GroupBy(m => getResourceMethod(m.RouteValues["Action"])).Select(x => new ResourceMethod()
                 {
                     Type = x.Key,
-                    UriList = x.Select(u => {
+                    UriList = x.Where(u => u.AttributeRouteInfo != null).Select(u => {
                         var uristring = String.IsNullOrEmpty(u.AttributeRouteInfo.Template.Replace(k.Key, "")) ? "/" : u.AttributeRouteInfo.Template.Replace(k.Key, "");
                         return new ResourceUri() 
                         {
