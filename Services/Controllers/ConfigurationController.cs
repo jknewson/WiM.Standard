@@ -24,6 +24,9 @@ using Microsoft.Extensions.Options;
 using WiM.Services.Resources;
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using WiM.Resources;
+using System.Collections.Generic;
 
 namespace WiM.Services.Controllers
 {
@@ -51,23 +54,14 @@ namespace WiM.Services.Controllers
                     Type = x.Key,
                     UriList = x.Where(u => u.AttributeRouteInfo != null).Select(u => {
                         var uristring = String.IsNullOrEmpty(u.AttributeRouteInfo.Template.Replace(k.Key, "")) ? "/" : u.AttributeRouteInfo.Template.Replace(k.Key, "");
-                        return new ResourceUri() 
+                        return new ResourceUri()
                         {
                             Name = getResourceURIName(k.Key, uristring),
                             Uri = uristring,
                             Description = getResourceDescription(k.Key, uristring),
-                            Parameters = u.Parameters.Where(p => p.BindingInfo?.BindingSource.DisplayName == "Query").Select(p => new ResourceParameter()
-                            {
-                                Name = p.Name,
-                                Description = getResourcePropertyDescription(p.Name),
-                                Type = p.ParameterType.Name
-                            }).ToList(),
-                            Body = u.Parameters.Where(p => p.BindingInfo?.BindingSource.DisplayName == "Body").Select(p => new ResourceParameter()
-                            {
-                                Name = p.Name,
-                                Description = getResourcePropertyDescription(p.Name),
-                                Type = p.ParameterType.Name
-                            }).ToList()
+                            Parameters = u.Parameters.Where(p => p.BindingInfo?.BindingSource.DisplayName != "Body").Select(p => getResourceParams(p)).ToList(),
+                            Body = u.Parameters.Where(p => p.BindingInfo?.BindingSource.DisplayName == "Body").Select(p => getResourceParams(p)).ToList()
+                        
                         };
                     }).ToList()                    
                 }).ToList()
@@ -75,7 +69,7 @@ namespace WiM.Services.Controllers
             return Ok(routes);
         }
         #region Helper Methods
-        protected virtual String getResourceDescription(string ResourceName, string uriname ="") {
+        protected virtual Dictionary<string, string> getResourceDescription(string ResourceName, string uriname = null) {
             try
             {
             var resource = _settings.Resources[ResourceName];
@@ -85,7 +79,7 @@ namespace WiM.Services.Controllers
             }
             catch (Exception)
             {
-                return "Description not available";
+                return new Dictionary<string, string>() { { "string", "Description not available" } };
             }
         }
         protected virtual String getResourceURIName(string ResourceName, string uriname)
@@ -103,7 +97,7 @@ namespace WiM.Services.Controllers
         {
             try
             { 
-                return _settings.Parameters[propertyname];
+                return _settings.Parameters[propertyname].Description;
             }
             catch (Exception)
             {
@@ -123,6 +117,48 @@ namespace WiM.Services.Controllers
                 default: return "UNSPECIFIED";
             }
 
+        }
+        protected ResourceParameter getResourceParams(ParameterDescriptor p)
+        {
+            var parameter = new ResourceParameter()
+            {
+                Name = p.Name,
+                Description = getResourcePropertyDescription(p.Name),
+                Type = GetTypeName(p.ParameterType),
+                Required = p.BindingInfo == null ? (bool?)true : null,
+                Link = getLinkedResource(p.Name)
+
+
+            };
+
+            return parameter;
+        }
+        private Link getLinkedResource(string propertyname)
+        {
+            try
+            {
+                return _settings.Parameters[propertyname].Link;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        protected string GetTypeName(Type type)
+        {
+            var nullableType = Nullable.GetUnderlyingType(type);
+            bool isNullableType = nullableType != null;
+
+
+            if (isNullableType)
+                return string.Format("nullable({0})", nullableType.Name.ToLower());
+            else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(System.Collections.Generic.List<>))
+            {
+                return string.Format("array({0})", type.GetGenericArguments().Single().Name.ToLower());
+            }
+            else
+                return type.Name;
         }
         #endregion
 

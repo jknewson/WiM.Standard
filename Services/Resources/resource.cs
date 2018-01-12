@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WiM.Resources;
 
 namespace WiM.Services.Resources
 {
     public class RESTResource
     {
         public string Name { get; set; }
-        public string Description { get; set; }
+        public Dictionary<string, string> Description { get; set; }
         public List<ResourceMethod> Methods { get; set; }
     }
     public class ResourceMethod
@@ -20,7 +21,7 @@ namespace WiM.Services.Resources
     {
         public string Name { get; set; }
         public string Uri { get; set; }
-        public string Description { get; set; }
+        public Dictionary<string, string> Description { get; set; }
         public List<ResourceParameter> Parameters { get; set; }
         public bool ShouldSerializeParameters()
         { return Parameters != null && Parameters.Count > 0; }
@@ -33,5 +34,7 @@ namespace WiM.Services.Resources
         public string Name { get; set; }
         public string Description { get; set; }
         public string Type { get; set; }
+        public bool? Required { get; set; }
+        public Link Link { get; set; }
     }
 }
