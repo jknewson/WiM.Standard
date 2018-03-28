@@ -37,7 +37,7 @@ namespace WiM.Services.Controllers
         public ControllerBase()
         {
         }        
-        protected List<string> parse(string items)
+        protected virtual List<string> parse(string items)
         {
             if (items == null) items = string.Empty;
             char[] delimiterChars = { ';', ',' };
@@ -47,6 +47,8 @@ namespace WiM.Services.Controllers
         {
             try
             {
+                //Must clear ModelState before validation to ensure any manual updates are applied during validation.
+                ModelState.Clear();
                 var isvalid = this.TryValidateModel(item);
                 return isvalid;
             }
@@ -56,11 +58,11 @@ namespace WiM.Services.Controllers
                 return false;
             }
         }
-        protected async Task<IActionResult> HandleExceptionAsync(Exception ex)
+        protected virtual async Task<IActionResult> HandleExceptionAsync(Exception ex)
         {
             return await Task.Run(() => { return HandleException(ex); });
         }
-        protected IActionResult HandleException(Exception ex)
+        protected virtual IActionResult HandleException(Exception ex)
         {
                 return StatusCode(500, new Error(errorEnum.e_internalError, "An error occured while processing your request."));
         }
