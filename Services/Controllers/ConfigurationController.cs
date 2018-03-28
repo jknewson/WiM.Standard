@@ -53,7 +53,9 @@ namespace WiM.Services.Controllers
                 {
                     Type = x.Key,
                     UriList = x.Where(u => u.AttributeRouteInfo != null).Select(u => {
-                        var uristring = String.IsNullOrEmpty(u.AttributeRouteInfo.Template.Replace(k.Key, "")) ? "/" : u.AttributeRouteInfo.Template.Replace(k.Key, "");
+                        var uristring = u.AttributeRouteInfo.Template.IndexOf(k.Key) == 0 ? u.AttributeRouteInfo.Template.Remove(0, k.Key.Length) : u.AttributeRouteInfo.Template;
+                        if (string.IsNullOrEmpty(uristring)) uristring = "/";
+
                         return new ResourceUri()
                         {
                             Name = getResourceURIName(k.Key, uristring),
