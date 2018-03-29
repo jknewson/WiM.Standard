@@ -27,6 +27,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using WiM.Resources;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Internal;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
 
 namespace WiM.Services.Controllers
 {
@@ -44,61 +46,79 @@ namespace WiM.Services.Controllers
         [HttpGet()]
         public virtual IActionResult GetRoutes()
         {
-            var routes = _provider.ActionDescriptors.Items.Where(a => a.RouteValues["Action"] != "GetRoutes").GroupBy(s => ((ControllerActionDescriptor)s).ControllerName).Select(k => 
-            new RESTResource()  
+            var routes = _provider.ActionDescriptors.Items.Where(a => a.RouteValues["Action"] != "GetRoutes").GroupBy(s => ((ControllerActionDescriptor)s).ControllerName).Select(k =>
+            new RESTResource()
             {
                 Name = k.Key,
-                Description = getResourceDescription(k.Key),
-                Methods = k.GroupBy(m => getResourceMethod(m.RouteValues["Action"])).Select(x => new ResourceMethod()
+                Description = getResourceDescription(k.Key),                  
+                Methods = k.GroupBy(m => getHttpMethod(m.ActionConstraints.Where(ac => ac.GetType() == typeof(HttpMethodActionConstraint))
+                .Cast<HttpMethodActionConstraint>())).Select(x => new ResourceMethod()
                 {
-                    Type = x.Key,
+                    Type = x.Key,  
                     UriList = x.Where(u => u.AttributeRouteInfo != null).Select(u => {
                         var uristring = u.AttributeRouteInfo.Template.IndexOf(k.Key) == 0 ? u.AttributeRouteInfo.Template.Remove(0, k.Key.Length) : u.AttributeRouteInfo.Template;
                         if (string.IsNullOrEmpty(uristring)) uristring = "/";
 
                         return new ResourceUri()
                         {
-                            Name = getResourceURIName(k.Key, uristring),
+                            Name = getResourceURIName(k.Key, x.Key, uristring),
                             Uri = uristring,
-                            Description = getResourceDescription(k.Key, uristring),
+                            RequiresAuthentication = getResourceAuthenticationRequirement(k.Key,x.Key,uristring),
+                            Description = getResourceDescription(k.Key, x.Key, uristring),
                             Parameters = u.Parameters.Where(p => p.BindingInfo?.BindingSource.DisplayName != "Body").Select(p => getResourceParams(p)).ToList(),
                             Body = u.Parameters.Where(p => p.BindingInfo?.BindingSource.DisplayName == "Body").Select(p => getResourceParams(p)).ToList()
-                        
                         };
-                    }).ToList()                    
+                    }).ToList()
                 }).ToList()
             }).ToList();
             return Ok(routes);
         }
         #region Helper Methods
-        protected virtual Dictionary<string, string> getResourceDescription(string ResourceName, string uriname = null) {
+        protected virtual string getHttpMethod(IEnumerable<HttpMethodActionConstraint> actionConstraints)
+        {
+            List<string> methods = actionConstraints.SelectMany(x => x.HttpMethods).ToList();
+
+            return (methods.Count == 1) ? getResourceMethod(methods.FirstOrDefault()) : getResourceMethod("");
+        }
+        protected virtual Dictionary<string, string> getResourceDescription(string ResourceName, string method = null, string uri = null)
+        {
             try
             {
-            var resource = _settings.Resources[ResourceName];
-
-                if (string.IsNullOrEmpty(uriname)) return resource.Description;
-                else return resource.Uris[uriname].Description;
+                var resource = _settings.Resources[ResourceName];
+                if (string.IsNullOrEmpty(uri)) return resource.Description;
+                else return resource.Uris[getResourceMethod(method)]?[uri].Description;
             }
             catch (Exception)
             {
                 return new Dictionary<string, string>() { { "string", "Description not available" } };
             }
         }
-        protected virtual String getResourceURIName(string ResourceName, string uriname)
+        protected virtual String getResourceURIName(string ResourceName, string method, string uri)
         {
             try
-            { 
-                return _settings.Resources[ResourceName]?.Uris[uriname]?.Name ?? "Name not available";
+            {
+                return _settings.Resources[ResourceName]?.Uris[getResourceMethod(method)]?[uri]?.Name ?? "Name not available";
             }
             catch (Exception)
             {
                 return "Name not available";
             }
         }
+        protected virtual Boolean? getResourceAuthenticationRequirement(string ResourceName, string method, string uri)
+        {
+            try
+            {
+                return _settings.Resources[ResourceName]?.Uris[getResourceMethod(method)]?[uri]?.RequiresAuthentication ?? null;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
         protected virtual String getResourcePropertyDescription(string propertyname)
         {
             try
-            { 
+            {
                 return _settings.Parameters[propertyname].Description;
             }
             catch (Exception)
@@ -112,15 +132,15 @@ namespace WiM.Services.Controllers
             switch (ResourceMethod.ToLower())
             {
                 case "get": return "GET";
-                case "post":return "POST";
-                case "put":return "PUT";
-                case "delete":return "DELETE";
-                case "patch":return "PATCH";
+                case "post": return "POST";
+                case "put": return "PUT";
+                case "delete": return "DELETE";
+                case "patch": return "PATCH";
                 default: return "UNSPECIFIED";
             }
 
         }
-        protected ResourceParameter getResourceParams(ParameterDescriptor p)
+        protected virtual ResourceParameter getResourceParams(ParameterDescriptor p)
         {
             var parameter = new ResourceParameter()
             {
@@ -135,7 +155,7 @@ namespace WiM.Services.Controllers
 
             return parameter;
         }
-        private Link getLinkedResource(string propertyname)
+        protected virtual Link getLinkedResource(string propertyname)
         {
             try
             {
@@ -146,8 +166,7 @@ namespace WiM.Services.Controllers
                 return null;
             }
         }
-
-        protected string GetTypeName(Type type)
+        protected virtual string GetTypeName(Type type)
         {
             var nullableType = Nullable.GetUnderlyingType(type);
             bool isNullableType = nullableType != null;
@@ -163,7 +182,5 @@ namespace WiM.Services.Controllers
                 return type.Name;
         }
         #endregion
-
-
     }
 }

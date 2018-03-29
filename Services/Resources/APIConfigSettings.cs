@@ -14,7 +14,7 @@ namespace WiM.Services.Resources
     public class Resource
     {
         public Dictionary<string, string> Description { get; set; }
-        public Dictionary<string, Uri> Uris { get; set; }
+        public Dictionary<string, Dictionary<string, Uri>> Uris { get; set; }
     }
     public class Parameter
     {
@@ -25,5 +25,6 @@ namespace WiM.Services.Resources
     {
         public string Name { get; set; }
         public Dictionary<string, string> Description { get; set; }
+        public Boolean? RequiresAuthentication { get; set; }
     }
 }

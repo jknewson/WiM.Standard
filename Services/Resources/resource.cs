@@ -10,7 +10,7 @@ namespace WiM.Services.Resources
     {
         public string Name { get; set; }
         public Dictionary<string, string> Description { get; set; }
-        public List<ResourceMethod> Methods { get; set; }
+        public List<ResourceMethod> Methods { get; set; }       
     }
     public class ResourceMethod
     {
@@ -22,6 +22,7 @@ namespace WiM.Services.Resources
         public string Name { get; set; }
         public string Uri { get; set; }
         public Dictionary<string, string> Description { get; set; }
+        public Boolean? RequiresAuthentication { get; set; }
         public List<ResourceParameter> Parameters { get; set; }
         public bool ShouldSerializeParameters()
         { return Parameters != null && Parameters.Count > 0; }
