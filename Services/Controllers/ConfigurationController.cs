@@ -35,8 +35,8 @@ namespace WiM.Services.Controllers
     [Route("[controller]")]
     public class APIConfigController: ControllerBase
     {
-        private readonly IActionDescriptorCollectionProvider _provider;
-        private readonly APIConfigSettings _settings;
+        protected readonly IActionDescriptorCollectionProvider _provider;
+        protected readonly APIConfigSettings _settings;
 
         public APIConfigController(IActionDescriptorCollectionProvider provider, IOptions<APIConfigSettings> api_settings)
         {
@@ -51,7 +51,7 @@ namespace WiM.Services.Controllers
             {
                 Name = k.Key,
                 Description = getResourceDescription(k.Key),                  
-                Methods = k.GroupBy(m => getHttpMethod(m.ActionConstraints.Where(ac => ac.GetType() == typeof(HttpMethodActionConstraint))
+                Methods = k.Where(m => m.ActionConstraints != null).GroupBy(m => getHttpMethod(m.ActionConstraints.Where(ac => ac.GetType() == typeof(HttpMethodActionConstraint))
                 .Cast<HttpMethodActionConstraint>())).Select(x => new ResourceMethod()
                 {
                     Type = x.Key,  
