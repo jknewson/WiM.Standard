@@ -84,7 +84,7 @@ namespace WiM.Utilities.ServiceAgent
 
         }//end ExecuteAsync<T>
 
-        protected ProcessResponse Execute<T>(ProcessStartInfo psi)
+        protected ProcessResponse Execute(ProcessStartInfo psi)
         {
             ProcessResponse response = null;
             Process task = null;
@@ -114,12 +114,12 @@ namespace WiM.Utilities.ServiceAgent
 
         #endregion
         #region Helper Methods
-        protected ProcessStartInfo getProcessRequest(string filename=null, string args=null)
+        protected ProcessStartInfo getProcessRequest(string argument = null)
         {
 
             ProcessStartInfo psi = new ProcessStartInfo();
             psi.FileName = this.BaseEXE;
-            psi.Arguments = string.Format("{0} {1}", filename, args);
+            psi.Arguments = string.Format(argument);
             psi.UseShellExecute = false;
             psi.RedirectStandardOutput = true;
             psi.RedirectStandardError = true;
