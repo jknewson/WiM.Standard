@@ -36,12 +36,6 @@ namespace WiM.Utilities
         protected DbContext context { get; private set; }
         #endregion
         #region "Collections & Dictionaries"
-        private List<Message> _message = new List<Message>();
-        public List<Message> Messages
-        {
-            get { return _message.Distinct().ToList(); }
-        }
-        #endregion
         #region "Constructor and IDisposable Support"
         #region Constructors
         public DBAgentBase(DbContext context)
@@ -194,13 +188,10 @@ namespace WiM.Utilities
                 return false;
             }
         }
-        protected void sm(MessageType t, string msg)
+
+        protected virtual void sm(Message msg)
         {
-            this._message.Add(new Message() { type = t, msg = msg });
-        }
-        protected void sm(List<Message> msg)
-        {
-            this._message.AddRange(msg);
+            
         }
         #endregion
     }//end class

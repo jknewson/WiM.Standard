@@ -4,7 +4,7 @@ namespace WiM.Resources
 {
     public interface IMessage
     {
-        List<Message> Messages { get; }
+        void sm(Message msg);
     }
     public struct Message
     {

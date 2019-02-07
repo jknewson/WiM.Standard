@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.1</Version>
+    <Version>1.1.2</Version>
     <AssemblyName>WiM.Utilities.ServiceAgent</AssemblyName>
     <RootNamespace>WiM.Utilities.ServiceAgent</RootNamespace>
     <RepositoryUrl>https://github.com/USGS-WiM/WiM.Standard</RepositoryUrl>
@@ -15,7 +15,8 @@
 the requestor.</Description>
     <PackageIconUrl>https://wim.usgs.gov/visuals/branding/wimvector.png</PackageIconUrl>
     <PackageProjectUrl>https://wim.usgs.gov/</PackageProjectUrl>
-    <PackageReleaseNotes>1.1.1 added ExternalProcessServiceAgentBase</PackageReleaseNotes>
+    <PackageReleaseNotes>1.1.1 added ExternalProcessServiceAgentBase
+1.1.2 updated externalProcessServicesAgentBase to be more flexible.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

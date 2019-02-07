@@ -27,6 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WiM.Resources;
 
 namespace WiM.Services.Controllers
 {
@@ -122,6 +123,13 @@ namespace WiM.Services.Controllers
             e_notAllowed=405,
             e_internalError=500,
             e_error=0
+        }
+
+        protected void sm(Message msg)
+        {
+            if (!this.HttpContext.Items.ContainsKey(WiM.Services.Middleware.X_MessagesExtensions.msgKey))
+                this.HttpContext.Items[WiM.Services.Middleware.X_MessagesExtensions.msgKey] = new List<Message>();
+            ((List<Message>)this.HttpContext.Items[WiM.Services.Middleware.X_MessagesExtensions.msgKey]).Add(msg);
         }
     }
 }

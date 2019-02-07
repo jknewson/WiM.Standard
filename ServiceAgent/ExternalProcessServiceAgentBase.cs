@@ -21,6 +21,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
+using WiM.Utilities.Resources;
 using System.Linq;
 
 namespace WiM.Utilities.ServiceAgent
@@ -38,7 +39,7 @@ namespace WiM.Utilities.ServiceAgent
         #endregion
 
         #region Constructors
-        public ExternalProcessServiceAgentBase(string baseExe, string basePath)
+        protected ExternalProcessServiceAgentBase(string baseExe = null, string basePath = null)
         {
             this.BaseEXE = baseExe;
             this.BasePath = basePath;
@@ -47,7 +48,7 @@ namespace WiM.Utilities.ServiceAgent
         #endregion
 
         #region Methods
-        public void ExecuteAsync<T>(ProcessStartInfo psi, Action<T> CallBackOnSuccess, Action<string> CallBackOnFail) where T : new()
+        protected void ExecuteAsync(ProcessStartInfo psi, Action<string> CallBackOnSuccess, Action<string> CallBackOnFail)
         {
             String response = null;
             Process task = null;
@@ -62,7 +63,7 @@ namespace WiM.Utilities.ServiceAgent
 
                 if (!String.IsNullOrEmpty(response))
                 {
-                    CallBackOnSuccess(JsonConvert.DeserializeObject<T>(response));
+                    CallBackOnSuccess(response);
                 }//else
                 else
                 {
@@ -83,33 +84,22 @@ namespace WiM.Utilities.ServiceAgent
 
         }//end ExecuteAsync<T>
 
-        public T Execute<T>(ProcessStartInfo psi)
+        protected ProcessResponse Execute<T>(ProcessStartInfo psi)
         {
-            String[] response = null;
+            ProcessResponse response = null;
             Process task = null;
-            string results = null;
             try
             {
                 if (psi == null) throw new ArgumentNullException("processInfo");
                 task = new Process();
                 task = Process.Start(psi);
-                response = task.StandardOutput.ReadToEnd().Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-                var err = task.StandardError.ReadToEnd();
+                response = new ProcessResponse()
+                {
+                    Output = task.StandardOutput.ReadToEnd(),
+                    Errors = task.StandardError.ReadToEnd()
+                };                
                 task.WaitForExit();
-
-                if (response.Count() > 0)
-                {
-                    this.ExecuteMessages = response.FirstOrDefault(x => x.Contains("messages="));
-                    //assumes last row is result
-                    results = response.LastOrDefault();
-                    var ss = JsonConvert.DeserializeObject<T>(results);
-                    return ss;
-                }//else
-                else
-                {
-                    throw new Exception(psi.Arguments + " response is null, Errors:" +err );
-                }
-
+                return response;
             }
             catch (Exception ex)
             {
@@ -124,7 +114,7 @@ namespace WiM.Utilities.ServiceAgent
 
         #endregion
         #region Helper Methods
-        protected ProcessStartInfo getProcessRequest(string filename, string args)
+        protected ProcessStartInfo getProcessRequest(string filename=null, string args=null)
         {
 
             ProcessStartInfo psi = new ProcessStartInfo();
