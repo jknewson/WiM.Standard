@@ -1,6 +1,6 @@
-﻿namespace WiM.Hypermedia
+﻿namespace WIM.Hypermedia
 {
-    public class Link:WiM.Resources.Link
+    public class Link:WIM.Resources.Link
     {
 
         #region Constructors
@@ -20,7 +20,7 @@
 
 
         }//end link
-        public Link(string baseUri, string rel, string href, WiM.Resources.refType httpMethod)
+        public Link(string baseUri, string rel, string href, WIM.Resources.refType httpMethod)
         {
             //insure base uri has /
             if (!baseUri[baseUri.Length - 1].Equals('/'))

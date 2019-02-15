@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WiM.Extensions
+namespace WIM.Extensions
 {
     public static class IEnumerableExtensions
     {

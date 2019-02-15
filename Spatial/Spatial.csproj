@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>WiM.Spatial</AssemblyName>
-    <RootNamespace>WiM.Spatial</RootNamespace>
+    <AssemblyName>WIM.Spatial</AssemblyName>
+    <RootNamespace>WIM.Spatial</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Jeremy Newson</Authors>
     <Company>Web Informatics and Mapping</Company>
@@ -11,9 +11,10 @@
     <Copyright>public domain</Copyright>
     <PackageLicenseUrl>https://www2.usgs.gov/visual-id/credit_usgs.html#copyright</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/USGS-WiM/WiM.Standard</RepositoryUrl>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <PackageIconUrl>https://wim.usgs.gov/visuals/branding/wimvector.png</PackageIconUrl>
     <PackageProjectUrl>https://wim.usgs.gov/</PackageProjectUrl>
+    <PackageReleaseNotes>1.1.1-namespace update</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="GeoJSON.Net" Version="1.1.64" />
+    <PackageReference Include="GeoJSON.Net" Version="1.1.70" />
   </ItemGroup>
 
 </Project>

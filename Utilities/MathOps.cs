@@ -22,7 +22,7 @@
 #endregion
 using System;
 
-namespace WiM.Utilities
+namespace WIM.Utilities
 {
     public static class MathOps
     {

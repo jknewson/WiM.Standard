@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WiM.Security
+namespace WIM.Security
 {
     public class User
     {

@@ -5,7 +5,7 @@
     <AssemblyName>WIM.Exceptions</AssemblyName>
     <RootNamespace>WIM.Exceptions</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageId>WiM.Exceptions</PackageId>
+    <PackageId>WIM.Exceptions</PackageId>
     <Authors>Jeremy Newson</Authors>
     <Company>Web Informatics and Mapping</Company>
     <Product>WiM.Exceptions</Product>
@@ -15,7 +15,9 @@
     <PackageProjectUrl>https://wim.usgs.gov/</PackageProjectUrl>
     <PackageIconUrl>https://wim.usgs.gov/visuals/branding/wimvector.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/USGS-WiM/WiM.Standard</RepositoryUrl>
-    <PackageReleaseNotes>1.0.0- initial services exceptions</PackageReleaseNotes>
+    <PackageReleaseNotes>1.0.1- minor updates
+1.0.0- initial services exceptions</PackageReleaseNotes>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
 </Project>

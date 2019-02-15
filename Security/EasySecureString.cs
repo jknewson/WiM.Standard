@@ -24,7 +24,7 @@ using System;
 using System.Security;
 using System.Runtime.InteropServices;
 
-namespace WiM.Security
+namespace WIM.Security
 {
     public class EasySecureString : IDisposable
     {

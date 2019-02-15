@@ -23,10 +23,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using System.Net;
-using WiM.Resources;
+using WIM.Resources;
 using Newtonsoft.Json;
 
-namespace WiM.Services.Middleware
+namespace WIM.Services.Middleware
 {
     public class X_Messages
     {
@@ -44,12 +44,12 @@ namespace WiM.Services.Middleware
             {
                 try
                 {
-                    httpContext.Response.Headers.Add("X-USGSWiM-HostName", Environment.MachineName);
+                    httpContext.Response.Headers.Add("X-USGSWIM-HostName", Environment.MachineName);
                     //need to attach msg from log here 
                     if (httpContext.Items[X_MessagesExtensions.msgKey] != null)
                     {
                         List<string> msg = ((List<Message>)httpContext.Items[X_MessagesExtensions.msgKey]).GroupBy(g => g.type).Select(gr => gr.Key.ToString() + ": " + string.Join(",", gr.Select(c => c.msg))).ToList();
-                        httpContext.Response.Headers.Add("X-USGSWiM-Messages", string.Join(";", msg));
+                        httpContext.Response.Headers.Add("X-USGSWIM-Messages", string.Join(";", msg));
                     }
                 }
                 catch (Exception ex)

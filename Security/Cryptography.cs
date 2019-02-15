@@ -26,7 +26,7 @@ using System;
 using System.Text;
 using System.Security.Cryptography;
 
-namespace WiM.Security
+namespace WIM.Security
 {
     public static class Cryptography
     {

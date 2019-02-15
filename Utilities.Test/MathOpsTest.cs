@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using WiM.Utilities;
+using WIM.Utilities;
 using System.Linq;
 
-namespace WiM.Test
+namespace WIM.Test
 {
     [TestClass]
     public class MathOpsTest

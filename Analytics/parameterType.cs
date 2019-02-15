@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WiM.Services.Analytics
+namespace WIM.Services.Analytics
 {
     public class parameterType
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WiM.Utilities.Resources
+namespace WIM.Utilities.Resources
 {
     public class ProcessResponse
     {

@@ -1,4 +1,4 @@
-﻿namespace WiM.Resources
+﻿namespace WIM.Resources
 {
     public class Link
     {

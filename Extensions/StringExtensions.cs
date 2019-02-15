@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WiM.Extensions
+namespace WIM.Extensions
 {
         //Extension methods must be defined in a static class
         public static class StringExtensions

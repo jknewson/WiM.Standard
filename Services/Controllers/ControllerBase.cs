@@ -27,17 +27,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WiM.Resources;
+using WIM.Resources;
 
-namespace WiM.Services.Controllers
+namespace WIM.Services.Controllers
 {
 
     public abstract class ControllerBase: Microsoft.AspNetCore.Mvc.Controller
-    {
-
-        public ControllerBase()
-        {
-        }        
+    {    
         protected virtual List<string> parse(string items)
         {
             if (items == null) items = string.Empty;
@@ -65,9 +61,27 @@ namespace WiM.Services.Controllers
         }
         protected virtual IActionResult HandleException(Exception ex)
         {
-                return StatusCode(500, new Error(errorEnum.e_internalError, "An error occured while processing your request."));
+            if (ex is WIM.Exceptions.Services.BadRequestException)
+            {
+                sm(ex.Message, MessageType.warning);
+                return new BadRequestObjectResult(new Error(errorEnum.e_badRequest, ex.Message));
+            }
+            else if (ex is WIM.Exceptions.Services.NotFoundRequestException)
+            {
+                sm(ex.Message, MessageType.warning);
+                return new NotFoundObjectResult(new Error(errorEnum.e_notFound, ex.Message));
+            }
+            else if (ex is WIM.Exceptions.Services.UnAuthorizedRequestException)
+            {
+                sm(ex.Message, MessageType.warning);
+                return new UnauthorizedObjectResult(new Error(errorEnum.e_unauthorize, ex.Message));
+            }
+            else
+            {
+                sm(ex.Message, MessageType.error);
+                return StatusCode(500, new Error(errorEnum.e_internalError, "An error occured while processing your request. See messages for more information."));
+            }
         }
-        
         protected struct Error
         {
             public int Code { get; private set; }
@@ -124,12 +138,21 @@ namespace WiM.Services.Controllers
             e_internalError=500,
             e_error=0
         }
-
+        /// <summary>
+        /// Sends a message to the X-usgswim-message header
+        /// </summary>
+        protected void sm(string msg, MessageType type = MessageType.info)
+        {
+            sm(new Message() { msg = msg, type = type });
+        }
+        /// <summary>
+        /// Sends a message to the X-usgswim-message header
+        /// </summary>
         protected void sm(Message msg)
         {
-            if (!this.HttpContext.Items.ContainsKey(WiM.Services.Middleware.X_MessagesExtensions.msgKey))
-                this.HttpContext.Items[WiM.Services.Middleware.X_MessagesExtensions.msgKey] = new List<Message>();
-            ((List<Message>)this.HttpContext.Items[WiM.Services.Middleware.X_MessagesExtensions.msgKey]).Add(msg);
+            if (!this.HttpContext.Items.ContainsKey(WIM.Services.Middleware.X_MessagesExtensions.msgKey))
+                this.HttpContext.Items[WIM.Services.Middleware.X_MessagesExtensions.msgKey] = new List<Message>();
+            ((List<Message>)this.HttpContext.Items[WIM.Services.Middleware.X_MessagesExtensions.msgKey]).Add(msg);
         }
     }
 }

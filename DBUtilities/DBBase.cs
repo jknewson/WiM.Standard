@@ -24,18 +24,15 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Reflection;
-using WiM.Resources;
 using System.Threading.Tasks;
 
-namespace WiM.Utilities
+namespace WIM.Utilities
 {
-    public abstract class DBAgentBase : IDisposable, IMessage
+    public abstract class DBAgentBase : IDisposable
     {
-
         #region "Properties"
         protected DbContext context { get; private set; }
         #endregion
-        #region "Collections & Dictionaries"
         #region "Constructor and IDisposable Support"
         #region Constructors
         public DBAgentBase(DbContext context)
@@ -114,7 +111,7 @@ namespace WiM.Utilities
             DbSet<T> set = GetDBSet<T>();
             if (set.AsEnumerable().Contains(item))
             {
-                sm(MessageType.warning, "Item already exists");
+                sm("Item already exists");
                 return set.AsEnumerable<T>().FirstOrDefault(i => i.Equals(item));
             }
             await set.AddAsync(item);
@@ -129,7 +126,7 @@ namespace WiM.Utilities
             List<T> DontAlreadyExist = items.Except(set.AsEnumerable()).ToList();
 
             if (DontAlreadyExist.Count > 0) {
-                sm(MessageType.info, "added " +DontAlreadyExist.Count +" items.");
+                sm("added " +DontAlreadyExist.Count +" items.");
                 await set.AddRangeAsync(DontAlreadyExist);
                 await context.SaveChangesAsync();
             }//end if
@@ -146,7 +143,7 @@ namespace WiM.Utilities
             context.Entry(item).State = EntityState.Modified;
 
             await context.SaveChangesAsync();
-            sm(MessageType.info, "Item found and updated.");
+            sm("Item found and updated.");
             return await this.Find<T>(pkId);
         }
         protected async Task Delete<T>(T item) where T : class, new()
@@ -159,7 +156,7 @@ namespace WiM.Utilities
                 //set state to modified to force the update.
                 context.Entry(item).State = EntityState.Deleted;
                 await context.SaveChangesAsync();
-                sm(MessageType.info, "Item Deleted.");
+                sm("Item Deleted.", WIM.Resources.MessageType.info);
             }//end if           
 
         }
@@ -184,15 +181,12 @@ namespace WiM.Utilities
             }
             catch (Exception)
             {
-                sm(MessageType.error, "Failed to set pk.");
+                sm("Failed to set pk.");
                 return false;
             }
         }
-
-        protected virtual void sm(Message msg)
-        {
-            
-        }
+        protected abstract void sm(string msg, WIM.Resources.MessageType type= Resources.MessageType.info);
+        
         #endregion
     }//end class
 }//end namespace

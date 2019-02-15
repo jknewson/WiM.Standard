@@ -24,10 +24,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using WiM.Services.Analytics;
+using WIM.Services.Analytics;
 using Microsoft.Extensions.Primitives;
 
-namespace WiM.Services.Middleware
+namespace WIM.Services.Middleware
 {
     public class Analytics
     {

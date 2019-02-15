@@ -21,16 +21,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
-using WiM.Services.Resources;
+using WIM.Services.Resources;
 using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Abstractions;
-using WiM.Resources;
+using WIM.Resources;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 
-namespace WiM.Services.Controllers
+namespace WIM.Services.Controllers
 {
     [Route("[controller]")]
     public class APIConfigController: ControllerBase

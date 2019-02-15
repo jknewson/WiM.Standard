@@ -23,7 +23,7 @@
 using System;
 using Microsoft.AspNetCore.Authentication;
 
-namespace WiM.Security.Authentication.Basic
+namespace WIM.Security.Authentication.Basic
 {
     public static class BasicAppBuilderExtensions
     {

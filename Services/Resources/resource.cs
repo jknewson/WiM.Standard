@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WiM.Resources;
+using WIM.Resources;
 
-namespace WiM.Services.Resources
+namespace WIM.Services.Resources
 {
     public class RESTResource
     {

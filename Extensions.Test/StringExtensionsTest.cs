@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using WiM.Extensions;
-namespace WiM.Test
+using WIM.Extensions;
+namespace WIM.Test
 {
     [TestClass]
     public class StringExtensionsTest

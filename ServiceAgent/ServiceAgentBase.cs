@@ -28,7 +28,7 @@ using System.Collections.Generic;
 using System.Net.Http.Headers;
 
 
-namespace WiM.Utilities.ServiceAgent
+namespace WIM.Utilities.ServiceAgent
 {
     public abstract class ServiceAgentBase
     {
@@ -73,9 +73,9 @@ namespace WiM.Utilities.ServiceAgent
             }
         }
 
-        protected void ExecuteAsync(RequestInfo request)
+        protected async void ExecuteAsync(RequestInfo request)
         {
-            this.ExecuteAsync(request.RequestURI, request.Content, request.Method);
+            await ExecuteAsync(request.RequestURI, request.Content, request.Method);
         }//end ExecuteAsync<T>
 
         protected async Task<HttpResponseMessage> ExecuteAsync(string uri, HttpContent data, methodType mtd = methodType.e_GET)

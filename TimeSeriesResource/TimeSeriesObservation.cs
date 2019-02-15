@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WiM.Resources.TimeSeries
+namespace WIM.Resources.TimeSeries
 {
     public class TimeSeriesObservation
     {

@@ -24,7 +24,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Options;
 
-namespace WiM.Security.Authentication.Basic
+namespace WIM.Security.Authentication.Basic
 {
     public class BasicOptions : AuthenticationSchemeOptions
     {

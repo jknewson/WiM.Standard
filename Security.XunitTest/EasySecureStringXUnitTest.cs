@@ -1,6 +1,6 @@
 using System;
 using Xunit;
-using WiM.Security;
+using WIM.Security;
 
 namespace Security.XUnitTest
 {

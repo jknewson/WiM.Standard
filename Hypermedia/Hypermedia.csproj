@@ -2,19 +2,21 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>WiM.Hypermedia</AssemblyName>
-    <RootNamespace>WiM.Hypermedia</RootNamespace>
+    <AssemblyName>WIM.Hypermedia</AssemblyName>
+    <RootNamespace>WIM.Hypermedia</RootNamespace>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>jknewson</Authors>
     <Company>Web Informatics and Mapping</Company>
     <Description>Hypermedia objects</Description>
-    <Version>1.1.1</Version>
+    <Version>1.1.2</Version>
     <Copyright>public domain</Copyright>
     <RepositoryUrl>https://github.com/USGS-WiM/WiM.Standard</RepositoryUrl>
     <PackageLicenseUrl>https://www2.usgs.gov/visual-id/credit_usgs.html#copyright</PackageLicenseUrl>
     <PackageIconUrl>https://wim.usgs.gov/visuals/branding/wimvector.png</PackageIconUrl>
     <PackageProjectUrl>https://wim.usgs.gov/</PackageProjectUrl>
-    <PackageReleaseNotes>1.1.1 - refactored links</PackageReleaseNotes>
+    <PackageReleaseNotes>1.1.2 - update namespace
+1.1.1 - refactored links</PackageReleaseNotes>
+    <PackageId>WIM.Hypermedia</PackageId>
   </PropertyGroup>
 
   <ItemGroup>

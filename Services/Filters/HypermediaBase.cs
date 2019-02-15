@@ -26,12 +26,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.Filters;
-using WiM.Hypermedia;
+using WIM.Hypermedia;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Collections;
 
-namespace WiM.Services.Filters
+namespace WIM.Services.Filters
 {
     public abstract class HypermediaBase : IActionFilter
     {

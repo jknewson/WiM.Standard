@@ -33,9 +33,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WiM.Services.Analytics;
+using WIM.Services.Analytics;
 
-namespace WiM.Utilities.ServiceAgent
+namespace WIM.Utilities.ServiceAgent
 {
 
     public class GoogleAnalyticsAgent : ServiceAgentBase, IAnalyticsAgent

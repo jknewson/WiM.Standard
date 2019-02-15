@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WiM.Security.Authentication.Basic
+namespace WIM.Security.Authentication.Basic
 {
     public interface IBasicUser
     {

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
 using Remotion.Linq.Parsing.Structure;
 
-namespace WiM.Extensions
+namespace WIM.Extensions
 {
     public static class IQueryableExtensions
     {

@@ -4,7 +4,7 @@ using GeoJSON.Net.Geometry;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace WiM.Extensions
+namespace WIM.Extensions
 {
     public static class SpatialExtensions
     {

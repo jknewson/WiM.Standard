@@ -6,7 +6,7 @@
 //       01234567890123456789012345678901234567890123456789012345678901234567890
 //-------+---------+---------+---------+---------+---------+---------+---------+
 
-// copyright:   2012 WiM - USGS
+// copyright:   2012 WIM - USGS
 
 //    authors:  Jeremy K. Newson USGS Web Informatics and Mapping
 //              
@@ -21,10 +21,10 @@
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
-using WiM.Utilities.Resources;
+using WIM.Utilities.Resources;
 using System.Linq;
 
-namespace WiM.Utilities.ServiceAgent
+namespace WIM.Utilities.ServiceAgent
 {
     public abstract class ExternalProcessServiceAgentBase
     {

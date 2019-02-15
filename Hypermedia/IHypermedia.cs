@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace WiM.Hypermedia
+namespace WIM.Hypermedia
 {
     public interface IHypermedia
     {

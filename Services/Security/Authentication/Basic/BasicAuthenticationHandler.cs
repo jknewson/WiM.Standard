@@ -32,7 +32,7 @@ using System.Text.Encodings.Web;
 
 
 //where all the authentication work is actually done
-namespace WiM.Security.Authentication.Basic
+namespace WIM.Security.Authentication.Basic
 {
     public class BasicAuthenticationHandler : AuthenticationHandler<BasicOptions>
     {

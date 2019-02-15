@@ -40,7 +40,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 #endregion
 
-namespace WiM.Utilities
+namespace WIM.Utilities
 {
     public class ExpressionOps
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace WiM.Utilities.Resources
+namespace WIM.Utilities.Resources
 {
     public class Resource
     {

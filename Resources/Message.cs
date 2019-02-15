@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace WiM.Resources
+namespace WIM.Resources
 {
     public interface IMessage
     {

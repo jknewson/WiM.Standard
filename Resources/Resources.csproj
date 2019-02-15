@@ -2,19 +2,21 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>WiM.Resources</AssemblyName>
-    <RootNamespace>WiM.Resources</RootNamespace>
+    <AssemblyName>WIM.Resources</AssemblyName>
+    <RootNamespace>WIM.Resources</RootNamespace>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Jeremy Newson</Authors>
     <Company>Web Informatics and Mapping</Company>
     <Description>Resource objects</Description>
-    <Version>1.1.1</Version>
+    <Version>1.1.2</Version>
     <RepositoryUrl>https://github.com/USGS-WiM/WiM.Standard</RepositoryUrl>
     <Copyright>public domain</Copyright>
     <PackageLicenseUrl>https://www2.usgs.gov/visual-id/credit_usgs.html#copyright</PackageLicenseUrl>
     <PackageIconUrl>https://wim.usgs.gov/visuals/branding/wimvector.png</PackageIconUrl>
     <PackageProjectUrl>https://wim.usgs.gov/</PackageProjectUrl>
-    <PackageReleaseNotes>1.1.1 - added link</PackageReleaseNotes>
+    <PackageReleaseNotes>1.1.2 - namespace update
+1.1.1 - added link</PackageReleaseNotes>
+    <PackageId>WIM.Resources</PackageId>
   </PropertyGroup>
 
 </Project>
