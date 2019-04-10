@@ -79,6 +79,18 @@ namespace WIM.Security.Authentication.Basic
                 return AuthenticateResult.Fail(ex);
             }
         }
+
+        protected override async Task HandleChallengeAsync(AuthenticationProperties properties)
+        {
+            var authResult = await HandleAuthenticateOnceSafeAsync();
+            if(authResult?.Failure != null)
+                Response.StatusCode = 401;
+
+        }
+        protected override async Task HandleForbiddenAsync(AuthenticationProperties properties)
+        {
+            await base.HandleForbiddenAsync(properties);
+        }
         protected virtual ClaimsPrincipal getUserPrincipal(string username, string password) {
 
             var user = _agent.GetUserByUsername(username);

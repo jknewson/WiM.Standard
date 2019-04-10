@@ -8,7 +8,7 @@
     <Authors>Jeremy Newson</Authors>
     <Company>Web Informatics and Mapping</Company>
     <Description>provides simple override methods for db interactions</Description>
-    <Version>1.1.2</Version>
+    <Version>1.1.4</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
     <Copyright>public domain</Copyright>
@@ -17,7 +17,8 @@
     <RepositoryType />
     <PackageIconUrl>https://wim.usgs.gov/visuals/branding/wimvector.png</PackageIconUrl>
     <PackageProjectUrl>https://wim.usgs.gov/</PackageProjectUrl>
-    <PackageReleaseNotes>1.1.2 messaging and update ID
+    <PackageReleaseNotes>1.1.4 added direct database sql query for object
+1.1.2 messaging and update ID
 1.1.1 added joinCollection
 1.1.0 initial build</PackageReleaseNotes>
   </PropertyGroup>
