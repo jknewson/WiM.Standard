@@ -5,7 +5,7 @@ namespace WIM.Hypermedia
     public interface IHypermedia
     {
         #region Properties
-        List<Link> Links { get; set; }
+        List<WIM.Resources.Link> Links { get; set; }
         #endregion
     }
     public enum HypermediaType

@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>WIM.Services</RootNamespace>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.10</Version>
+    <Version>1.1.11</Version>
     <AssemblyName>WIM.Services</AssemblyName>
     <Authors>Jeremy Newson</Authors>
     <Company>Web Informatics and Mapping</Company>
@@ -14,7 +14,8 @@
     <PackageLicenseUrl>https://www2.usgs.gov/visual-id/credit_usgs.html#copyright</PackageLicenseUrl>
     <PackageIconUrl>https://wim.usgs.gov/visuals/branding/wimvector.png</PackageIconUrl>
     <PackageProjectUrl>https://wim.usgs.gov/</PackageProjectUrl>
-    <PackageReleaseNotes>1.1.10-authentication authorization
+    <PackageReleaseNotes>1.1.11 - hypermedia updates
+1.1.10-authentication authorization
 1.1.9- add msging to controller and update namespaces
 1.1.8 - fixed apiconfig method to check for null
 1.1.7 - added requires authentication tag.
