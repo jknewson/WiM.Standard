@@ -15,6 +15,12 @@ namespace WIM.Test
             string expression = "";
             Dictionary<string, double?> variables = null;
             ExpressionOps eOps = null;
+
+            expression = "S^(0.159)";
+            variables = new Dictionary<string, double?>() { { "S", 0.003 }};
+            eOps = new ExpressionOps(expression, variables);
+            Assert.IsTrue(eOps.IsValid && eOps.Value == 0.397065614767193);
+
             //CO ()
             expression = "5.01187E-62*(DRNAREA)^(1.23)*(ELEV)^(15.22)";
             variables = new Dictionary<string, double?>() { { "DRNAREA", 6.2 }, { "ELEV", 11129 } };

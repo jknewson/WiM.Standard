@@ -305,9 +305,7 @@ namespace WIM.Utilities
         private TokenClassEnum getTokenClass(string token)
         {
             double tempValue;
-            if (double.TryParse(token, out tempValue) ||
-                token.Equals("R", StringComparison.CurrentCultureIgnoreCase) ||
-                token.Equals("S", StringComparison.CurrentCultureIgnoreCase))
+            if (double.TryParse(token, out tempValue))
             {
                 return TokenClassEnum.e_value;
             }
