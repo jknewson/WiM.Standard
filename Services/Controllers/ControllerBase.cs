@@ -150,9 +150,9 @@ namespace WIM.Services.Controllers
         /// </summary>
         protected void sm(Message msg)
         {
-            if (!this.HttpContext.Items.ContainsKey(WIM.Services.Middleware.X_MessagesExtensions.msgKey))
-                this.HttpContext.Items[WIM.Services.Middleware.X_MessagesExtensions.msgKey] = new List<Message>();
-            ((List<Message>)this.HttpContext.Items[WIM.Services.Middleware.X_MessagesExtensions.msgKey]).Add(msg);
+            if (!this.HttpContext.Items.ContainsKey(WIM.Services.Messaging.X_MessagesDefault.ItemsKey))
+                this.HttpContext.Items[WIM.Services.Messaging.X_MessagesDefault.ItemsKey] = new List<Message>();
+            ((List<Message>)this.HttpContext.Items[WIM.Services.Messaging.X_MessagesDefault.ItemsKey]).Add(msg);
         }
     }
 }
