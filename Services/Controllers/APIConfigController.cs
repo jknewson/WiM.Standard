@@ -39,7 +39,7 @@ namespace WIM.Services.Controllers
     {
         protected readonly IActionDescriptorCollectionProvider _provider;
         protected readonly APIConfigSettings _settings;
-        private EndpointAttribute defaultValue = new EndpointAttribute() { type = DescriptionType.e_string, Description = "Description not available" };
+        private APIDescriptionAttribute defaultValue = new APIDescriptionAttribute() { type = DescriptionType.e_string, Description = "Description not available" };
 
         public APIConfigController(IActionDescriptorCollectionProvider provider, IOptions<APIConfigSettings> api_settings)
         {
@@ -53,8 +53,8 @@ namespace WIM.Services.Controllers
             new RESTResource()
             {
                 Name = k.Key,
-                Description = ((EndpointAttribute)((ControllerActionDescriptor)k.FirstOrDefault())?
-                        .ControllerTypeInfo.GetCustomAttributes(typeof(EndpointAttribute), false)
+                Description = ((APIDescriptionAttribute)((ControllerActionDescriptor)k.FirstOrDefault())?
+                        .ControllerTypeInfo.GetCustomAttributes(typeof(APIDescriptionAttribute), false)
                             .DefaultIfEmpty(defaultValue).First()).ToDictionary(_settings.pathDirectory),   
                 
                 Methods = k.Where(m => m.ActionConstraints != null).GroupBy(m => getHttpMethod(m.ActionConstraints.Where(ac => ac.GetType() == typeof(HttpMethodActionConstraint))
@@ -70,7 +70,7 @@ namespace WIM.Services.Controllers
                             Name = u.AttributeRouteInfo.Name ?? u.AttributeRouteInfo.Template,
                             Uri = uristring,
                             RequiresAuthentication = ((ControllerActionDescriptor)u).MethodInfo.GetCustomAttributes(false).OfType<AuthorizeAttribute>().Any(),
-                            Description = ((EndpointAttribute)((ControllerActionDescriptor)u).MethodInfo.GetCustomAttributes(typeof(EndpointAttribute), false)
+                            Description = ((APIDescriptionAttribute)((ControllerActionDescriptor)u).MethodInfo.GetCustomAttributes(typeof(APIDescriptionAttribute), false)
                                     .DefaultIfEmpty(defaultValue).First()).ToDictionary(_settings.pathDirectory),
                             
                             Parameters = u.Parameters.Where(p => p.BindingInfo?.BindingSource.DisplayName != "Body").Select(p => getResourceParams(p)).ToList(),

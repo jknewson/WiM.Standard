@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
 using WIM.Extensions;
 
 namespace WIM.Services.Attributes
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
-    public class EndpointAttribute : System.Attribute
+    public class APIDescriptionAttribute : Attribute
     {
-        public DescriptionType type { get; set; }
-        public string Description { get; set; }
+        public DescriptionType type { get; set; } = DescriptionType.e_string;
+        public string Description { get; set; } = "";
 
         public Dictionary<string, string> ToDictionary(string descriptionPrecursor ="")
         {
@@ -24,9 +22,9 @@ namespace WIM.Services.Attributes
 
     public enum DescriptionType
     {
-        [Description("string")]
+        [System.ComponentModel.Description("string")]
         e_string,
-        [Description("link")]
+        [System.ComponentModel.Description("link")]
         e_link
     }
 }
