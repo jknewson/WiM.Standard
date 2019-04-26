@@ -29,6 +29,8 @@ using WIM.Resources;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
+using WIM.Services.Attributes;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WIM.Services.Controllers
 {
@@ -37,6 +39,7 @@ namespace WIM.Services.Controllers
     {
         protected readonly IActionDescriptorCollectionProvider _provider;
         protected readonly APIConfigSettings _settings;
+        private EndpointAttribute defaultValue = new EndpointAttribute() { type = DescriptionType.e_string, Description = "Description not available" };
 
         public APIConfigController(IActionDescriptorCollectionProvider provider, IOptions<APIConfigSettings> api_settings)
         {
@@ -50,7 +53,10 @@ namespace WIM.Services.Controllers
             new RESTResource()
             {
                 Name = k.Key,
-                Description = getResourceDescription(k.Key),                  
+                Description = ((EndpointAttribute)((ControllerActionDescriptor)k.FirstOrDefault())?
+                        .ControllerTypeInfo.GetCustomAttributes(typeof(EndpointAttribute), false)
+                            .DefaultIfEmpty(defaultValue).First()).ToDictionary(_settings.pathDirectory),   
+                
                 Methods = k.Where(m => m.ActionConstraints != null).GroupBy(m => getHttpMethod(m.ActionConstraints.Where(ac => ac.GetType() == typeof(HttpMethodActionConstraint))
                 .Cast<HttpMethodActionConstraint>())).Select(x => new ResourceMethod()
                 {
@@ -61,10 +67,12 @@ namespace WIM.Services.Controllers
 
                         return new ResourceUri()
                         {
-                            Name = getResourceURIName(k.Key, x.Key, uristring),
+                            Name = u.AttributeRouteInfo.Name ?? u.AttributeRouteInfo.Template,
                             Uri = uristring,
-                            RequiresAuthentication = getResourceAuthenticationRequirement(k.Key,x.Key,uristring),
-                            Description = getResourceDescription(k.Key, x.Key, uristring),
+                            RequiresAuthentication = ((ControllerActionDescriptor)u).MethodInfo.GetCustomAttributes(false).OfType<AuthorizeAttribute>().Any(),
+                            Description = ((EndpointAttribute)((ControllerActionDescriptor)u).MethodInfo.GetCustomAttributes(typeof(EndpointAttribute), false)
+                                    .DefaultIfEmpty(defaultValue).First()).ToDictionary(_settings.pathDirectory),
+                            
                             Parameters = u.Parameters.Where(p => p.BindingInfo?.BindingSource.DisplayName != "Body").Select(p => getResourceParams(p)).ToList(),
                             Body = u.Parameters.Where(p => p.BindingInfo?.BindingSource.DisplayName == "Body").Select(p => getResourceParams(p)).ToList()
                         };
@@ -80,40 +88,33 @@ namespace WIM.Services.Controllers
 
             return (methods.Count == 1) ? getResourceMethod(methods.FirstOrDefault()) : getResourceMethod("");
         }
-        protected virtual Dictionary<string, string> getResourceDescription(string ResourceName, string method = null, string uri = null)
+        protected String getResourceMethod(string ResourceMethod)
+                {
+
+                    switch (ResourceMethod.ToLower())
+                    {
+                        case "get": return "GET";
+                        case "post": return "POST";
+                        case "put": return "PUT";
+                        case "delete": return "DELETE";
+                        case "patch": return "PATCH";
+                        default: return "UNSPECIFIED";
+                    }
+
+                }
+               
+        protected virtual ResourceParameter getResourceParams(ParameterDescriptor p)
         {
-            try
+            var parameter = new ResourceParameter()
             {
-                var resource = _settings.Resources[ResourceName];
-                if (string.IsNullOrEmpty(uri)) return resource.Description;
-                else return resource.Uris[getResourceMethod(method)]?[uri].Description;
-            }
-            catch (Exception)
-            {
-                return new Dictionary<string, string>() { { "string", "Description not available" } };
-            }
-        }
-        protected virtual String getResourceURIName(string ResourceName, string method, string uri)
-        {
-            try
-            {
-                return _settings.Resources[ResourceName]?.Uris[getResourceMethod(method)]?[uri]?.Name ?? "Name not available";
-            }
-            catch (Exception)
-            {
-                return "Name not available";
-            }
-        }
-        protected virtual Boolean? getResourceAuthenticationRequirement(string ResourceName, string method, string uri)
-        {
-            try
-            {
-                return _settings.Resources[ResourceName]?.Uris[getResourceMethod(method)]?[uri]?.RequiresAuthentication ?? null;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+                Name = p.Name,
+                Description = getResourcePropertyDescription(p.Name),
+                Type = GetTypeName(p.ParameterType),
+                Required = p.BindingInfo == null ? (bool?)true : null,
+                Link = getLinkedResource(p.Name)
+            };
+
+            return parameter;
         }
         protected virtual String getResourcePropertyDescription(string propertyname)
         {
@@ -126,40 +127,11 @@ namespace WIM.Services.Controllers
                 return "Description not available";
             }
         }
-        protected virtual String getResourceMethod(string ResourceMethod)
-        {
-
-            switch (ResourceMethod.ToLower())
-            {
-                case "get": return "GET";
-                case "post": return "POST";
-                case "put": return "PUT";
-                case "delete": return "DELETE";
-                case "patch": return "PATCH";
-                default: return "UNSPECIFIED";
-            }
-
-        }
-        protected virtual ResourceParameter getResourceParams(ParameterDescriptor p)
-        {
-            var parameter = new ResourceParameter()
-            {
-                Name = p.Name,
-                Description = getResourcePropertyDescription(p.Name),
-                Type = GetTypeName(p.ParameterType),
-                Required = p.BindingInfo == null ? (bool?)true : null,
-                Link = getLinkedResource(p.Name)
-
-
-            };
-
-            return parameter;
-        }
         protected virtual Link getLinkedResource(string propertyname)
         {
             try
             {
-                return _settings.Parameters[propertyname].Link;
+                return _settings.Parameters[propertyname]?.Link;
             }
             catch (Exception)
             {

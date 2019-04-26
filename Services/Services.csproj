@@ -14,7 +14,7 @@
     <PackageLicenseUrl>https://www2.usgs.gov/visual-id/credit_usgs.html#copyright</PackageLicenseUrl>
     <PackageIconUrl>https://wim.usgs.gov/visuals/branding/wimvector.png</PackageIconUrl>
     <PackageProjectUrl>https://wim.usgs.gov/</PackageProjectUrl>
-    <PackageReleaseNotes>1.1.12 - update wim-messaging
+    <PackageReleaseNotes>1.1.12 - update wim-messaging, and apiconfig updates
 1.1.11 - hypermedia updates
 1.1.10-authentication authorization
 1.1.9- add msging to controller and update namespaces
@@ -38,13 +38,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Exceptions\Exceptions.csproj" />
+    <ProjectReference Include="..\Extensions\Extensions.csproj" />
     <ProjectReference Include="..\Hypermedia\Hypermedia.csproj" />
     <ProjectReference Include="..\Resources\Resources.csproj" />
     <ProjectReference Include="..\Security\Security.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>
