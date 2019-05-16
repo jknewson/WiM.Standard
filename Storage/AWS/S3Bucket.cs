@@ -26,6 +26,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace WIM.Storage.AWS
 {
@@ -38,7 +39,7 @@ namespace WIM.Storage.AWS
 
         #endregion
         #region Constructor
-        public S3Bucket(AWSSettings settings)
+        public S3Bucket(IAWSSettings settings)
         {
             this.ParentDirectory = settings.BucketName;
             this.Creds = new BasicAWSCredentials(settings.Key,settings.SecretKey);
@@ -62,9 +63,7 @@ namespace WIM.Storage.AWS
                 using (IAmazonS3 client = new AmazonS3Client(Creds,Region))
                 {
                     PutObjectResponse response = await client.PutObjectAsync(request);
-                    if (response.HttpStatusCode != HttpStatusCode.Accepted ||
-                        response.HttpStatusCode != HttpStatusCode.OK)
-                        
+                    if (response.HttpStatusCode != HttpStatusCode.OK)                        
                         throw new Exception($"{ObjectName} failed to store. {response.ResponseMetadata.ToString()}");
                 }//end using
                                     
@@ -78,7 +77,7 @@ namespace WIM.Storage.AWS
         {
             try
             {
-                using (IAmazonS3 client = new AmazonS3Client())
+                using (IAmazonS3 client = new AmazonS3Client(Creds, Region))
                 {
                     DeleteObjectRequest request = new DeleteObjectRequest()
                     {
@@ -110,7 +109,7 @@ namespace WIM.Storage.AWS
                                                     Key = ObjectName
                                                 };
 
-                using (IAmazonS3 client = new AmazonS3Client())
+                using (IAmazonS3 client = new AmazonS3Client(Creds, Region))
                 {
                     using (GetObjectResponse response = await client.GetObjectAsync(request))
                     {
@@ -135,6 +134,28 @@ namespace WIM.Storage.AWS
             }
 
         }//end GetObject
+        public async Task<List<S3Object>> ListObjectsAsync(String prefix)
+        {
+            try
+            {
+                ListObjectsRequest request = new ListObjectsRequest();
+                request.BucketName = ParentDirectory;
+                //Only files that start with 'prefix'
+                if (prefix != null)
+                    request.Prefix = prefix;
+                using (IAmazonS3 client = new AmazonS3Client(Creds, Region))
+                {
+                    ListObjectsResponse response = await client.ListObjectsAsync(request);
+                    return response.S3Objects;
+                }//endusing
+            }
+            catch (AmazonS3Exception amazonS3Exception)
+            {
+                S3Exception(amazonS3Exception);
+            }
+
+            return new List<S3Object>();
+        }//end ListObjects
         #endregion
         #region HelperMethods
         private void S3Exception(AmazonS3Exception amazonS3Exception)

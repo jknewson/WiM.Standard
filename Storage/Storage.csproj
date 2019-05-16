@@ -14,6 +14,10 @@
     <Company>USGS Web Informatics and Mapping</Company>
     <Product>WIM.Storage</Product>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.4</Version>
+    <PackageReleaseNotes>1.0.4 Added ListObjects method
+1.0.3 Implement Interface
+</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
