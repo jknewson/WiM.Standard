@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>WIM.Storage</RootNamespace>
+    <AssemblyName>WIM.Storage</AssemblyName>
+    <Copyright>public domain</Copyright>
+    <PackageProjectUrl>https://wim.usgs.gov/</PackageProjectUrl>
+    <PackageIconUrl>https://wim.usgs.gov/visuals/branding/wimvector.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/USGS-WiM/WiM.Standard</RepositoryUrl>
+    <Description>provides basic services for Storage management, AWS S3, Local etc.</Description>
+    <PackageId>WIM.Storage</PackageId>
+    <Authors>Jeremy Newson</Authors>
+    <Company>USGS Web Informatics and Mapping</Company>
+    <Product>WIM.Storage</Product>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" Version="3.3.101.17" />
+  </ItemGroup>
+
+</Project>
