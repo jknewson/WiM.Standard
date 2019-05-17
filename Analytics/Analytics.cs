@@ -44,7 +44,7 @@ namespace WIM.Services.Middleware
             var request = httpContext.Request;
             
             var parameters = new Dictionary<parameterType, string>();
-
+            if(request.Host.HasValue) parameters.Add(parameterType.serviceHost, request.Host.Value);
             parameters.Add(parameterType.path, request.Path.Value);
             parameters.Add(parameterType.operation, request.Method);
 

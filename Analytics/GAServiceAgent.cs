@@ -98,6 +98,8 @@ namespace WIM.Utilities.ServiceAgent
         {
             switch (ptype)
             {
+                case parameterType.serviceHost:
+                    return "cd1";//https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cd_
                 case parameterType.operation:
                     //Event Category. Required.
                     return "ec";
