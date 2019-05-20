@@ -99,11 +99,11 @@ namespace WIM.Utilities.ServiceAgent
             switch (ptype)
             {
                 case parameterType.operation:                   //request method
-                    //custome
+                    //custom
                     return "cd1";
                 case parameterType.datasource:                  //machinename
                     return "ds";
-                case parameterType.basepath:                        //basepath
+                case parameterType.basepath:                    //basepath
                     //Event Category. Required.
                     return "ec";
                 case parameterType.resource:                    //request resource    
@@ -118,6 +118,9 @@ namespace WIM.Utilities.ServiceAgent
                 case parameterType.referrer_ip_address:         // referrer IP
                     //IP override
                     return "uip";
+                case parameterType.referrer:
+                    //Specifies which referral source brought traffic to a website. This value is also used to compute the traffic source. 
+                    return "dr";
                 default:
                     return "other1";
             }

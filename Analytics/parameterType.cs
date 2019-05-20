@@ -17,6 +17,7 @@ namespace WIM.Services.Analytics
         public const int referrer_ip_address = 7;
         public const int datasource = 8;
         public const int basepath = 9;
+        public const int referrer = 10;
 
         public parameterType(int value)
         {

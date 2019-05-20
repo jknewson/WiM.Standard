@@ -46,6 +46,8 @@ namespace WIM.Services.Middleware
             var parameters = new Dictionary<parameterType, string>();
             if (!String.IsNullOrEmpty(Environment.MachineName)) parameters.Add(parameterType.datasource, Environment.MachineName);
             parameters.Add(parameterType.basepath, request.PathBase.HasValue ? request.PathBase.Value : "LocalTesting");
+            if (request.Headers.ContainsKey("Referer")) parameters.Add(parameterType.referrer, request.Headers["Referer"].ToString());
+
             parameters.Add(parameterType.operation, request.Method);
             parameters.Add(parameterType.path, request.Path.Value);
             
