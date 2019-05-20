@@ -44,9 +44,11 @@ namespace WIM.Services.Middleware
             var request = httpContext.Request;
             
             var parameters = new Dictionary<parameterType, string>();
-            if(request.Host.HasValue) parameters.Add(parameterType.serviceHost, request.Host.Value);
-            parameters.Add(parameterType.path, request.Path.Value);
+            if (!String.IsNullOrEmpty(Environment.MachineName)) parameters.Add(parameterType.datasource, Environment.MachineName);
+            parameters.Add(parameterType.basepath, request.PathBase.HasValue ? request.PathBase.Value : "LocalTesting");
             parameters.Add(parameterType.operation, request.Method);
+            parameters.Add(parameterType.path, request.Path.Value);
+            
 
             var ip = GetRequestIP(httpContext);
             if (!string.IsNullOrEmpty(ip)) parameters.Add(parameterType.referrer_ip_address, ip );
@@ -109,7 +111,7 @@ namespace WIM.Services.Middleware
     }
 
     // Extension method used to add the middleware to the HTTP request pipeline.
-    public static class GA_AnalyticsExtensions
+    public static class WIM_AnalyticsExtensions
     {
         public static IApplicationBuilder Use_Analytics(this IApplicationBuilder builder)
         {

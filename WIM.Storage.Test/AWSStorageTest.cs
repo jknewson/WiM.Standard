@@ -9,24 +9,15 @@ namespace WIM.Storage.Test
 {
     public class AWSStorageTest
     {
-        public AWSSettings stnSettings { get; set; }
-        public AWSSettings ssSettings { get; set; }
+        public AWSSettings s3Settings { get; set; }
         public AWSStorageTest()
         {
             //Arrange
-            ssSettings = new AWSSettings()
+            s3Settings = new AWSSettings()
             {
-                BucketName = "streamstats-staged-data",
-                Key = "***REMOVED***",
-                SecretKey = "***REMOVED***",
-                RegionName = "***REMOVED***"
-            };
-            stnSettings = new AWSSettings()
-            {
-
-                Key = "***REMOVED***",
-                SecretKey = "***REMOVED***",
-                BucketName = "***REMOVED***",
+                BucketName = "",
+                Key = "",
+                SecretKey = "",
                 RegionName = "***REMOVED***"
             };
 
@@ -38,8 +29,9 @@ namespace WIM.Storage.Test
 
             try
             {                
-                var client = new S3Bucket(ssSettings);
-                var item = await client.GetObject("xml/StreamStatsAK.xml");
+                var client = new S3Bucket(s3Settings);
+                //s3 is not a path, so / must be used instead of Path.combine
+                var item = await client.GetObject("SITES/SITE_16707" + "/" + "46UR1G.jpg");
 
                 using (FileStream file = new FileStream("file.xml", FileMode.Create, System.IO.FileAccess.Write))
                     item.CopyTo(file);
@@ -60,7 +52,7 @@ namespace WIM.Storage.Test
 
             try
             {
-                var client = new S3Bucket(stnSettings);
+                var client = new S3Bucket(s3Settings);
 
                 Stream fs = File.OpenRead("file.xml");
 
@@ -78,7 +70,7 @@ namespace WIM.Storage.Test
 
             try
             {
-                var client = new S3Bucket(stnSettings);
+                var client = new S3Bucket(s3Settings);
                 await client.DeleteObject("SITES/SITE_16707/file.xml");
             }
             catch (Exception ex)
@@ -95,7 +87,7 @@ namespace WIM.Storage.Test
             try
             {
                 
-                var client = new S3Bucket(stnSettings);
+                var client = new S3Bucket(s3Settings);
                 var items = await client.ListObjectsAsync("SITES/SITE_16707");
                 var itemkeys = items.Select(o => o.Key);
 

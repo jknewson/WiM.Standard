@@ -14,9 +14,12 @@
     <PackageProjectUrl>https://wim.usgs.gov/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/USGS-WiM/WiM.Standard</RepositoryUrl>
 	<Description>provides basic services for integration with google analytics measurement protocal. See https://developers.google.com/analytics/devguides/collection/protocol/v1/reference for more information</Description>
-	<Version>1.2.0</Version>
+	<Version>1.2.3</Version>
 	<PackageIconUrl>https://wim.usgs.gov/visuals/branding/wimvector.png</PackageIconUrl>
-	<PackageReleaseNotes>1.2.0 - added custom dimenstion option (GA-servicehost)</PackageReleaseNotes>
+	<PackageReleaseNotes>1.2.3 - configureation of analyitics GA requests
+1.2.2 - added host option
+1.2.1 - changed custom dim to datasource
+1.2.0 - added custom dimenstion option (GA-servicehost)</PackageReleaseNotes>
     </PropertyGroup>
 
   <ItemGroup>
