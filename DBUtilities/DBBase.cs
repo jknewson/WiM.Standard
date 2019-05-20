@@ -25,6 +25,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace WIM.Utilities
 {
@@ -108,6 +109,8 @@ namespace WIM.Utilities
         }
         protected async Task<T> Add<T>(T item) where T : class, new()
         {
+            //set pkid to 0 before adding
+            setPKfield<T>(item, 0);
             DbSet<T> set = GetDBSet<T>();
             if (set.AsEnumerable().Contains(item))
             {
@@ -124,7 +127,8 @@ namespace WIM.Utilities
             set.AsEnumerable();
             //create list of items that don't exist in db already
             List<T> DontAlreadyExist = items.Except(set.AsEnumerable()).ToList();
-
+            //set pkid to 0 before adding
+            DontAlreadyExist.ForEach(i => setPKfield<T>(i, 0));
             if (DontAlreadyExist.Count > 0) {
                 sm("added " +DontAlreadyExist.Count +" items.");
                 await set.AddRangeAsync(DontAlreadyExist);
@@ -141,6 +145,11 @@ namespace WIM.Utilities
             set.Attach(item);
             //set state to modified to force the update.
             context.Entry(item).State = EntityState.Modified;
+
+            //for child updates
+            IEnumerable<EntityEntry> unchangedEntities = context.ChangeTracker.Entries().Where(x => x.State == EntityState.Unchanged);
+            foreach (EntityEntry ee in unchangedEntities)
+                ee.State = EntityState.Modified;            
 
             await context.SaveChangesAsync();
             sm("Item found and updated.");

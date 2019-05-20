@@ -98,21 +98,24 @@ namespace WIM.Utilities.ServiceAgent
         {
             switch (ptype)
             {
-                case parameterType.serviceHost:
-                    return "cd1";//https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#cd_
-                case parameterType.operation:
+                case parameterType.operation:                   //request method
+                    //custome
+                    return "cd1";
+                case parameterType.datasource:                  //machinename
+                    return "ds";
+                case parameterType.basepath:                        //basepath
                     //Event Category. Required.
                     return "ec";
-                case parameterType.resource:
+                case parameterType.resource:                    //request resource    
                     // Event Action. Required.
                     return "ea";
-                case parameterType.item:
+                case parameterType.item:                        //request resource
                     // Event Label
                     return "el";
-                case parameterType.queryparams:
+                case parameterType.queryparams:                 //query parameters
                     // custom
-                    return "_qps";
-                case parameterType.referrer_ip_address:
+                    return "cd2";
+                case parameterType.referrer_ip_address:         // referrer IP
                     //IP override
                     return "uip";
                 default:

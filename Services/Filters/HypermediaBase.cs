@@ -44,6 +44,7 @@ namespace WIM.Services.Filters
         {
             UrlHelper = new UrlHelper(context);
             BaseURI = context.HttpContext.Request.Host.Value;
+            
             URLQuery = context.HttpContext.Request.Path.Value;
 
 
