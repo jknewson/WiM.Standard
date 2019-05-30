@@ -29,6 +29,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Text.Encodings.Web;
+using Microsoft.Extensions.DependencyInjection;
+using WIM.Resources;
 
 
 //where all the authentication work is actually done
@@ -36,13 +38,10 @@ namespace WIM.Security.Authentication.Basic
 {
     public class BasicAuthenticationHandler : AuthenticationHandler<BasicOptions>
     {
-        private IBasicUserAgent _agent;
-
         public BasicAuthenticationHandler(IOptionsMonitor<BasicOptions> options, ILoggerFactory logger, 
-                                            UrlEncoder encoder, ISystemClock clock, IBasicUserAgent agent) 
+                                            UrlEncoder encoder, ISystemClock clock) 
             : base(options, logger, encoder, clock)
         {
-            this._agent = agent;
         }
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -85,30 +84,23 @@ namespace WIM.Security.Authentication.Basic
             var authResult = await HandleAuthenticateOnceSafeAsync();
             if(authResult?.Failure != null)
                 Response.StatusCode = 401;
-
         }
         protected override async Task HandleForbiddenAsync(AuthenticationProperties properties)
         {
             await base.HandleForbiddenAsync(properties);
         }
+
         protected virtual ClaimsPrincipal getUserPrincipal(string username, string password) {
 
-            var user = _agent.GetUserByUsername(username);
-
-            if (user == null || !Cryptography.VerifyPassword(password, user.Salt, user.password))
-            {
-                return null;
-            }
-
+            var agent = Context.RequestServices.GetRequiredService<IAuthenticationAgent>();
+            if (agent == null) throw new NullReferenceException($"{typeof(IAuthenticationAgent).Name} not configured in startup.");
+            IUser user = agent.AuthenticateUser(username, password);
+            
             //set the user
             var claims = new List<Claim> {
-                            new Claim(ClaimTypes.Name, user.FirstName, ClaimValueTypes.String),
-                            new Claim(ClaimTypes.Surname, user.LastName, ClaimValueTypes.String),
-                            new Claim(ClaimTypes.Email, user.Email, ClaimValueTypes.String),
-                            new Claim(ClaimTypes.Role, user.Role, ClaimValueTypes.String),
-                            new Claim(ClaimTypes.Anonymous, user.RoleID.ToString(), ClaimValueTypes.Integer),
-                            new Claim(ClaimTypes.PrimarySid, user.ID.ToString(), ClaimValueTypes.Integer),
-                            new Claim(ClaimTypes.NameIdentifier, user.Username,ClaimValueTypes.String)
+                    new Claim(ClaimTypes.Role, user.Role, ClaimValueTypes.String),
+                    new Claim(ClaimTypes.PrimarySid, user.ID.ToString(), ClaimValueTypes.Integer),
+                    new Claim(ClaimTypes.NameIdentifier, user.Username,ClaimValueTypes.String)
                         };
             var userIdentity = new ClaimsIdentity(claims, Options.AuthenticationScheme);
             return new ClaimsPrincipal(userIdentity);
