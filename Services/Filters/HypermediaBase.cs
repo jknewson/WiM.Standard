@@ -74,7 +74,6 @@ namespace WIM.Services.Filters
             {
                 //do nothing
             }
-
         }
 
         protected abstract List<Link> GetReflectedHypermedia(IHypermedia entity);
