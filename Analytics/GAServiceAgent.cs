@@ -66,8 +66,7 @@ namespace WIM.Utilities.ServiceAgent
                 List<string> uri = new List<string>();
                 uri.Add("/collect?v=1");
                 uri.Add("tid="+this.ClientID);
-                uri.Add("uid="+ getBase64EncodedString((parameters.ContainsKey(parameterType.referrer_ip_address) ? parameters[parameterType.referrer_ip_address]: "555")));
-                uri.Add("cid=" + getBase64EncodedString((parameters.ContainsKey(parameterType.referrer_ip_address) ? parameters[parameterType.referrer_ip_address] : "as8eknlll")));
+                uri.Add("cid=" + getClientID((parameters.ContainsKey(parameterType.referrer_ip_address) ? parameters[parameterType.referrer_ip_address] : "0.0.0.0")));
                 uri.Add("t=event");
                 foreach (KeyValuePair<parameterType, string> entry in parameters)
                 {
@@ -82,21 +81,21 @@ namespace WIM.Utilities.ServiceAgent
                 return string.Empty;
             }
         }
-        protected string getBase64EncodedString(string plainText)
+        protected string getClientID(string plainText)
         {
+            Int32 Timestamp = (Int32)(DateTime.Today.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;            
             try
-            {
-                var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
-                return Convert.ToBase64String(plainTextBytes);
+            {              
+                return $"{plainText.Replace(".","")}.{Timestamp}";
             }
             catch (Exception)
             {
                 Random random = new Random();
                 string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-                return new string(Enumerable.Repeat(chars, 10)
+                var user= new string(Enumerable.Repeat(chars, 10)
                   .Select(s => s[random.Next(s.Length)]).ToArray());
-            }
-            
+                return $"{user}.{Timestamp}";
+            }            
         }
         protected virtual string getGAParameter(KeyValuePair<parameterType, string> entry)
         {
