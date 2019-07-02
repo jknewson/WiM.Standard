@@ -66,7 +66,8 @@ namespace WIM.Utilities.ServiceAgent
                 List<string> uri = new List<string>();
                 uri.Add("/collect?v=1");
                 uri.Add("tid="+this.ClientID);
-                uri.Add("uid="+ getBase64EncodedString((parameters.ContainsKey(parameterType.referrer_ip_address) ? parameters[parameterType.referrer_ip_address]: "555").GetHashCode().ToString()));
+                uri.Add("uid="+ getBase64EncodedString((parameters.ContainsKey(parameterType.referrer_ip_address) ? parameters[parameterType.referrer_ip_address]: "555")));
+                uri.Add("cid=" + getBase64EncodedString((parameters.ContainsKey(parameterType.referrer_ip_address) ? parameters[parameterType.referrer_ip_address] : "as8eknlll")));
                 uri.Add("t=event");
                 foreach (KeyValuePair<parameterType, string> entry in parameters)
                 {
@@ -83,8 +84,19 @@ namespace WIM.Utilities.ServiceAgent
         }
         protected string getBase64EncodedString(string plainText)
         {
-            var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
-            return Convert.ToBase64String(plainTextBytes);
+            try
+            {
+                var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+                return Convert.ToBase64String(plainTextBytes);
+            }
+            catch (Exception)
+            {
+                Random random = new Random();
+                string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                return new string(Enumerable.Repeat(chars, 10)
+                  .Select(s => s[random.Next(s.Length)]).ToArray());
+            }
+            
         }
         protected virtual string getGAParameter(KeyValuePair<parameterType, string> entry)
         {
