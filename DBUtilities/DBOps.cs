@@ -41,9 +41,8 @@ namespace WIM.Utilities
     public abstract class dbOps : IDisposable
     {
         #region "Fields"
-        private string connectionString = string.Empty;
-        private DbConnection connection;
-        public ConnectionType connectionType { get; private set; }
+        protected DbConnection connection;
+        
         #endregion
         #region Properties
         private List<string> _message = new List<string>();
@@ -54,13 +53,9 @@ namespace WIM.Utilities
         #endregion
         #region "Constructor and IDisposable Support"
         #region Constructors
-        public dbOps(string pSQLconnstring, ConnectionType pConnectionType, bool doResetTables = false)
+        public dbOps()
         {
             this.connection = null;
-            this.connectionString = pSQLconnstring;
-            this.connectionType = pConnectionType;
-            init();
-            if (doResetTables) this.ResetTables();
         }
         #endregion
         #region IDisposable Support
@@ -116,22 +111,19 @@ namespace WIM.Utilities
         #endregion
         #endregion
         #region "Methods"
-        public virtual List<T> GetDBItems<T>(Int32 SqlTypeIdentifyer, params object[] args)
+        public virtual IEnumerable<T> GetItems<T>(string getSql)
         {
-            List<T> dbList = null;
-            string sql = string.Empty;
+            IEnumerable<T> dbList = null;
             try
             {
-                sql = string.Format(getSQL(SqlTypeIdentifyer), args);
-
                 this.OpenConnection();
-                DbCommand command = getCommand(sql);
+                DbCommand command = getCommand(getSql);
                 Func<IDataReader, T> fromdr = (Func<IDataReader, T>)Delegate.CreateDelegate(typeof(Func<IDataReader, T>), null, typeof(T).GetMethod("FromDataReader"));
 
                 using (DbDataReader reader = command.ExecuteReader())
                 {
-                    dbList = reader.Select<T>(fromdr).ToList();
-                    sm("DB return count: " + dbList.Count);
+                    dbList = reader.Select<T>(fromdr);
+                    sm("DB return count: " + dbList.Count());
                 }//end using
 
                 return dbList;
@@ -146,13 +138,12 @@ namespace WIM.Utilities
                 this.CloseConnection();
             }
         }
-        public virtual bool Update(Int32 SqlTypeIdentifyer, Int32 pkID, Object[] args)
+        public virtual bool Update(string sql)
         {
-            string sql = string.Empty;
             try
             {
                 this.OpenConnection();
-                DbCommand command = getCommand(String.Format(getSQL(SqlTypeIdentifyer), pkID, args));
+                DbCommand command = getCommand(sql);
                 command.ExecuteNonQuery();
                 return true;
             }
@@ -220,16 +211,12 @@ namespace WIM.Utilities
                 //this.CloseConnection();
             }
         }
-        public virtual Int32 AddItem(Int32 SqlTypeIdentifyer, Object[] args)
+        public virtual Int32 AddItem(string AddSql)
         {
-            string sql = string.Empty;
             try
             {
-                args = args.Select(a => a == null ? "null" : a).ToArray();
-                sql = String.Format(getSQL(SqlTypeIdentifyer), args);
-
                 this.OpenConnection();
-                DbCommand command = getCommand(sql);
+                DbCommand command = getCommand(AddSql);
                 command.ExecuteNonQuery();
                 command.CommandText = "SELECT lastval();";
                 var id = command.ExecuteScalar();
@@ -245,7 +232,6 @@ namespace WIM.Utilities
                 this.CloseConnection();
             }
         }
-        public abstract bool ResetTables();
         #endregion
         #region "Helper Methods"
         protected virtual T FromDataReader<T>(IDataReader r)
@@ -253,8 +239,6 @@ namespace WIM.Utilities
             return (T)Activator.CreateInstance(typeof(T), new object[] { });
         }
         protected abstract DbCommand getCommand(string sql);
-        protected abstract string getSQL(Int32 SqlTypeIdentifyer);
-
         protected virtual void OpenConnection()
         {
             try
@@ -280,23 +264,16 @@ namespace WIM.Utilities
                 throw ex;
             }
         }
-        protected abstract void init();
         protected virtual void sm(string msg)
         {
             Console.WriteLine(msg);
+            #if DEBUG
             Debug.Print(msg);
+            #endif
             this._message.Add(msg);
         }
         #endregion
-        #region "Enumerated Constants"
 
-        public enum ConnectionType
-        {
-            e_access,
-            e_postgresql,
-            e_mysql
-        }
-        #endregion
 
     }
 }

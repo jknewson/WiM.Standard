@@ -22,7 +22,7 @@
 //
 //              v=1               // version (1)
 //              &tid=UA-XXXXX-Y   // Tracking ID/Property ID
-//              &cid=555          // Anonymous Client ID
+//              &uid=555          // Anonymous User ID
 
 //              &t=event         // Event hit type
 //              &ec=video        // Event Category. Required.
@@ -33,6 +33,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using WIM.Services.Analytics;
 
 namespace WIM.Utilities.ServiceAgent
@@ -58,14 +59,14 @@ namespace WIM.Utilities.ServiceAgent
         #endregion
         #region HelperMethods
        
-        private String getResourcrUrl(Dictionary<parameterType, string> parameters)
+        protected String getResourcrUrl(Dictionary<parameterType, string> parameters)
         {
             try
             {
                 List<string> uri = new List<string>();
                 uri.Add("/collect?v=1");
                 uri.Add("tid="+this.ClientID);
-                uri.Add("cid=" + 555);
+                uri.Add("uid="+ getBase64EncodedString((parameters.ContainsKey(parameterType.referrer_ip_address) ? parameters[parameterType.referrer_ip_address]: "555").GetHashCode().ToString()));
                 uri.Add("t=event");
                 foreach (KeyValuePair<parameterType, string> entry in parameters)
                 {
@@ -79,6 +80,11 @@ namespace WIM.Utilities.ServiceAgent
             {
                 return string.Empty;
             }
+        }
+        protected string getBase64EncodedString(string plainText)
+        {
+            var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+            return Convert.ToBase64String(plainTextBytes);
         }
         protected virtual string getGAParameter(KeyValuePair<parameterType, string> entry)
         {
