@@ -19,6 +19,7 @@
 //              Primary responsibility is for http requests
 // 
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -26,7 +27,8 @@ using System.Text;
 using System.IO;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
-
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace WIM.Utilities.ServiceAgent
 {
@@ -49,7 +51,7 @@ namespace WIM.Utilities.ServiceAgent
         #endregion
 
         #region Methods
-        protected async Task<T> ExecuteAsync<T>(RequestInfo request) where T : new()
+        protected async Task<T> ExecuteAsync<T>(RequestInfo request)
         {
             return await this.ExecuteAsync<T>(request.RequestURI, request.Content, request.Method);
         }//end ExecuteAsync<T>
@@ -61,9 +63,10 @@ namespace WIM.Utilities.ServiceAgent
                 T result = default(T);
                 response = await this.ExecuteAsync(uri, data, mtd);
 
+                var contenttype = response.Content.Headers.GetValues("Content-Type").FirstOrDefault();
                 var stream = await response.Content.ReadAsStreamAsync();
                 if (stream != null)
-                    result = DeserializeStream<T>(stream);
+                    result = DeserializeStream<T>(stream,  GetMediaType(contenttype));
 
                 return result;
             }
@@ -113,15 +116,29 @@ namespace WIM.Utilities.ServiceAgent
         #endregion
         #region Helper Methods
 
-        protected T DeserializeStream<T>(Stream stream)
+        protected T DeserializeStream<T>(Stream stream, contentType ContentType)
         {
             using (var sr = new StreamReader(stream))
             {
-                using (var jsonTextReader = new JsonTextReader(sr))
+                switch (ContentType)
                 {
-                    var serializer = new JsonSerializer();
-                    return serializer.Deserialize<T>(jsonTextReader);
-                }//end using
+                    case contentType.JSON:
+                        using (var jsonTextReader = new JsonTextReader(sr))
+                        {
+                            var serializer = new JsonSerializer();
+                            return serializer.Deserialize<T>(jsonTextReader);
+                        }//end using
+
+                    case contentType.XML:
+                        using (var reader = XmlReader.Create(sr))
+                        {
+                            var serializer = new XmlSerializer(typeof(T));
+                            return (T)serializer.Deserialize(reader);
+                        }//end using
+                      
+                }//end switch
+                
+                return (T)(object)sr.ReadToEnd();
             }//end using
         }
         protected void Serialize<T>(T value, Stream s)
@@ -135,6 +152,18 @@ namespace WIM.Utilities.ServiceAgent
             }
         }
         #endregion
+
+        private contentType GetMediaType(string type)
+        {
+            switch (type)
+            {
+                case "text/json":
+                    return contentType.JSON;
+                case "text/xml":
+                    return contentType.XML;
+            }
+            return contentType.Default ;
+        }
 
     }//end class ServiceAgentBase
 
@@ -174,6 +203,7 @@ namespace WIM.Utilities.ServiceAgent
             }
             return "application/json";
         }
+        
     }
     public enum methodType
     {
@@ -185,6 +215,7 @@ namespace WIM.Utilities.ServiceAgent
     public enum contentType
     {
         JSON,
-        XML
+        XML,
+        Default
     }
 }
