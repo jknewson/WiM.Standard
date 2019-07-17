@@ -122,11 +122,8 @@ namespace WIM.Utilities
 
                 using (DbDataReader reader = command.ExecuteReader())
                 {
-                    dbList = reader.Select<T>(fromdr);
-                    sm("DB return count: " + dbList.Count());
+                    return reader.Select<T>(fromdr);                    
                 }//end using
-
-                return dbList;
             }
             catch (Exception ex)
             {

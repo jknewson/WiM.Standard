@@ -8,14 +8,15 @@
     <Authors>Jeremy Newson</Authors>
     <Company>Web Informatics and Mapping</Company>
     <Description>provides simple override methods for db interactions</Description>
-    <Version>1.1.9</Version>
+    <Version>1.1.10</Version>
     <Copyright>public domain</Copyright>
     <PackageLicenseUrl>https://www2.usgs.gov/visual-id/credit_usgs.html#copyright</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/USGS-WiM/WiM.Standard</RepositoryUrl>
     <RepositoryType />
     <PackageIconUrl>https://wim.usgs.gov/visuals/branding/wimvector.png</PackageIconUrl>
     <PackageProjectUrl>https://wim.usgs.gov/</PackageProjectUrl>
-    <PackageReleaseNotes>1.1.9 - minor update
+    <PackageReleaseNotes>1.1.10 - removed .tolist from yeild return
+1.1.9 - minor update
 1.1.8 - removed init from base dbops
 1.1.7 made a few more changes to dbops
 1.1.6 added dbops class, operations for manual usage of database
