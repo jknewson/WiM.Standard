@@ -55,7 +55,7 @@ namespace WIM.Utilities.ServiceAgent
         {
             return await this.ExecuteAsync<T>(request.RequestURI, request.Content, request.Method);
         }//end ExecuteAsync<T>
-        protected async Task<T> ExecuteAsync<T>(string uri, HttpContent data, methodType mtd = methodType.e_GET)
+        protected async Task<T> ExecuteAsync<T>(string uri, HttpContent data, methodType mtd = methodType.e_GET, contentType overrideResponseDeserializer = contentType.Default)
         {
             try
             {
@@ -66,7 +66,7 @@ namespace WIM.Utilities.ServiceAgent
                 var contenttype = response.Content.Headers.GetValues("Content-Type").FirstOrDefault();
                 var stream = await response.Content.ReadAsStreamAsync();
                 if (stream != null)
-                    result = DeserializeStream<T>(stream,  GetMediaType(contenttype));
+                    result = DeserializeStream<T>(stream, overrideResponseDeserializer == contentType.Default? GetMediaType(contenttype): overrideResponseDeserializer);
 
                 return result;
             }
@@ -158,8 +158,11 @@ namespace WIM.Utilities.ServiceAgent
             switch (type)
             {
                 case "text/json":
+                case "application/json; charset=UTF-8":
+                case "application/vnd.geo+json":
                     return contentType.JSON;
                 case "text/xml":
+                case "application/xml; charset=UTF-8":
                     return contentType.XML;
             }
             return contentType.Default ;

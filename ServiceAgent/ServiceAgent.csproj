@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.5</Version>
+    <Version>1.1.6</Version>
     <AssemblyName>WIM.Utilities.ServiceAgent</AssemblyName>
     <RootNamespace>WIM.Utilities.ServiceAgent</RootNamespace>
     <RepositoryUrl>https://github.com/USGS-WiM/WiM.Standard</RepositoryUrl>
@@ -20,7 +20,8 @@ the requestor.</Description>
 1.1.3 update to getProgressRequest parameters
 1.1.4 update namespace and minor serviceagent updates
 1.1.4 - namespaceupdate
-1.1.5 updates to servicebase</PackageReleaseNotes>
+1.1.5 updates to servicebase
+1.1.6 updated to serviceAgentBase (mediatype update and override response deserializer type)</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

@@ -113,17 +113,45 @@ namespace WIM.Utilities
         #region "Methods"
         public virtual IEnumerable<T> GetItems<T>(string getSql)
         {
-            IEnumerable<T> dbList = null;
             try
             {
+                List<T> results = null;
                 this.OpenConnection();
                 DbCommand command = getCommand(getSql);
                 Func<IDataReader, T> fromdr = (Func<IDataReader, T>)Delegate.CreateDelegate(typeof(Func<IDataReader, T>), null, typeof(T).GetMethod("FromDataReader"));
 
                 using (DbDataReader reader = command.ExecuteReader())
                 {
-                    return reader.Select<T>(fromdr);                    
+                    //force yeild before closing reader
+                    results = reader.Select<T>(fromdr).ToList();                      
                 }//end using
+                return results;
+            }
+            catch (Exception ex)
+            {
+                this.sm(ex.Message);
+                throw ex;
+            }
+            finally
+            {
+                this.CloseConnection();
+            }
+        }
+        public virtual IEnumerable<Dictionary<string, object>> GetItems(string getSql)
+        {
+            try
+            {
+                List<Dictionary<string, object>> results = new List<Dictionary<string, object>>();
+                this.OpenConnection();
+                DbCommand command = getCommand(getSql);
+                
+                using (DbDataReader reader = command.ExecuteReader())
+                {
+                    var names = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
+                    foreach (IDataRecord record in reader as IEnumerable)
+                        results.Add( names.ToDictionary(n => n, n => record[n]));
+                }//end using
+                return results;
             }
             catch (Exception ex)
             {
