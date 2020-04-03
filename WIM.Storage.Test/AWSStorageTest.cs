@@ -18,7 +18,7 @@ namespace WIM.Storage.Test
                 BucketName = "",
                 Key = "",
                 SecretKey = "",
-                RegionName = "***REMOVED***"
+                RegionName = "us-east-1"
             };
 
         }

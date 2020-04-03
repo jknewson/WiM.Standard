@@ -8,14 +8,17 @@
     <Authors>Jeremy Newson</Authors>
     <Company>Web Informatics and Mapping</Company>
     <Description>Simple Enumerable and string Extension methods</Description>
-    <Version>1.1.2</Version>
+
     <Copyright>public domain</Copyright>
     <RepositoryUrl>https://github.com/USGS-WiM/WiM.Standard</RepositoryUrl>
     <PackageLicenseUrl>https://www2.usgs.gov/visual-id/credit_usgs.html#copyright</PackageLicenseUrl>
     <PackageIconUrl>https://wim.usgs.gov/visuals/branding/wimvector.png</PackageIconUrl>
     <PackageProjectUrl>https://wim.usgs.gov/</PackageProjectUrl>
-    <PackageReleaseNotes>1.1.2 - added enum method
-1.1.1- minor namespace update</PackageReleaseNotes>
+    <Version>1.3.0</Version>
+    <PackageReleaseNotes>
+      1.3.0 - package reference updates to support dotnetcore 3.1
+      1.1.2 - added enum method
+      1.1.1- minor namespace update</PackageReleaseNotes>
     <PackageId>WIM.Extensions</PackageId>
   </PropertyGroup>
 

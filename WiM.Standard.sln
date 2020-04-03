@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exceptions", "Exceptions\Ex
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Storage", "Storage\Storage.csproj", "{325EE745-FBF1-4C4E-9297-B0E5733DAFEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Storage.Test", "WIM.Storage.Test\Storage.Test.csproj", "{07DAB8F6-E752-4A5A-A397-B30E7D832B50}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Storage.Test", "WIM.Storage.Test\Storage.Test.csproj", "{07DAB8F6-E752-4A5A-A397-B30E7D832B50}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

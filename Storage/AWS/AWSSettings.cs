@@ -10,7 +10,7 @@ namespace WIM.Storage.AWS
         string Key { get; set; }
         string SecretKey { get; set; }
         /// <summary>
-        /// Specified region name, like "***REMOVED***"
+        /// Specified region name, like "us-east-1"
         /// </summary>
         string RegionName { get; set; }
     }
@@ -20,8 +20,8 @@ namespace WIM.Storage.AWS
         public string Key { get; set; }
         public string SecretKey { get; set; }
         /// <summary>
-        /// Specified region name, like "***REMOVED***"
+        /// Specified region name, like "us-east-1"
         /// </summary>
-        public string RegionName { get; set; } = "***REMOVED***";
+        public string RegionName { get; set; } = "us-east-1";
     }
 }

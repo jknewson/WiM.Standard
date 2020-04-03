@@ -100,7 +100,7 @@ namespace WIM.Utilities
         protected IQueryable<T> FromSQL<T>(string sql) where T : class, new()
         {
             DbSet<T> set = GetDBSet<T>();
-            return set.FromSql(sql);
+            return set.FromSqlRaw<T>(sql);
         }
         protected async Task<T> Find<T>(Int32 pk) where T : class, new()
         {
