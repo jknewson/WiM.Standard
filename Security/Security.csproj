@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>WIM.Security</AssemblyName>
+    <RootNamespace>WIM.Security</RootNamespace>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>jknewson</Authors>
+    <Company>Web Informatics and Mapping</Company>
+    <Description>Security objects and authentication</Description>
+    <Version>1.1.1</Version>
+    <PackageLicenseUrl>https://www2.usgs.gov/visual-id/credit_usgs.html#copyright</PackageLicenseUrl>
+    <Copyright>public domain</Copyright>
+    <RepositoryUrl>https://github.com/USGS-WiM/WiM.Standard</RepositoryUrl>
+    <PackageIconUrl>https://wim.usgs.gov/visuals/branding/wimvector.png</PackageIconUrl>
+    <PackageProjectUrl>https://wim.usgs.gov/</PackageProjectUrl>
+    <PackageReleaseNotes>1.1.1 - namespace update</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Security.SecureString" Version="4.3.0" />
+  </ItemGroup>
+
+</Project>

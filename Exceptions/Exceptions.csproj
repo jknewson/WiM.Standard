@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>WIM.Exceptions</AssemblyName>
+    <RootNamespace>WIM.Exceptions</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>WIM.Exceptions</PackageId>
+    <Authors>Jeremy Newson</Authors>
+    <Company>Web Informatics and Mapping</Company>
+    <Product>WiM.Exceptions</Product>
+    <Description>Custom Exceptions</Description>
+    <Copyright>Public Domain</Copyright>
+    <PackageLicenseUrl>https://www2.usgs.gov/visual-id/credit_usgs.html#copyright</PackageLicenseUrl>
+    <PackageProjectUrl>https://wim.usgs.gov/</PackageProjectUrl>
+    <PackageIconUrl>https://wim.usgs.gov/visuals/branding/wimvector.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/USGS-WiM/WiM.Standard</RepositoryUrl>
+    <Version>1.3.0</Version>
+    <PackageReleaseNotes>
+      1.3.0 - package reference updates to support dotnetcore 3.1
+      1.0.1- minor updates
+      1.0.0- initial services exceptions</PackageReleaseNotes>
+    
+  </PropertyGroup>
+
+</Project>

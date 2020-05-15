@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>WIM.Utilities</AssemblyName>
+    <RootNamespace>WIM.Utilities</RootNamespace>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>Jeremy Newson</Authors>
+    <Company>Web Informatics and Mapping</Company>
+    <Description>random utility operations</Description>
+    <Version>1.1.2</Version>
+    <PackageLicenseUrl>https://www2.usgs.gov/visual-id/credit_usgs.html#copyright</PackageLicenseUrl>
+    <Copyright>public domain</Copyright>
+    <RepositoryUrl>https://github.com/USGS-WiM/WiM.Standard</RepositoryUrl>
+    <PackageIconUrl>https://wim.usgs.gov/visuals/branding/wimvector.png</PackageIconUrl>
+    <PackageProjectUrl>https://wim.usgs.gov/</PackageProjectUrl>
+    <PackageReleaseNotes>1.1.2 - removed R &amp; S from getTokenClass, TokenClassEnum.e_value
+1.1.1 - namespace update</PackageReleaseNotes>
+  </PropertyGroup>
+
+</Project>

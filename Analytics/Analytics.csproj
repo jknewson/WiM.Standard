@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+	<AssemblyName>WIM.Services.Analytics</AssemblyName>
+	<RootNamespace>WIM.Services.Analytics</RootNamespace>
+	<Product>WiM.Analytics</Product>
+    <PackageId>WIM.Analytics</PackageId>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Jeremy Newson</Authors>
+    <Company>USGS Web Informatics and Mapping</Company>
+    <PackageLicenseUrl>https://www2.usgs.gov/visual-id/credit_usgs.html#copyright</PackageLicenseUrl>
+    <Copyright>public domain</Copyright>
+    <PackageProjectUrl>https://wim.usgs.gov/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/USGS-WiM/WiM.Standard</RepositoryUrl>
+	<Description>provides basic services for integration with google analytics measurement protocal. See https://developers.google.com/analytics/devguides/collection/protocol/v1/reference for more information</Description>
+	<Version>1.3.0</Version>
+	<PackageIconUrl>https://wim.usgs.gov/visuals/branding/wimvector.png</PackageIconUrl>
+	<PackageReleaseNotes> 1.3.0 - package reference updates to support dotnetcore 3.1
+1.2.7 - refactor cid generation method adn removed uid
+1.2.6 - add cid based on encoded ip address
+1.2.5 - add unique id based on encoded ip address
+1.2.4 - added document referrer to tracked information
+1.2.3 - configureation of analyitics GA requests
+1.2.2 - added host option
+1.2.1 - changed custom dim to datasource
+1.2.0 - added custom dimenstion option (GA-servicehost)</PackageReleaseNotes>
+    </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="3.1.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ServiceAgent\ServiceAgent.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Http.Abstractions">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.http.abstractions\2.0.0\lib\netstandard2.0\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

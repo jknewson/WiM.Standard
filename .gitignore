@@ -6,6 +6,9 @@
 *.user
 *.sln.docstates
 
+# Visual Studio 2015 cache/options directory
+.vs/
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -15,6 +18,12 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
+
+# include dist
+!NSSServices/
+!NSSServices/[Dd]ist/*
+!NSSServices/[Dd]ist/[Bb]in/*
+!NSSServices/[Dd]ist/[Bb]in/*.dll
 
 # Roslyn cache directories
 *.ide/

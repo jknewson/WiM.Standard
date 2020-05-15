@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>WIM.Spatial</AssemblyName>
+    <RootNamespace>WIM.Spatial</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Jeremy Newson</Authors>
+    <Company>Web Informatics and Mapping</Company>
+    <Description>Spatial extensions and methods.</Description>
+    <Copyright>public domain</Copyright>
+    <PackageLicenseUrl>https://www2.usgs.gov/visual-id/credit_usgs.html#copyright</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/USGS-WiM/WiM.Standard</RepositoryUrl>
+    
+    <PackageIconUrl>https://wim.usgs.gov/visuals/branding/wimvector.png</PackageIconUrl>
+    <PackageProjectUrl>https://wim.usgs.gov/</PackageProjectUrl>
+    <Version>1.3.0</Version>
+    <PackageReleaseNotes>
+      1.3.0 - package reference updates to support dotnetcore 3.1
+      1.1.1-namespace update</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Resources\FeatureResource.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GeoJSON.Net" Version="1.2.15" />
+  </ItemGroup>
+
+</Project>
